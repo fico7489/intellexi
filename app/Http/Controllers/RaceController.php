@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Race;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class RaceController extends Controller
 {
@@ -39,6 +43,10 @@ class RaceController extends Controller
 
     public function create() : JsonResponse
     {
+        if (! Gate::allows('manage-race')) {
+            throw new AccessDeniedHttpException();
+        }
+
         $race = Race::create(Request::all());
 
         return new JsonResponse([
@@ -51,6 +59,10 @@ class RaceController extends Controller
 
     public function update($id) : JsonResponse
     {
+        if (! Gate::allows('manage-race')) {
+            throw new AccessDeniedHttpException();
+        }
+
         $race = Race::findOrFail($id);
 
         $race->update(Request::all());
@@ -65,6 +77,10 @@ class RaceController extends Controller
 
     public function delete($id) : JsonResponse
     {
+        if (! Gate::allows('manage-race')) {
+            throw new AccessDeniedHttpException();
+        }
+
         $race = Race::findOrFail($id);
 
         $race->delete();

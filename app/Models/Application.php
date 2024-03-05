@@ -21,6 +21,7 @@ class Application extends Model
         'last_name',
         'club',
         'race_id',
+        'user_id',
     ];
 
     public function race(): BelongsTo

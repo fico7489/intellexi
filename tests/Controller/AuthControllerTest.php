@@ -6,6 +6,7 @@ use App\Models\Race;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Request;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -17,13 +18,12 @@ class AuthControllerTest extends TestCase
         ]);
 
         $token = $response->json()['token'];
-
         $this->assertNotNull($token);
 
-        $user = User::where([])->first();
+        //test Unauthorized
+        $this->get('/api/applications')->assertStatus(401);
 
-        $this->withToken($token)->get('/api/applications', [
-
-        ])->assertStatus(200);
+        //test Authorized
+        $this->withToken($token)->get('/api/applications')->assertStatus(200);
     }
 }

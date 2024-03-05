@@ -14,8 +14,10 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('club');
             $table->uuid('race_id');
+            $table->uuid('user_id');
 
             $table->foreign('race_id')->references('id')->on('races');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });

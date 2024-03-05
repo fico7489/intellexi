@@ -5,6 +5,7 @@ php artisan migrate
 php artisan db:wipe
 php artisan make:migration User
 php artisan db:seed --class=UserSeeder
+php artisan db:seed
 php artisan jwt:secret
 php artisan route:list
 

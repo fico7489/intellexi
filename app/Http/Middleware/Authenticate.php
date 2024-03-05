@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Token;
 
@@ -14,15 +15,19 @@ class Authenticate
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
+        try {
+            $token = $request->bearerToken();
 
-        /** @var \Tymon\JWTAuth\Payload $payload */
-        $payload = JWTAuth::decode(new Token($token));
-        $id = $payload->toArray()['sub'];
+            /** @var \Tymon\JWTAuth\Payload $payload */
+            $payload = JWTAuth::decode(new Token($token));
+            $id = $payload->toArray()['sub'];
 
-        $user = User::where(['id' => $id])->first();
+            $user = User::where(['id' => $id])->first();
 
-        Auth::login($user);
+            Auth::login($user);
+        }catch (\Throwable $t){
+            throw new UnauthorizedHttpException('Unauthorized');
+        }
 
         return $next($request);
     }

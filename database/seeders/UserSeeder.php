@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
+        //Administrator
         User::create([
             'first_name' => 'Administrator',
             'last_name' => 'Administrator',
@@ -20,10 +21,20 @@ class UserSeeder extends Seeder
             'role' => 'Administrator',
         ]);
 
+        //Applicant
         User::create([
             'first_name' => 'Applicant',
             'last_name' => 'Applicant',
             'email' => 'applicant@example.com',
+            'dob' => '1990-01-01',
+            'role' => 'Applicant',
+        ]);
+
+        //Applicant2
+        User::create([
+            'first_name' => 'Applicant2',
+            'last_name' => 'Applicant2',
+            'email' => 'applicant2@example.com',
             'dob' => '1990-01-01',
             'role' => 'Applicant',
         ]);
