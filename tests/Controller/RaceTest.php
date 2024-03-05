@@ -10,7 +10,8 @@ class RaceTest extends TestCase
     public function testGetAll()
     {
         $race = $this->createRaceModel();
-        $race = $this->createRaceModel();
+        $race2 = $this->createRaceModel();
+
         $this->asApplicant()->get('/api/races')->assertJson([
             'data' => [
                 [

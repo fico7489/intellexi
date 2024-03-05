@@ -8,3 +8,4 @@ COPY --from=composer:2.7.1 /usr/bin/composer /usr/local/bin/composer
 RUN sed -ri 's/^www-data:x:82:82:/www-data:x:1000:1000:/' /etc/passwd
 
 USER www-data
+
