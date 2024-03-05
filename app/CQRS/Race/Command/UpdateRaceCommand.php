@@ -8,7 +8,8 @@ class UpdateRaceCommand
         private readonly string $id,
         private readonly ?string $name,
         private readonly ?string $distance
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {

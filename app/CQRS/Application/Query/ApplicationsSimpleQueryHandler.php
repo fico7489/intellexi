@@ -3,18 +3,17 @@
 namespace App\CQRS\Application\Query;
 
 use App\Models\Application;
-use App\Models\Race;
 use Ecotone\Modelling\Attribute\QueryHandler;
 use Illuminate\Support\Facades\Auth;
 
 class ApplicationsSimpleQueryHandler
 {
     #[QueryHandler]
-    public function handle(ApplicationsSimpleQuery $query) : array
+    public function handle(ApplicationsSimpleQuery $query): array
     {
         $applications = Application::where([]);
 
-        if (Auth::user()->role === 'Applicant') {
+        if ('Applicant' === Auth::user()->role) {
             $applications->where(['user_id' => Auth::user()->id]);
         }
 

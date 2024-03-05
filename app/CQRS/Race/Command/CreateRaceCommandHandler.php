@@ -1,4 +1,5 @@
 <?php
+
 namespace App\CQRS\Race\Command;
 
 use App\Models\Race;
@@ -9,9 +10,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class CreateRaceCommandHandler
 {
     #[CommandHandler]
-    public function handle(CreateRaceCommand $command) : void
+    public function handle(CreateRaceCommand $command): void
     {
-        if (! Gate::allows('manage-race')) {
+        if (!Gate::allows('manage-race')) {
             throw new AccessDeniedHttpException();
         }
 

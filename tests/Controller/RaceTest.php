@@ -20,8 +20,8 @@ class RaceTest extends TestCase
                 [
                     'name' => 'Test race',
                     'distance' => '5k',
-                ]
-            ]
+                ],
+            ],
         ])->assertStatus(200);
     }
 
@@ -29,11 +29,11 @@ class RaceTest extends TestCase
     {
         $race = $this->createRaceModel();
 
-        $this->asApplicant()->get('/api/races/' . $race->id)->assertJson([
+        $this->asApplicant()->get('/api/races/'.$race->id)->assertJson([
             'data' => [
                 'name' => 'Test race',
                 'distance' => '5k',
-            ]
+            ],
         ])->assertStatus(200);
     }
 
@@ -53,11 +53,11 @@ class RaceTest extends TestCase
     {
         $race = $this->createRaceModel();
 
-        $this->asAdministrator()->patch('/api/races/' . $race->id, [
+        $this->asAdministrator()->patch('/api/races/'.$race->id, [
             'distance' => '10k',
         ])->assertStatus(200);
 
-        $this->asApplicant()->patch('/api/races/' . $race->id, [])->assertStatus(403);
+        $this->asApplicant()->patch('/api/races/'.$race->id, [])->assertStatus(403);
     }
 
     public function testDelete()
@@ -65,10 +65,10 @@ class RaceTest extends TestCase
         $race = $this->createRaceModel();
 
         $this->assertEquals(1, Race::count());
-        $this->asAdministrator()->delete('/api/races/' . $race->id)->assertStatus(200);
+        $this->asAdministrator()->delete('/api/races/'.$race->id)->assertStatus(200);
         $this->assertEquals(0, Race::count());
 
-        $this->asApplicant()->delete('/api/races/' . $race->id)->assertStatus(403);
+        $this->asApplicant()->delete('/api/races/'.$race->id)->assertStatus(403);
     }
 
     private function createRaceModel()

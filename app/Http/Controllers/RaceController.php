@@ -14,33 +14,35 @@ use Illuminate\Support\Facades\Request;
 
 class RaceController extends Controller
 {
-    public function __construct(private readonly CommandBus $commandBus, private readonly QueryBus $queryBus) {}
+    public function __construct(private readonly CommandBus $commandBus, private readonly QueryBus $queryBus)
+    {
+    }
 
-    public function getAll() : JsonResponse
+    public function getAll(): JsonResponse
     {
         return $this->dataResponse($this->queryBus->send(new RacesSimpleQuery()));
     }
 
-    public function get($id) : JsonResponse
+    public function get($id): JsonResponse
     {
         return $this->dataResponse($this->queryBus->send(new RaceSimpleQuery($id)));
     }
 
-    public function create() : JsonResponse
+    public function create(): JsonResponse
     {
         $this->commandBus->send(new CreateRaceCommand(Request::get('name'), Request::get('distance')));
 
         return $this->emptyResponse(201);
     }
 
-    public function update($id) : JsonResponse
+    public function update($id): JsonResponse
     {
         $this->commandBus->send(new UpdateRaceCommand($id, Request::get('name'), Request::get('distance')));
 
         return $this->emptyResponse(200);
     }
 
-    public function delete($id) : JsonResponse
+    public function delete($id): JsonResponse
     {
         $this->commandBus->send(new DeleteRaceCommand($id));
 

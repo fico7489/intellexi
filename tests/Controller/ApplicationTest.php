@@ -5,7 +5,6 @@ namespace Tests\Controller;
 use App\Models\Application;
 use App\Models\Race;
 use App\Models\User;
-use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class ApplicationTest extends TestCase
@@ -18,7 +17,7 @@ class ApplicationTest extends TestCase
         $application = $this->createApplicationModel($userApplicant);
         $application2 = $this->createApplicationModel($userApplicant2);
 
-        //Administrator can see all
+        // Administrator can see all
         $this->asAdministrator()->json('GET', '/api/applications')->assertJson([
             'data' => [
                 [
@@ -34,11 +33,11 @@ class ApplicationTest extends TestCase
                     'club' => 'Club',
                     'race_id' => $application2->race->id,
                     'user_id' => $application2->user_id,
-                ]
-            ]
+                ],
+            ],
         ])->assertJsonCount(2, 'data')->assertStatus(200);
 
-        //Applicant can see own
+        // Applicant can see own
         $this->asApplicant()->json('GET', '/api/applications')
             ->assertJson([
                 'data' => [
@@ -48,11 +47,11 @@ class ApplicationTest extends TestCase
                         'club' => 'Club',
                         'race_id' => $application->race->id,
                         'user_id' => $application->user_id,
-                    ]
-                ]
+                    ],
+                ],
             ])->assertJsonCount(1, 'data')->assertStatus(200);
 
-        //Applicant2 can see own
+        // Applicant2 can see own
         $this->asApplicant2()->json('GET', '/api/applications')
             ->assertJson([
                 'data' => [
@@ -62,8 +61,8 @@ class ApplicationTest extends TestCase
                         'club' => 'Club',
                         'race_id' => $application2->race->id,
                         'user_id' => $application2->user_id,
-                    ]
-                ]
+                    ],
+                ],
             ])->assertJsonCount(1, 'data')->assertStatus(200);
     }
 
@@ -75,17 +74,17 @@ class ApplicationTest extends TestCase
         $application = $this->createApplicationModel($userApplicant);
         $application2 = $this->createApplicationModel($userApplicant2);
 
-        //Administrator can see all
-        $this->asAdministrator()->json('GET', '/api/applications/' . $application->id)->assertStatus(200);
-        $this->asAdministrator()->json('GET', '/api/applications/' . $application2->id)->assertStatus(200);
+        // Administrator can see all
+        $this->asAdministrator()->json('GET', '/api/applications/'.$application->id)->assertStatus(200);
+        $this->asAdministrator()->json('GET', '/api/applications/'.$application2->id)->assertStatus(200);
 
-        //Applicant can see own
-        $this->asApplicant()->json('GET', '/api/applications/' . $application->id)->assertStatus(200);
-        $this->asApplicant()->json('GET', '/api/applications/' . $application2->id)->assertStatus(403);
+        // Applicant can see own
+        $this->asApplicant()->json('GET', '/api/applications/'.$application->id)->assertStatus(200);
+        $this->asApplicant()->json('GET', '/api/applications/'.$application2->id)->assertStatus(403);
 
-        //Applicant2 can see own
-        $this->asApplicant2()->json('GET', '/api/applications/' . $application->id)->assertStatus(403);
-        $this->asApplicant2()->json('GET', '/api/applications/' . $application2->id)->assertStatus(200);
+        // Applicant2 can see own
+        $this->asApplicant2()->json('GET', '/api/applications/'.$application->id)->assertStatus(403);
+        $this->asApplicant2()->json('GET', '/api/applications/'.$application2->id)->assertStatus(200);
     }
 
     public function testCreate()
@@ -105,7 +104,7 @@ class ApplicationTest extends TestCase
                 'last_name' => 'Last_name',
                 'club' => 'Club',
                 'race_id' => $application->race->id,
-            ]
+            ],
         ])->assertStatus(201);
     }
 
@@ -116,8 +115,8 @@ class ApplicationTest extends TestCase
         $application = $this->createApplicationModel($userApplicant);
 
         $this->assertEquals(1, Application::count());
-        $this->asApplicant2()->json('DELETE', '/api/applications/' . $application->id)->assertStatus(403);
-        $this->asApplicant()->json('DELETE', '/api/applications/' . $application->id)->assertStatus(200);
+        $this->asApplicant2()->json('DELETE', '/api/applications/'.$application->id)->assertStatus(403);
+        $this->asApplicant()->json('DELETE', '/api/applications/'.$application->id)->assertStatus(200);
 
         $this->assertEquals(0, Application::count());
     }

@@ -7,7 +7,8 @@ class CreateRaceCommand
     public function __construct(
         private readonly string $name,
         private readonly string $distance
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {

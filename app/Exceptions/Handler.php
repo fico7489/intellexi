@@ -3,11 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Throwable;
-use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
 {
@@ -19,9 +18,7 @@ class Handler extends ExceptionHandler
 
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-
-            //
+        $this->reportable(function (\Throwable $e) {
         });
 
         $this->renderable(function (UnauthorizedHttpException $e, Request $request) {
@@ -36,7 +33,7 @@ class Handler extends ExceptionHandler
             return $this->reportGenericApiException(404, 'Not found');
         });
 
-        $this->renderable(function (Throwable $e, Request $request) {
+        $this->renderable(function (\Throwable $e, Request $request) {
             return $this->reportGenericApiException(500, 'Internal error');
         });
     }
@@ -45,7 +42,7 @@ class Handler extends ExceptionHandler
     {
         return response()->json([
             'code' => $code,
-            'message' => $message
+            'message' => $message,
         ], $code);
     }
 }

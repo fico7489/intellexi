@@ -8,7 +8,7 @@ use Ecotone\Modelling\Attribute\QueryHandler;
 class RacesSimpleQueryHandler
 {
     #[QueryHandler]
-    public function handle(RacesSimpleQuery $query) : array
+    public function handle(RacesSimpleQuery $query): array
     {
         $races = Race::all();
 
@@ -19,7 +19,6 @@ class RacesSimpleQueryHandler
                 'distance' => $race->distance,
             ];
         }
-
 
         return $data;
     }

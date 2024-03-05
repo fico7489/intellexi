@@ -28,7 +28,7 @@ class Kernel extends HttpKernel
     ];
 
     protected $middlewareAliases = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => Middleware\Authenticate::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];

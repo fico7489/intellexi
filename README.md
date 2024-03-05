@@ -13,7 +13,9 @@ http://localhost:5005/api/race
 
 
 
-
+- vendor/bin/php-cs-fixer fix
+- vendor/bin/phpstan analyse
+- vendor/bin/phpunit
 
 
 

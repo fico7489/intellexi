@@ -9,12 +9,12 @@ class ErrorHandlerTest extends TestCase
 {
     public function testErrorHandler()
     {
-        $response = $this->json('GET', '/api/races/' . 1)->assertStatus(401)->json();
+        $response = $this->json('GET', '/api/races/'. 1)->assertStatus(401)->json();
         $this->assertEquals('Unauthorized', $response['message']);
         $this->assertEquals(401, $response['code']);
 
         $race = Race::create(['name' => 'Test race', 'distance' => '5k']);
-        $response = $this->asApplicant()->json('PATCH', '/api/races/' . $race->id ,[])->assertStatus(403)->json();
+        $response = $this->asApplicant()->json('PATCH', '/api/races/'.$race->id, [])->assertStatus(403)->json();
         $this->assertEquals('Access Denied', $response['message']);
         $this->assertEquals(403, $response['code']);
 

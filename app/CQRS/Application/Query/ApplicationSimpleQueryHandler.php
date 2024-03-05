@@ -3,7 +3,6 @@
 namespace App\CQRS\Application\Query;
 
 use App\Models\Application;
-use App\Models\Race;
 use Ecotone\Modelling\Attribute\QueryHandler;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -11,11 +10,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class ApplicationSimpleQueryHandler
 {
     #[QueryHandler]
-    public function handle(ApplicationSimpleQuery $query) : array
+    public function handle(ApplicationSimpleQuery $query): array
     {
         $application = Application::findOrFail($query->getId());
 
-        if (! Gate::allows('manage-application', $application)) {
+        if (!Gate::allows('manage-application', $application)) {
             throw new AccessDeniedHttpException();
         }
 

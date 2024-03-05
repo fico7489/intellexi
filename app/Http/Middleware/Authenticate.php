@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +12,7 @@ use Tymon\JWTAuth\Token;
 
 class Authenticate
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
         try {
             $token = $request->bearerToken();
@@ -25,7 +24,7 @@ class Authenticate
             $user = User::where(['id' => $id])->first();
 
             Auth::login($user);
-        }catch (\Throwable $t){
+        } catch (\Throwable $t) {
             throw new UnauthorizedHttpException('Unauthorized');
         }
 
