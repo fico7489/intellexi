@@ -1,0 +1,35 @@
+services:
+
+    nginx:
+        container_name: intellexi_nginx
+        build: ./.docker/nginx
+        volumes:
+            - ./:/var/www/html
+            - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+        ports:
+            - '5005:80'
+
+    php:
+        container_name: intellexi_php
+        build: ./.docker/php
+        volumes:
+            - ./:/var/www/html
+
+    mysql:
+        container_name: intellexi_mysql
+        build: ./.docker/mysql
+        environment:
+            - "MYSQL_ROOT_PASSWORD=root"
+            - "MYSQL_DATABASE=intellexi"
+            - "MYSQL_USER=intellexi"
+            - "MYSQL_PASSWORD=intellexi"
+        volumes:
+            - db-data-intellexi:/var/lib/mysql
+            - ./:/app
+        ports:
+            - "33309:3306"
+
+volumes:
+    db-data-intellexi:
+
+
