@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "8.2.*",
+        "ecotone/laravel": "^1.213",
         "laravel/framework": "10.*",
         "tymon/jwt-auth": "2.*"
     },

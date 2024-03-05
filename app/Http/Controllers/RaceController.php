@@ -2,89 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\CQRS\Command\CreateRaceCommand;
+use App\CQRS\Command\DeleteRaceCommand;
+use App\CQRS\Command\UpdateRaceCommand;
+use App\CQRS\Query\Race\RaceSimpleQuery;
+use App\CQRS\Query\Race\RacesSimpleQuery;
 use App\Models\Race;
+use Ecotone\Modelling\CommandBus;
+use Ecotone\Modelling\QueryBus;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Gate;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Illuminate\Support\Facades\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class RaceController extends Controller
 {
+    public function __construct(private readonly CommandBus $commandBus, private readonly QueryBus $queryBus) {}
+
     public function getAll() : JsonResponse
     {
-        $races = Race::all();
-
-        $data = [];
-        foreach ($races as $race) {
-            $data[] = [
-                'name' => $race->name,
-                'distance' => $race->distance,
-            ];
-        }
-
-        return new JsonResponse([
-            'data' => $data,
-        ], 200);
+        return $this->dataResponse($this->queryBus->send(new RacesSimpleQuery()));
     }
 
     public function get($id) : JsonResponse
     {
-        $race = Race::findOrFail($id);
-
-        return new JsonResponse([
-            'data' => [
-                'name' => $race->name,
-                'distance' => $race->distance,
-            ]
-        ]);
+        return $this->dataResponse($this->queryBus->send(new RaceSimpleQuery($id)));
     }
 
     public function create() : JsonResponse
     {
-        if (! Gate::allows('manage-race')) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->commandBus->send(new CreateRaceCommand(Request::get('name'), Request::get('distance')));
 
-        $race = Race::create(Request::all());
-
-        return new JsonResponse([
-            'data' => [
-                'name' => $race->name,
-                'distance' => $race->distance,
-            ]
-        ], 201);
+        return $this->emptyResponse(201);
     }
 
     public function update($id) : JsonResponse
     {
-        if (! Gate::allows('manage-race')) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->commandBus->send(new UpdateRaceCommand($id, Request::get('name'), Request::get('distance')));
 
-        $race = Race::findOrFail($id);
-
-        $race->update(Request::all());
-
-        return new JsonResponse([
-            'data' => [
-                'name' => $race->name,
-                'distance' => $race->distance,
-            ]
-        ]);
+        return $this->emptyResponse(200);
     }
 
     public function delete($id) : JsonResponse
     {
-        if (! Gate::allows('manage-race')) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->commandBus->send(new DeleteRaceCommand($id));
 
-        $race = Race::findOrFail($id);
-
-        $race->delete();
-
-        return new JsonResponse([]);
+        return $this->emptyResponse();
     }
 }

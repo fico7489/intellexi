@@ -44,12 +44,7 @@ class RaceTest extends TestCase
             'distance' => 'marathon',
         ];
 
-        $this->asAdministrator()->post('/api/races', $data)->assertJson([
-            'data' => [
-                'name' => 'Test race3',
-                'distance' => 'marathon',
-            ]
-        ])->assertStatus(201);
+        $this->asAdministrator()->post('/api/races', $data)->assertStatus(201);
 
         $this->asApplicant()->post('/api/races', $data)->assertStatus(403);
     }
@@ -60,11 +55,6 @@ class RaceTest extends TestCase
 
         $this->asAdministrator()->patch('/api/races/' . $race->id, [
             'distance' => '10k',
-        ])->assertJson([
-            'data' => [
-                'name' => 'Test race',
-                'distance' => '10k',
-            ]
         ])->assertStatus(200);
 
         $this->asApplicant()->patch('/api/races/' . $race->id, [])->assertStatus(403);
