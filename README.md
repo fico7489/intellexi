@@ -21,10 +21,12 @@ Notes:
 
 Do sad nisam radio sa CQRS patternom, znao sam samo površno što je to, pa sam u ovome projektu složio neki mix što sam proučio u dva dana 
 tako da vjerojatno nisam 100% pogodio. Pogledao sam desetak članaka o CQRS te se u svakome se radi drugačije i koliko vidim nema baš straightforward uputa.
+Uzeo sam neki "upitan" paket za to ali poslužit će svrsi za ovaj testni zadatak.
 
-API je složen sirov, vraća sirove podatke nije implementiran JSONAPI ili nešto slično.
+API je složen sirov, vraća čiste podatke, nije implementiran JSONAPI ili nešto slično, nije bilo uputa.
 
 Testovima je pokrivena sva authentifikacija (tko šta može).
+
 
 
 Pay attention to the following:

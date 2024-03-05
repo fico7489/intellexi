@@ -5,6 +5,7 @@ namespace App\CQRS\Race\Command;
 use App\Models\Race;
 use Ecotone\Modelling\Attribute\CommandHandler;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class CreateRaceCommandHandler
@@ -16,14 +17,16 @@ class CreateRaceCommandHandler
             throw new AccessDeniedHttpException();
         }
 
-        request()->validate([
+        $data = [
+            'name' => $command->getName(),
+            'distance' => $command->getDistance(),
+        ];
+
+        Validator::make($data, [
             'name' => 'required|max:255',
             'distance' => 'in:'.implode(',', Race::RACES),
-        ]);
+        ])->validate();
 
-        $race = new Race();
-        $race->name = $command->getName();
-        $race->distance = $command->getDistance();
-        $race->save();
+        Race::create($data);
     }
 }
