@@ -10,6 +10,9 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasUuids;
 
+    public const ROLE_ADMINISTRATOR = 'Administrator';
+    public const ROLE_APPLICANT = 'Applicant';
+
     protected $fillable = [
         'first_name',
         'last_name',

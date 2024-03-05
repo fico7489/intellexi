@@ -16,6 +16,11 @@ class CreateRaceCommandHandler
             throw new AccessDeniedHttpException();
         }
 
+        request()->validate([
+            'name' => 'required|max:255',
+            'distance' => 'in:'.implode(',', Race::RACES),
+        ]);
+
         $race = new Race();
         $race->name = $command->getName();
         $race->distance = $command->getDistance();

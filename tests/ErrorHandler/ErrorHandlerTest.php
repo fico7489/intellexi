@@ -22,6 +22,18 @@ class ErrorHandlerTest extends TestCase
         $this->assertEquals('Not found', $response['message']);
         $this->assertEquals(404, $response['code']);
 
+        $response = $this->asAdministrator()->json('POST', '/api/races', ['distance' => 'test'])->assertStatus(422)->json();
+        $this->assertEquals('Validation Exception', $response['message']);
+        $this->assertEquals(422, $response['code']);
+        $this->assertEquals([
+            'name' => [
+                'The name field is required.',
+            ],
+            'distance' => [
+                'The selected distance is invalid.',
+            ],
+        ], $response['errors']);
+
         $response = $this->asAdministrator()->json('GET', '/api/test/exception/500')->assertStatus(500)->json();
         $this->assertEquals('Internal error', $response['message']);
         $this->assertEquals(500, $response['code']);

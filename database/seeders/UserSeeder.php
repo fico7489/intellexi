@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'last_name' => 'Administrator',
             'email' => 'administrator@example.com',
             'dob' => '1990-01-01',
-            'role' => 'Administrator',
+            'role' => User::ROLE_ADMINISTRATOR,
         ]);
 
         //Applicant
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'last_name' => 'Applicant',
             'email' => 'applicant@example.com',
             'dob' => '1990-01-01',
-            'role' => 'Applicant',
+            'role' => User::ROLE_APPLICANT,
         ]);
 
         //Applicant2
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             'last_name' => 'Applicant2',
             'email' => 'applicant2@example.com',
             'dob' => '1990-01-01',
-            'role' => 'Applicant',
+            'role' => User::ROLE_APPLICANT,
         ]);
     }
 }

@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('club');
+            $table->string('first_name', 255);
+            $table->string('last_name', 255);
+            $table->string('club', 255)->nullable();
             $table->uuid('race_id');
             $table->uuid('user_id');
 

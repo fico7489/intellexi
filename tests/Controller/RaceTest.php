@@ -41,7 +41,7 @@ class RaceTest extends TestCase
     {
         $data = [
             'name' => 'Test race3',
-            'distance' => 'marathon',
+            'distance' => 'Marathon',
         ];
 
         $this->asAdministrator()->post('/api/races', $data)->assertStatus(201);

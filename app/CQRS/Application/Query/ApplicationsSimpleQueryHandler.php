@@ -3,6 +3,7 @@
 namespace App\CQRS\Application\Query;
 
 use App\Models\Application;
+use App\Models\User;
 use Ecotone\Modelling\Attribute\QueryHandler;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,7 @@ class ApplicationsSimpleQueryHandler
     {
         $applications = Application::where([]);
 
-        if ('Applicant' === Auth::user()->role) {
+        if (User::ROLE_APPLICANT === Auth::user()->role) {
             $applications->where(['user_id' => Auth::user()->id]);
         }
 

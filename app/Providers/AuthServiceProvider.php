@@ -15,13 +15,13 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('manage-race', function (User $user) {
-            return 'Administrator' === $user->role;
+            return User::ROLE_ADMINISTRATOR === $user->role;
         });
 
         Gate::define('manage-application', function (User $user, Application $application) {
             return
-                'Administrator' === $user->role
-                or ('Applicant' === $user->role and $application->user_id == $user->id);
+                User::ROLE_ADMINISTRATOR === $user->role
+                or (User::ROLE_APPLICANT === $user->role and $application->user_id == $user->id);
         });
     }
 }

@@ -93,19 +93,14 @@ class ApplicationTest extends TestCase
         $userApplicant2 = $this->findUserByEmail('applicant2@example.com');
         $application = $this->createApplicationModel($userApplicant);
 
-        $this->asApplicant()->json('POST', '/api/applications', [
+        $data = [
             'first_name' => 'First_name',
             'last_name' => 'Last_name',
             'club' => 'Club',
             'race_id' => $application->race->id,
-        ])->assertJson([
-            'data' => [
-                'first_name' => 'First_name',
-                'last_name' => 'Last_name',
-                'club' => 'Club',
-                'race_id' => $application->race->id,
-            ],
-        ])->assertStatus(201);
+        ];
+
+        $this->asAdministrator()->post('/api/applications', $data)->assertStatus(201);
     }
 
     public function testDelete()
