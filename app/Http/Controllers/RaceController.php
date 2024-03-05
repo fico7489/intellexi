@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\CQRS\Command\CreateRaceCommand;
-use App\CQRS\Command\DeleteRaceCommand;
-use App\CQRS\Command\UpdateRaceCommand;
-use App\CQRS\Query\Race\RaceSimpleQuery;
-use App\CQRS\Query\Race\RacesSimpleQuery;
-use App\Models\Race;
+use App\CQRS\Race\Command\CreateRaceCommand;
+use App\CQRS\Race\Command\DeleteRaceCommand;
+use App\CQRS\Race\Command\UpdateRaceCommand;
+use App\CQRS\Race\Query\Race\RaceSimpleQuery;
+use App\CQRS\Race\Query\Race\RacesSimpleQuery;
 use Ecotone\Modelling\CommandBus;
 use Ecotone\Modelling\QueryBus;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class RaceController extends Controller
 {

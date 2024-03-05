@@ -1,5 +1,5 @@
 <?php
-namespace App\CQRS\Command;
+namespace App\CQRS\Race\Command;
 
 use App\Models\Race;
 use Ecotone\Modelling\Attribute\CommandHandler;

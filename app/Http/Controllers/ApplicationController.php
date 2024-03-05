@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\CQRS\Application\Query\ApplicationSimpleQuery;
+use App\CQRS\Application\Query\ApplicationsSimpleQuery;
+use App\CQRS\Race\Query\Race\RaceSimpleQuery;
+use App\CQRS\Race\Query\Race\RacesSimpleQuery;
 use App\Models\Application;
 use App\Models\Race;
+use Ecotone\Modelling\CommandBus;
+use Ecotone\Modelling\QueryBus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,49 +19,16 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ApplicationController extends Controller
 {
+    public function __construct(private readonly CommandBus $commandBus, private readonly QueryBus $queryBus) {}
+
     public function getAll(): JsonResponse
     {
-        $applications = Application::where([]);
-
-        if (Auth::user()->role === 'Applicant') {
-            $applications->where(['user_id' => Auth::user()->id]);
-        }
-
-        $applications = $applications->get();
-
-        $data = [];
-        foreach ($applications as $application) {
-            $data[] = [
-                'first_name' => $application->first_name,
-                'last_name' => $application->last_name,
-                'club' => $application->club,
-                'race_id' => $application->race_id,
-                'user_id' => $application->user_id,
-            ];
-        }
-
-        return new JsonResponse([
-            'data' => $data,
-        ], 200);
+        return $this->dataResponse($this->queryBus->send(new ApplicationsSimpleQuery()));
     }
 
     public function get($id): JsonResponse
     {
-        $application = Application::findOrFail($id);
-
-        if (! Gate::allows('manage-application', $application)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        return new JsonResponse([
-            'data' => [
-                'first_name' => $application->first_name,
-                'last_name' => $application->last_name,
-                'club' => $application->club,
-                'race_id' => $application->race_id,
-                'user_id' => $application->user_id,
-            ]
-        ]);
+        return $this->dataResponse($this->queryBus->send(new ApplicationSimpleQuery($id)));
     }
 
     public function create(): JsonResponse

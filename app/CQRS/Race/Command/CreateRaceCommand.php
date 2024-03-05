@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CQRS\Command;
+namespace App\CQRS\Race\Command;
 
 class CreateRaceCommand
 {

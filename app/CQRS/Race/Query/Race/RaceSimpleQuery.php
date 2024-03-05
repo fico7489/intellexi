@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CQRS\Query\Race;
+namespace App\CQRS\Race\Query\Race;
 
 class RaceSimpleQuery
 {
