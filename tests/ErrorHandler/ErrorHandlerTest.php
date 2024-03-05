@@ -21,5 +21,9 @@ class ErrorHandlerTest extends TestCase
         $response = $this->asAdministrator()->json('GET', '/api/races/1')->assertStatus(404)->json();
         $this->assertEquals('Not found', $response['message']);
         $this->assertEquals(404, $response['code']);
+
+        $response = $this->asAdministrator()->json('GET', '/api/test/exception/500')->assertStatus(500)->json();
+        $this->assertEquals('Internal error', $response['message']);
+        $this->assertEquals(500, $response['code']);
     }
 }

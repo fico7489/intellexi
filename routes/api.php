@@ -3,7 +3,9 @@
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RaceController;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
@@ -20,4 +22,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/applications/{id}', [ApplicationController::class, 'get']);
     Route::post('/applications', [ApplicationController::class, 'create']);
     Route::delete('/applications/{id}', [ApplicationController::class, 'delete']);
+});
+
+Route::get('/test/exception/500', function (){
+    if(App::environment() !== 'testing'){
+        throw new NotFoundHttpException();
+    }
+
+    //testing 500 exceptions, laravel does not have feature to enable routes per environment?
+    1 / 0;
 });
