@@ -14,6 +14,7 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        Artisan::call('db:wipe');
         Artisan::call('migrate');
         Artisan::call('db:seed');
 
