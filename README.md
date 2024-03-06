@@ -17,10 +17,9 @@
 
 ### With Makefile
 
-- Set up local app: make install_local_app
 - Run tests:  make install_tests
 - Run tests with mysql:  make install_tests_mysql
-
+- Set up local app: make install_local_app
 
 ## Notes
 
