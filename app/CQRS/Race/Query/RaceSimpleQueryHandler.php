@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CQRS\Race\Query\Race;
+namespace App\CQRS\Race\Query;
 
 use App\Models\Race;
 use Ecotone\Modelling\Attribute\QueryHandler;
