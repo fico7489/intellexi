@@ -1,6 +1,6 @@
 # Intellexi projekt - Filip Horvat - 6.3.2024.
 
-[Zadatak](/docs/assignment.docx)
+[Assigment](/docs/assignment.docx)
 
 ## Set up project
 
