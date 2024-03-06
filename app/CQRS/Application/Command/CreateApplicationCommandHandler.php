@@ -26,6 +26,6 @@ class CreateApplicationCommandHandler
             'race_id' => 'required',
         ])->validate();
 
-        $application = Application::create(array_merge($data, ['user_id' => Auth::user()->id]));
+        Application::create(array_merge($data, ['user_id' => Auth::user()->id]));
     }
 }

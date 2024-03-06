@@ -17,13 +17,13 @@ class UpdateRaceCommandHandler
             throw new AccessDeniedHttpException();
         }
 
-        /*Validator::make([
+        Validator::make([
             'name' => $command->getName(),
             'distance' => $command->getDistance(),
-        ],[
-            'name' => 'required|max:255',
+        ], [
+            'name' => 'max:255',
             'distance' => 'in:'.implode(',', Race::RACES),
-        ])->validate();*/
+        ])->validate();
 
         $race = Race::findOrFail($command->getId());
 
