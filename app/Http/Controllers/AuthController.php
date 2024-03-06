@@ -15,13 +15,11 @@ class AuthController extends Controller
         $user = User::where(['email' => Request::get('email')])->first();
 
         if (!$user) {
-            throw new UnauthorizedHttpException();
+            throw new UnauthorizedHttpException('Unauthorized');
         }
 
-        $token = JWTAuth::fromUser($user);
-
         return new JsonResponse([
-            'token' => $token,
+            'token' => JWTAuth::fromUser($user),
         ], 200);
     }
 }

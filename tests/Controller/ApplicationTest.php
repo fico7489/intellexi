@@ -90,7 +90,6 @@ class ApplicationTest extends TestCase
     public function testCreate()
     {
         $userApplicant = $this->findUserByEmail('applicant@example.com');
-        $userApplicant2 = $this->findUserByEmail('applicant2@example.com');
         $application = $this->createApplicationModel($userApplicant);
 
         $data = [
@@ -106,7 +105,6 @@ class ApplicationTest extends TestCase
     public function testDelete()
     {
         $userApplicant = $this->findUserByEmail('applicant@example.com');
-        $userApplicant2 = $this->findUserByEmail('applicant2@example.com');
         $application = $this->createApplicationModel($userApplicant);
 
         $this->assertEquals(1, Application::count());

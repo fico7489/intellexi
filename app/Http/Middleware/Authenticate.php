@@ -25,6 +25,7 @@ class Authenticate
 
             Auth::login($user);
         } catch (\Throwable $t) {
+            // TODO more fine grained exceptions
             throw new UnauthorizedHttpException('Unauthorized');
         }
 
