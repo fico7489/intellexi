@@ -7,8 +7,8 @@ class ApplicationIndex
     public function getData() : array
     {
         return [
-            'first_name',
-            'last_name',
+            'firstName',
+            'lastName',
             'user' => [
                 'email',
                 'userType' => [
