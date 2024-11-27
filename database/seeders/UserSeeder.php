@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         //Administrator
         User::create([

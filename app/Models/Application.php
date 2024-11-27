@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Application extends Model
 {
-    use HasUuids;
-
     protected $fillable = [
         'first_name',
         'last_name',

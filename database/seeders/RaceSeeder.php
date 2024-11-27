@@ -10,13 +10,17 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class UserTypeSeeder extends Seeder
+class RaceSeeder extends Seeder
 {
     public function run(): void
     {
-        //Administrator
-        UserType::create(['name' => 'First']);
-        UserType::create(['name' => 'Second']);
-        UserType::create(['name' => 'Third']);
+        for ($i = 0; $i < 10; $i++) {
+            $faker = Factory::create();
+
+            Race::create([
+                'name' => $faker->name(),
+                'distance' => Race::RACES[random_int(1, 3)],
+            ]);
+        }
     }
 }
