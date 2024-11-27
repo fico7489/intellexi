@@ -13,6 +13,9 @@ class ApplicationIndex
                 'email',
                 'userType' => [
                     'name'
+                ],
+                'applications' => [
+                    'club'
                 ]
             ]
         ];

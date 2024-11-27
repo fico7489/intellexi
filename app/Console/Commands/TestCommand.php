@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\ES\ApplicationIndex;
 use App\Models\Application;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class TestCommand extends Command
@@ -34,7 +35,16 @@ class TestCommand extends Command
             if(is_int($key)){
                 $modelData[$value] = $model->{$value};
             }else{
-                $modelData[$key] = $this->fetchData($value, $model->{$key});
+                $relation = $model->{$key};
+
+                if($relation instanceof Model){
+                    $modelData[$key] = $this->fetchData($value, $relation);
+                }elseif ($relation instanceof Collection){
+                    $modelData[$key] = [];
+                    foreach ($relation as $item){
+                        $modelData[$key][] = $this->fetchData($value, $item);
+                    }
+                }
             }
         }
 
