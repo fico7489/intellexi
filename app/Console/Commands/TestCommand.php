@@ -20,9 +20,6 @@ class TestCommand extends Command
 
     public function handle()
     {
-        $reflection = new \ReflectionClass(Application::class);
-        $methods = $reflection->getMethods();
-
         //$this->testData();
         $this->testMapping();
     }
