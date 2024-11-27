@@ -28,9 +28,13 @@ class TestCommand extends Command
     {
         $model = Application::find(1);
 
-        $data = app(ApplicationIndex::class)->getData();
+        /** @var ApplicationIndex $applicationIndex */
+        $applicationIndex = app(ApplicationIndex::class);
 
-        $mapping = $this->fetchMapping($data, $model);
+        $data = $applicationIndex->getData();
+        $className = $applicationIndex->getClassName();
+
+        $mapping = $this->fetchMapping($data, new $className);
 
         dd($mapping);
     }
