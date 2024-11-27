@@ -20,8 +20,8 @@ class TestCommand extends Command
 
     public function handle()
     {
-        $this->testData();
-        //$this->testMapping();
+        //$this->testData();
+        $this->testMapping();
     }
 
     private function testMapping()
@@ -69,12 +69,13 @@ class TestCommand extends Command
         dd($modelData);
     }
 
-    private function fetchData(array $data, Model $model): array
+    private
+    function fetchData(array $data, Model $model): array
     {
         $modelData = [];
         foreach ($data as $key => $value) {
             if (is_int($key)) {
-                $modelData[$value] = $model->{$this->camelToSnake($value)};
+                $modelData[$value] = $model->{$value};
             } else {
                 $relation = $model->{$key};
 
@@ -90,10 +91,5 @@ class TestCommand extends Command
         }
 
         return $modelData;
-    }
-
-    private function camelToSnake($input): string
-    {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $input));
     }
 }
