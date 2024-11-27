@@ -7,6 +7,7 @@ use App\Models\Application;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TestCommand extends Command
 {
@@ -19,8 +20,45 @@ class TestCommand extends Command
 
     public function handle()
     {
-        $this->testData();
+        $reflection = new \ReflectionClass(Application::class);
+        $methods = $reflection->getMethods();
+
+        //$this->testData();
+        $this->testMapping();
     }
+
+    private function testMapping(){
+        $model = Application::find(1);
+
+        $data = app(ApplicationIndex::class)->getData();
+
+        $mapping = $this->fetchMapping($data, $model);
+
+        dd($mapping);
+    }
+
+    private function fetchMapping(array $data, Model $model): array
+    {
+        $mapping = [];
+        foreach ($data as $key => $value) {
+            if(is_int($key)){
+                $mapping[$value] = ['type' => 'string'];
+            }else{
+                /** @var BelongsTo $relation */
+                $relation = (new $model())->race();
+
+                if($relation instanceof BelongsTo){
+                    $mapping[$key] = [
+                        'type' => 'object',
+                        'properties' => [],
+                    ];
+                }
+            }
+        }
+
+        return $mapping;
+    }
+
 
     private function testData(){
         $model = Application::find(1);
