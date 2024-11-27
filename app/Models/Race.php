@@ -23,7 +23,8 @@ class Race extends Model
     ];
 
     protected $fillable = [
-        'name', 'distance',
+        'name',
+        'distance',
     ];
 
     public function race(): HasMany
