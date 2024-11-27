@@ -9,12 +9,11 @@ class ApplicationIndex
         return [
             'first_name',
             'last_name',
-            'race' => [
-                'name',
-                'distance',
-            ],
             'user' => [
                 'email',
+                'userType' => [
+                    'name'
+                ]
             ]
         ];
     }

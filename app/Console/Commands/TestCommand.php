@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\ES\ApplicationIndex;
 use App\Models\Application;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 
 class TestCommand extends Command
 {
@@ -21,15 +22,22 @@ class TestCommand extends Command
 
         $data = app(ApplicationIndex::class)->getData();
 
+        $modelData = $this->fetchData($data, $model);
+
+        dd($modelData);
+    }
+
+    private function fetchData(array $data, Model $model): array
+    {
         $modelData = [];
         foreach ($data as $key => $value) {
             if(is_int($key)){
                 $modelData[$value] = $model->{$value};
             }else{
-
+                $modelData[$key] = $this->fetchData($value, $model->{$key});
             }
         }
 
-        dd($modelData);
+        return $modelData;
     }
 }
