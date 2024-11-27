@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use Airalo\Lov\Repositories\LovBundleRepository;
 use App\Console\Commands\TestCommand;
-use GuzzleHttp\ClientInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
