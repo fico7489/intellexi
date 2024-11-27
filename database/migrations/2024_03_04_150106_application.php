@@ -9,12 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applications', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->bigIncrements('id');
             $table->string('first_name', 255);
             $table->string('last_name', 255);
             $table->string('club', 255)->nullable();
-            $table->uuid('race_id');
-            $table->uuid('user_id');
+            $table->unsignedBigInteger('race_id');
+            $table->unsignedBigInteger('user_id');
 
             $table->foreign('race_id')->references('id')->on('races');
             $table->foreign('user_id')->references('id')->on('users');
@@ -23,8 +23,5 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
-    {
-        //
-    }
+    public function down(): void{}
 };

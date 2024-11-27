@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use HasUuids;
-
     public const ROLE_ADMINISTRATOR = 'Administrator';
     public const ROLE_APPLICANT = 'Applicant';
 
@@ -21,13 +20,8 @@ class User extends Authenticatable implements JWTSubject
         'role',
     ];
 
-    public function getJWTIdentifier()
+    public function userType(): BelongsTo
     {
-        return $this->id;
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
+        return $this->belongsTo(UserType::class);
     }
 }

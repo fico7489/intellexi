@@ -26,4 +26,9 @@ class Race extends Model
         'name',
         'distance',
     ];
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
 }
