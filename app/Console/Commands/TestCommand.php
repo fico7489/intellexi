@@ -49,21 +49,19 @@ class TestCommand extends Command
                 $relation = (new $model())->{$key}();
 
                 $type = $relation instanceof BelongsTo ? 'object' : 'nested';
-                    $related = $relation->getRelated();
+                $related = $relation->getRelated();
 
-                    $mapping[$key] = [
-                        'type' => $type,
-                        'properties' => $this->fetchMapping($value, $related),
-                    ];
-                }
+                $mapping[$key] = [
+                    'type' => $type,
+                    'properties' => $this->fetchMapping($value, $related),
+                ];
+            }
         }
 
         return $mapping;
     }
 
-
-    private
-    function testData()
+    private function testData()
     {
         $model = Application::find(1);
 
