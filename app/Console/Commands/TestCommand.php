@@ -45,12 +45,14 @@ class TestCommand extends Command
                 $mapping[$value] = ['type' => 'string'];
             }else{
                 /** @var BelongsTo $relation */
-                $relation = (new $model())->race();
+                $relation = (new $model())->{$key}();
 
                 if($relation instanceof BelongsTo){
+                    $related = $relation->getRelated();
+
                     $mapping[$key] = [
                         'type' => 'object',
-                        'properties' => [],
+                        'properties' => $this->fetchMapping($value, $related),
                     ];
                 }
             }
