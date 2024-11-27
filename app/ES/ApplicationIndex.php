@@ -11,7 +11,7 @@ class ApplicationIndex
         return Application::class;
     }
 
-    public function getData() : array
+    public function getConfigModel() : array
     {
         return [
             'first_name',

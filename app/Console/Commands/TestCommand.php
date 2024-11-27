@@ -31,10 +31,10 @@ class TestCommand extends Command
         /** @var ApplicationIndex $applicationIndex */
         $applicationIndex = app(ApplicationIndex::class);
 
-        $data = $applicationIndex->getData();
+        $configModel = $applicationIndex->getConfigModel();
         $className = $applicationIndex->getClassName();
 
-        $mapping = $this->fetchMapping($data, new $className);
+        $mapping = $this->fetchMapping($configModel, new $className);
 
         dd($mapping);
     }
