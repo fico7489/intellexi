@@ -19,6 +19,10 @@ class TestCommand extends Command
 
     public function handle()
     {
+        $this->testData();
+    }
+
+    private function testData(){
         $model = Application::find(1);
 
         $data = app(ApplicationIndex::class)->getData();
