@@ -27,7 +27,8 @@ class TestCommand extends Command
         $this->testMapping();
     }
 
-    private function testMapping(){
+    private function testMapping()
+    {
         $model = Application::find(1);
 
         $data = app(ApplicationIndex::class)->getData();
@@ -41,28 +42,29 @@ class TestCommand extends Command
     {
         $mapping = [];
         foreach ($data as $key => $value) {
-            if(is_int($key)){
+            if (is_int($key)) {
                 $mapping[$value] = ['type' => 'string'];
-            }else{
+            } else {
                 /** @var BelongsTo $relation */
                 $relation = (new $model())->{$key}();
 
-                if($relation instanceof BelongsTo){
+                $type = $relation instanceof BelongsTo ? 'object' : 'nested';
                     $related = $relation->getRelated();
 
                     $mapping[$key] = [
-                        'type' => 'object',
+                        'type' => $type,
                         'properties' => $this->fetchMapping($value, $related),
                     ];
                 }
-            }
         }
 
         return $mapping;
     }
 
 
-    private function testData(){
+    private
+    function testData()
+    {
         $model = Application::find(1);
 
         $data = app(ApplicationIndex::class)->getData();
@@ -72,20 +74,21 @@ class TestCommand extends Command
         dd($modelData);
     }
 
-    private function fetchData(array $data, Model $model): array
+    private
+    function fetchData(array $data, Model $model): array
     {
         $modelData = [];
         foreach ($data as $key => $value) {
-            if(is_int($key)){
+            if (is_int($key)) {
                 $modelData[$value] = $model->{$value};
-            }else{
+            } else {
                 $relation = $model->{$key};
 
-                if($relation instanceof Model){
+                if ($relation instanceof Model) {
                     $modelData[$key] = $this->fetchData($value, $relation);
-                }elseif ($relation instanceof Collection){
+                } elseif ($relation instanceof Collection) {
                     $modelData[$key] = [];
-                    foreach ($relation as $item){
+                    foreach ($relation as $item) {
                         $modelData[$key][] = $this->fetchData($value, $item);
                     }
                 }
