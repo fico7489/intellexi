@@ -8,7 +8,7 @@
 - cd intellexi
 - cp .env.example .env
 - docker compose up -d
-- docker compose exec php
+- docker compose exec php sh
 - composer install
 - php artisan migrate
 - php artisan db:seed
