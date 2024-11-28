@@ -21,15 +21,17 @@ readonly class UpdatingMapFetcher
             $indexName = $indexDefiner->getIndexName();
             $className = $indexDefiner->getClassName();
 
-            $updatingFieldsRelated = $indexDefiner->getUpdatingFieldsRelated();
+            //root
+            $updatingFields = $indexDefiner->getUpdatingFields();
+            $updatingMap[$className][$indexName] = $updatingFields;
 
+            //related
+            $updatingFieldsRelated = $indexDefiner->getUpdatingFieldsRelated();
             foreach ($updatingFieldsRelated as $classNameRelated => $fieldsRelated) {
                 $updatingMap[$classNameRelated][$indexName] = $fieldsRelated;
             }
         }
 
-        dd($updatingMap);
-
-        return [];
+        return $updatingMap;
     }
 }
