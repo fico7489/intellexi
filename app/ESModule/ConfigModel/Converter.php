@@ -6,9 +6,10 @@ use App\ESModule\Interface\IndexInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Converter{
+class Converter
+{
     //convert configModel to mapping
-    public function convert(IndexInterface $index) :array
+    public function convert(IndexInterface $index): array
     {
         $configModel = $index->getConfigModel();
         $className = $index->getClassName();
