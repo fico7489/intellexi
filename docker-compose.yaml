@@ -24,7 +24,7 @@ services:
       - "MYSQL_USER=intellexi"
       - "MYSQL_PASSWORD=intellexi"
     volumes:
-      - db-data-intellexi:/var/lib/mysql
+      - intellexi_mysql_data:/var/lib/mysql
       - ./:/app
     ports:
       - "33309:3306"
@@ -44,7 +44,7 @@ services:
         hard: -1
     ports: [ '9200:9200' ]
     volumes:
-      - 'es-data-intellexi:/usr/share/elasticsearch/data'
+      - 'intellexi_elasticsearch_data:/usr/share/elasticsearch/data'
 
   kibana:
     container_name: intellexi_kibana
@@ -53,7 +53,7 @@ services:
     depends_on: [ 'elasticsearch' ]
 
 volumes:
-  db-data-intellexi:
-  es-data-intellexi:
+  intellexi_mysql_data:
+  intellexi_elasticsearch_data:
 
 

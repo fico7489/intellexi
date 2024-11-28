@@ -14,8 +14,11 @@ class TestCommand extends Command
 
     public function handle()
     {
+        dump(11);
         $this->testData();
+        dump(22);
         $this->testMapping();
+        dump(33);
     }
 
     private function testMapping()
