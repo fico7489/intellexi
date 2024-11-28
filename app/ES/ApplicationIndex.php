@@ -2,16 +2,17 @@
 
 namespace App\ES;
 
+use App\ESModule\Interface\IndexInterface;
 use App\Models\Application;
 
-class ApplicationIndex
+class ApplicationIndex implements IndexInterface
 {
     public function getClassName(): string
     {
         return Application::class;
     }
 
-    public function getConfigModel() : array
+    public function getConfigModel(): array
     {
         return [
             'first_name',
@@ -26,5 +27,10 @@ class ApplicationIndex
                 ]
             ]
         ];
+    }
+
+    public function getMapping(array $mapping): array
+    {
+        return $mapping;
     }
 }

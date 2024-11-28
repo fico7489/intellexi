@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\ES\ApplicationIndex;
+use App\ESModule\ConfigModel\Converter;
 use App\Models\Application;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
@@ -28,38 +29,15 @@ class TestCommand extends Command
     {
         $model = Application::find(1);
 
-        /** @var ApplicationIndex $applicationIndex */
-        $applicationIndex = app(ApplicationIndex::class);
+        /** @var ApplicationIndex $index */
+        $index = app(ApplicationIndex::class);
 
-        $configModel = $applicationIndex->getConfigModel();
-        $className = $applicationIndex->getClassName();
+        /** @var Converter $converter */
+        $converter = app(Converter::class);
 
-        $mapping = $this->fetchMapping($configModel, new $className);
+        $mapping = $converter->convert($index);
 
         dd($mapping);
-    }
-
-    private function fetchMapping(array $data, Model $model): array
-    {
-        $mapping = [];
-        foreach ($data as $key => $value) {
-            if (is_int($key)) {
-                $mapping[$value] = ['type' => 'string'];
-            } else {
-                /** @var BelongsTo $relation */
-                $relation = (new $model())->{$key}();
-
-                $type = $relation instanceof BelongsTo ? 'object' : 'nested';
-                $related = $relation->getRelated();
-
-                $mapping[$key] = [
-                    'type' => $type,
-                    'properties' => $this->fetchMapping($value, $related),
-                ];
-            }
-        }
-
-        return $mapping;
     }
 
     private function testData()
