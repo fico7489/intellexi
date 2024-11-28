@@ -7,8 +7,6 @@ use App\ESModule\ConfigModel\DataConverter;
 use App\ESModule\ConfigModel\MappingConverter;
 use App\Models\Application;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class TestCommand extends Command
 {
