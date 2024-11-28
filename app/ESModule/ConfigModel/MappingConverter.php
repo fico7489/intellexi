@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Converter
+class MappingConverter
 {
     //convert configModel to mapping
     public function convertMapping(IndexInterface $index): array
@@ -44,37 +44,5 @@ class Converter
         }
 
         return $mapping;
-    }
-
-    //convert configModel to mapping
-    public function convertData(IndexInterface $index, mixed $entity): array
-    {
-        $configModel = $index->getConfigModel();
-        $className = $index->getClassName();
-
-        return $this->fetchData($configModel, $entity);
-    }
-
-    private function fetchData(array $data, $model): array
-    {
-        $modelData = [];
-        foreach ($data as $key => $value) {
-            if (is_int($key)) {
-                $modelData[$value] = $model->{$value};
-            } else {
-                $relation = $model->{$key};
-
-                if ($relation instanceof Model) {
-                    $modelData[$key] = $this->fetchData($value, $relation);
-                } elseif ($relation instanceof Collection) {
-                    $modelData[$key] = [];
-                    foreach ($relation as $item) {
-                        $modelData[$key][] = $this->fetchData($value, $item);
-                    }
-                }
-            }
-        }
-
-        return $modelData;
     }
 }

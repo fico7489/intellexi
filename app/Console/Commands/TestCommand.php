@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use App\ES\ApplicationIndex;
-use App\ESModule\ConfigModel\Converter;
+use App\ESModule\ConfigModel\DataConverter;
+use App\ESModule\ConfigModel\MappingConverter;
 use App\Models\Application;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,7 +22,7 @@ class TestCommand extends Command
     public function handle()
     {
         $this->testData();
-        //$this->testMapping();
+        $this->testMapping();
     }
 
     private function testMapping()
@@ -29,12 +30,12 @@ class TestCommand extends Command
         /** @var ApplicationIndex $index */
         $index = app(ApplicationIndex::class);
 
-        /** @var Converter $converter */
-        $converter = app(Converter::class);
+        /** @var MappingConverter $converter */
+        $converter = app(MappingConverter::class);
 
         $mapping = $converter->convertMapping($index);
 
-        dd($mapping);
+        dump($mapping);
     }
 
     private function testData()
@@ -44,11 +45,11 @@ class TestCommand extends Command
         /** @var ApplicationIndex $index */
         $index = app(ApplicationIndex::class);
 
-        /** @var Converter $converter */
-        $converter = app(Converter::class);
+        /** @var DataConverter $converter */
+        $converter = app(DataConverter::class);
 
-        $mapping = $converter->convertData($index, $model);
+        $data = $converter->convertData($index, $model);
 
-        dd($mapping);
+        dump($data);
     }
 }
