@@ -14,22 +14,20 @@ class Converter
         $configModel = $index->getConfigModel();
         $className = $index->getClassName();
 
-        $mapping = $this->fetchMapping($configModel, new $className);
-
-        return $mapping;
+        return $this->fetchMapping($configModel, new $className);
     }
 
-    private function fetchMapping(array $data, Model $model): array
+    private function fetchMapping(array $configModel, Model $model): array
     {
         $mapping = [];
-        foreach ($data as $key => $value) {
+        foreach ($configModel as $key => $value) {
             if (is_int($key)) {
                 $propertyName = $value;
 
                 $mapping[$propertyName] = ['type' => 'string'];
             } else {
                 $relationName = $key;
-                $configModel = $value;
+                $configModelRelated = $value;
 
                 /** @var BelongsTo $relation */
                 $relation = (new $model())->{$relationName}();
@@ -39,7 +37,7 @@ class Converter
 
                 $mapping[$relationName] = [
                     'type' => $type,
-                    'properties' => $this->fetchMapping($value, $modelRelated),
+                    'properties' => $this->fetchMapping($configModelRelated, $modelRelated),
                 ];
             }
         }
