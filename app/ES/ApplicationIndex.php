@@ -33,4 +33,9 @@ class ApplicationIndex implements IndexInterface
     {
         return $mapping;
     }
+
+    public function getData(array $data, mixed $model): array
+    {
+        return $data;
+    }
 }
