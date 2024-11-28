@@ -2,7 +2,7 @@
 
 namespace App\ESModule\ConfigModel;
 
-use App\ESModule\Interface\IndexInterface;
+use App\ESModule\Interface\IndexDefinerModelInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MappingConverter
 {
     //convert configModel to mapping
-    public function convertMapping(IndexInterface $index): array
+    public function convertMapping(IndexDefinerModelInterface $index): array
     {
         $configModel = $index->getConfigModel();
         $className = $index->getClassName();

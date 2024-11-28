@@ -2,13 +2,18 @@
 
 namespace App\ES;
 
-use App\ESModule\Interface\IndexInterface;
+use App\ESModule\Interface\IndexDefinerModelInterface;
 use App\Models\Application;
 use App\Models\Race;
 use App\Models\User;
 
-class ApplicationIndex implements IndexInterface
+class ApplicationIndex implements IndexDefinerModelInterface
 {
+    public function getIndexName(): string
+    {
+        return 'applications';
+    }
+
     public function getClassName(): string
     {
         return Application::class;
@@ -58,6 +63,9 @@ class ApplicationIndex implements IndexInterface
             ],
             Race::class => [
                 'name'
+            ],
+            Application::class => [
+                'club',
             ]
         ];
     }

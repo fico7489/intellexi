@@ -2,12 +2,17 @@
 
 namespace App\ES;
 
-use App\ESModule\Interface\IndexInterface;
+use App\ESModule\Interface\IndexDefinerModelInterface;
 use App\Models\Application;
 use App\Models\User;
 
-class UserIndex implements IndexInterface
+class UserIndex implements IndexDefinerModelInterface
 {
+    public function getIndexName(): string
+    {
+        return 'users';
+    }
+
     public function getClassName(): string
     {
         return User::class;
