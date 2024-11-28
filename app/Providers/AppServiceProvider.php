@@ -9,7 +9,6 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->when(TestCommand::class)->needs('$test')->give('12344444');
     }
 
     public function boot(): void

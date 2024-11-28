@@ -14,14 +14,5 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Gate::define('manage-race', function (User $user) {
-            return User::ROLE_ADMINISTRATOR === $user->role;
-        });
-
-        Gate::define('manage-application', function (User $user, Application $application) {
-            return
-                User::ROLE_ADMINISTRATOR === $user->role
-                or (User::ROLE_APPLICANT === $user->role and $application->user_id == $user->id);
-        });
     }
 }

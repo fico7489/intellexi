@@ -15,5 +15,7 @@ class Test2Command extends Command
         $service = app(UpdatingMapFetcher::class);
 
         $updatingMap = $service->generate();
+
+        dump($updatingMap);
     }
 }
