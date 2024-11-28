@@ -7,7 +7,7 @@ use App\ES\UserIndex;
 
 class IndexDefinersFetcher
 {
-    public function fetchAll() : array
+    public function fetchAll(): array
     {
         return [
             app(ApplicationIndex::class),

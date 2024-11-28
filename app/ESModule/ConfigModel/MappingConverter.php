@@ -3,19 +3,17 @@
 namespace App\ESModule\ConfigModel;
 
 use App\ESModule\Interface\IndexDefinerModelInterface;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MappingConverter
 {
-    //convert configModel to mapping
+    // convert configModel to mapping
     public function convertMapping(IndexDefinerModelInterface $index): array
     {
         $configModel = $index->getConfigModel();
         $className = $index->getClassName();
 
-        return $this->fetchMapping($configModel, new $className);
+        return $this->fetchMapping($configModel, new $className());
     }
 
     private function fetchMapping(array $configModel, $model): array

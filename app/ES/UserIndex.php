@@ -33,19 +33,21 @@ class UserIndex implements IndexDefinerModelInterface
         return $data;
     }
 
-    public function getUpdatingFields() : array{
+    public function getUpdatingFields(): array
+    {
         return [
             'id',
             'last_name',
         ];
     }
 
-    public function getUpdatingFieldsRelated() : array{
+    public function getUpdatingFieldsRelated(): array
+    {
         return [
             Application::class => [
                 'id',
-                'club'
-            ]
+                'club',
+            ],
         ];
     }
 }

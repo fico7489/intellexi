@@ -156,8 +156,6 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,

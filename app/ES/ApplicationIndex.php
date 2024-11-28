@@ -30,12 +30,12 @@ class ApplicationIndex implements IndexDefinerModelInterface
             'user' => [
                 'email',
                 'userType' => [
-                    'name'
+                    'name',
                 ],
                 'applications' => [
-                    'club'
-                ]
-            ]
+                    'club',
+                ],
+            ],
         ];
     }
 
@@ -49,24 +49,26 @@ class ApplicationIndex implements IndexDefinerModelInterface
         return $data;
     }
 
-    public function getUpdatingFields() : array{
+    public function getUpdatingFields(): array
+    {
         return [
             'first_name',
             'last_name',
         ];
     }
 
-    public function getUpdatingFieldsRelated() : array{
+    public function getUpdatingFieldsRelated(): array
+    {
         return [
             User::class => [
-                'email'
+                'email',
             ],
             Race::class => [
-                'name'
+                'name',
             ],
             Application::class => [
                 'club',
-            ]
+            ],
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\ESModule\Interface;
 
 interface IndexDefinerModelInterface
 {
-    public function getIndexName() : string;
+    public function getIndexName(): string;
 
     public function getClassName(): string;
 
