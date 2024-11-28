@@ -24,17 +24,22 @@ class Converter
         $mapping = [];
         foreach ($data as $key => $value) {
             if (is_int($key)) {
-                $mapping[$value] = ['type' => 'string'];
+                $propertyName = $value;
+
+                $mapping[$propertyName] = ['type' => 'string'];
             } else {
+                $relationName = $key;
+                $configModel = $value;
+
                 /** @var BelongsTo $relation */
-                $relation = (new $model())->{$key}();
+                $relation = (new $model())->{$relationName}();
 
                 $type = $relation instanceof BelongsTo ? 'object' : 'nested';
-                $related = $relation->getRelated();
+                $modelRelated = $relation->getRelated();
 
-                $mapping[$key] = [
+                $mapping[$relationName] = [
                     'type' => $type,
-                    'properties' => $this->fetchMapping($value, $related),
+                    'properties' => $this->fetchMapping($value, $modelRelated),
                 ];
             }
         }
