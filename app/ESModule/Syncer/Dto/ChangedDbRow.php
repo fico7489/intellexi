@@ -1,6 +1,6 @@
 <?php
 
-namespace ESModule\Syncer\Dto;
+namespace App\ESModule\Syncer\Dto;
 
 class ChangedDbRow
 {
@@ -9,11 +9,17 @@ class ChangedDbRow
     final public const string TYPE_DELETE = 'delete';
 
     public function __construct(
+        private readonly string $database,
         private readonly string $table,
         private readonly string $identifier,
         private readonly string $type,
         private readonly array $changedFields = [],
     ) {
+    }
+
+    public function getDatabase(): string
+    {
+        return $this->database;
     }
 
     public function getTable(): string
