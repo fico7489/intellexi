@@ -15,7 +15,8 @@ class IndexCommand
     public function __construct(
         private readonly ConfigGlobalFetcher $configGlobalFetcher,
         private readonly ClientBuilder $clientBuilder,
-    ) {}
+    ) {
+    }
 
     public function fetchAll(): void
     {
