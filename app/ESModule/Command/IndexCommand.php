@@ -2,10 +2,8 @@
 
 namespace App\ESModule\Command;
 
-use App\ESModule\Client\ClientBuilder;
+use App\ESModule\Client\ClientAdapter;
 use App\ESModule\Config\ConfigGlobalFetcher;
-use Elastica\Mapping;
-use Elastica\Request;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class IndexCommand
@@ -14,7 +12,7 @@ class IndexCommand
 
     public function __construct(
         private readonly ConfigGlobalFetcher $configGlobalFetcher,
-        private readonly ClientBuilder $clientBuilder,
+        private readonly ClientAdapter       $clientAdapter,
     ) {
     }
 
@@ -23,16 +21,12 @@ class IndexCommand
         $this->info('Showing indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $client = $this->clientBuilder->build($connectionDto);
-
-            $indexes = $client->getCluster()->getIndexNames();
-            sort($indexes);
+            $indexes = $this->clientAdapter->getIndexes($connectionDto);
 
             $this->info('  Connection:'.$connectionDto->getName());
 
             foreach ($connectionDto->getIndexes() as $indexDto) {
-                $index = $client->getIndex($indexDto->getNameWithPrefix());
-                $exists = $index->exists();
+                $exists = $this->clientAdapter->indexExists($indexDto);
 
                 $this->info('    Index:'.$indexDto->getNameWithPrefix().', exists:'.($exists ? 'yes' : 'no'));
             }
@@ -46,27 +40,16 @@ class IndexCommand
         $this->info('Creating indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $client = $this->clientBuilder->build($connectionDto);
-
             $this->info('  Connection:'.$connectionDto->getName());
 
             $indexes = $connectionDto->getIndexes();
             foreach ($indexes as $indexDto) {
-                $index = $client->getIndex($indexDto->getNameWithPrefix());
-                $exists = $index->exists();
+                $exists = $this->clientAdapter->indexExists($indexDto);
 
                 $this->info('    Index:'.$indexDto->getNameWithPrefix().', exists:'.($exists ? 'yes' : 'no'));
 
                 if (!$exists) {
-                    // TODO get mapping and settings
-                    $mapping = [];
-                    $settings = [];
-
-                    $index->create($settings);
-
-                    $mappingObject = new Mapping();
-                    $mappingObject->setProperties($mapping);
-                    $mappingObject->send($index);
+                    $this->clientAdapter->createIndex($indexDto);
                 }
             }
         }
@@ -79,11 +62,11 @@ class IndexCommand
         $this->info('Deleting indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $client = $this->clientBuilder->build($connectionDto);
+            $client = $this->clientAdapter->getClient($connectionDto);
 
             $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
 
-            $client->request(sprintf('%s*', $connectionDto->getPrefix()), Request::DELETE)->getStatus();
+            $this->clientAdapter->deleteByPrefix($connectionDto);
         }
 
         $this->info('DONE');
