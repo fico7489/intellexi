@@ -3,8 +3,6 @@
 namespace App\ESModule\Client;
 
 use App\ESModule\Config\ConfigGlobalFetcher;
-use App\ESModule\Config\Dto\ConnectionDto;
-use App\ESModule\Config\Dto\IndexDto;
 use Elastica\Client;
 use Elastica\Mapping;
 use Elastica\Request;
@@ -17,8 +15,7 @@ class IndexClient
 
     public function __construct(
         private readonly ConfigGlobalFetcher $configGlobalFetcher,
-    )
-    {
+    ) {
         $params = [
             'host' => 'elasticsearch',
             'port' => 9200,
@@ -38,13 +35,13 @@ class IndexClient
         $this->info('Showing indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $this->info("  Connection:" . $connectionDto->getName());
+            $this->info('  Connection:'.$connectionDto->getName());
 
             foreach ($connectionDto->getIndexes() as $indexDto) {
                 $index = $this->client->getIndex($indexDto->getNameWithPrefix());
                 $exists = $index->exists();
 
-                $this->info("    Index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no'));
+                $this->info('    Index:'.$indexDto->getNameWithPrefix().', exists:'.($exists ? 'yes' : 'no'));
             }
         }
 
@@ -56,17 +53,17 @@ class IndexClient
         $this->info('Creating indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $this->info("  Connection:" . $connectionDto->getName());
+            $this->info('  Connection:'.$connectionDto->getName());
 
             $indexes = $connectionDto->getIndexes();
             foreach ($indexes as $indexDto) {
                 $index = $this->client->getIndex($indexDto->getNameWithPrefix());
                 $exists = $index->exists();
 
-                $this->info("    Index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no'));
+                $this->info('    Index:'.$indexDto->getNameWithPrefix().', exists:'.($exists ? 'yes' : 'no'));
 
                 if (!$exists) {
-                    //TODO get mapping and settings
+                    // TODO get mapping and settings
                     $mapping = [];
                     $settings = [];
 
@@ -87,7 +84,7 @@ class IndexClient
         $this->info('Deleting indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $this->info("  Connection:" . $connectionDto->getName(). ', prefix=' . $connectionDto->getPrefix());
+            $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
 
             $this->client->request(sprintf('%s*', $connectionDto->getPrefix()), Request::DELETE)->getStatus();
         }
@@ -102,6 +99,6 @@ class IndexClient
 
     private function info(string $string): void
     {
-        $this->output->writeln("<info>".$string."</info>");
+        $this->output->writeln('<info>'.$string.'</info>');
     }
 }

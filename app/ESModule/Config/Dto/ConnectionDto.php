@@ -11,8 +11,7 @@ class ConnectionDto
         private readonly string $host,
         private readonly string $port,
         private readonly string $prefix,
-    )
-    {
+    ) {
     }
 
     public function getName(): string

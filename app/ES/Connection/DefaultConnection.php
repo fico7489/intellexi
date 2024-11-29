@@ -4,11 +4,13 @@ namespace App\ES\Connection;
 
 class DefaultConnection
 {
-    public function getName(): string{
+    public function getName(): string
+    {
         return 'default';
     }
 
-    public function getPrefix(): string{
+    public function getPrefix(): string
+    {
         return 'prefix_';
     }
 
@@ -17,7 +19,8 @@ class DefaultConnection
         return 'elasticsearch';
     }
 
-    public function getPort(): int{
+    public function getPort(): int
+    {
         return 9200;
     }
 }

@@ -20,7 +20,7 @@ class Test3Command extends Command
 
         try {
             $indexes = $client->getCluster()->getIndexNames();
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             throw $th;
             dd(get_class($th));
         }

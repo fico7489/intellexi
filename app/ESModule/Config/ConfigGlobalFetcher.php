@@ -10,14 +10,13 @@ readonly class ConfigGlobalFetcher
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
-    )
-    {
+    ) {
     }
 
     /**
      * @return array<ConnectionDto>
      */
-    public function fetch() : array
+    public function fetch(): array
     {
         $connectionsDefiners = $this->configFetcher->fetchConnections();
         $indexDefiners = $this->configFetcher->fetchIndexes();
@@ -34,7 +33,7 @@ readonly class ConfigGlobalFetcher
 
             $indexes = [];
             foreach ($indexDefiners as $indexDefiner) {
-                if($indexDefiner->getConnection() === $connection->getName()) {
+                if ($indexDefiner->getConnection() === $connection->getName()) {
                     $indexes[] = new IndexDto(
                         $indexDefiner->getIndexName(),
                         $indexDefiner->getMapping([]),

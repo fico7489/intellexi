@@ -9,8 +9,7 @@ readonly class IndexDto
         private readonly array $mapping,
         private readonly array $settings,
         private readonly ConnectionDto $connection,
-    )
-    {
+    ) {
     }
 
     public function getName(): string
