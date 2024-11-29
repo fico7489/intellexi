@@ -12,6 +12,8 @@ interface IndexDefinerModelInterface
 
     public function getMapping(array $mapping): array;
 
+    public function getSettings(array $settings): array;
+
     public function getData(array $data, mixed $model): array;
 
     public function getUpdatingFields(): array;

@@ -8,6 +8,11 @@ use App\Models\User;
 
 class UserIndex implements IndexDefinerModelInterface
 {
+    public function getConnection(): string
+    {
+        return 'default';
+    }
+
     public function getIndexName(): string
     {
         return 'users';
@@ -26,6 +31,11 @@ class UserIndex implements IndexDefinerModelInterface
     public function getMapping(array $mapping): array
     {
         return $mapping;
+    }
+
+    public function getSettings(array $settings): array
+    {
+        return $settings;
     }
 
     public function getData(array $data, mixed $model): array

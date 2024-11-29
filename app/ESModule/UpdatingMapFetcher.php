@@ -2,17 +2,18 @@
 
 namespace App\ESModule;
 
+use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Interface\IndexDefinerModelInterface;
 
 readonly class UpdatingMapFetcher
 {
-    public function __construct(private IndexDefinersFetcher $indexDefinersFetcher)
+    public function __construct(private ConfigFetcher $indexDefinersFetcher)
     {
     }
 
     public function generate(): array
     {
-        $indexDefiners = $this->indexDefinersFetcher->fetchAll();
+        $indexDefiners = $this->indexDefinersFetcher->fetchIndexes();
 
         $updatingMap = [];
         foreach ($indexDefiners as $indexDefiner) {

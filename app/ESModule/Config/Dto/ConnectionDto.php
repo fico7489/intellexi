@@ -1,13 +1,15 @@
 <?php
 
-namespace App\ESModule\ConfigGlobal\Dto;
+namespace App\ESModule\Config\Dto;
 
-readonly class ConfigGlobalDto
+class ConnectionDto
 {
+    private array $indexes;
+
     public function __construct(
         private readonly string $host,
         private readonly string $port,
-        private readonly string $prefix
+        private readonly string $prefix,
     )
     {
     }
@@ -25,5 +27,15 @@ readonly class ConfigGlobalDto
     public function getPrefix(): string
     {
         return $this->prefix;
+    }
+
+    public function setIndexes(array $indexes): void
+    {
+        $this->indexes = $indexes;
+    }
+
+    public function getIndexes(): array
+    {
+        return $this->indexes;
     }
 }

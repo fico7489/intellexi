@@ -9,6 +9,11 @@ use App\Models\User;
 
 class ApplicationIndex implements IndexDefinerModelInterface
 {
+    public function getConnection(): string
+    {
+        return 'default';
+    }
+
     public function getIndexName(): string
     {
         return 'applications';
@@ -42,6 +47,11 @@ class ApplicationIndex implements IndexDefinerModelInterface
     public function getMapping(array $mapping): array
     {
         return $mapping;
+    }
+
+    public function getSettings(array $settings): array
+    {
+        return $settings;
     }
 
     public function getData(array $data, mixed $model): array
