@@ -14,6 +14,9 @@ readonly class ConfigGlobalFetcher
     {
     }
 
+    /**
+     * @return array<ConnectionDto>
+     */
     public function fetch() : array
     {
         $connectionsDefiners = $this->configFetcher->fetchConnections();

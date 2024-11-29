@@ -40,6 +40,9 @@ class ConnectionDto
         $this->indexes = $indexes;
     }
 
+    /**
+     * @return array<IndexDto>
+     */
     public function getIndexes(): array
     {
         return $this->indexes;

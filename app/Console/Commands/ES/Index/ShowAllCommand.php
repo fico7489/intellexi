@@ -9,15 +9,12 @@ class ShowAllCommand extends Command
 {
     protected $signature = 'es:index:show-all';
 
-    public function __construct(
-        private readonly IndexClient $indexClient,
-    )
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
-        dd($this->indexClient->fetchAll());
+        /** @var IndexClient $indexClient */
+        $indexClient = app(IndexClient::class);
+        $indexClient->setOutput($this->output);
+
+        $indexClient->fetchAll();
     }
 }

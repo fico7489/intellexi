@@ -29,33 +29,41 @@ class IndexClient
         $this->client = $client;
     }
 
-    public function fetchAll(): array
+    public function fetchAll(): void
     {
         $indexes = $this->client->getCluster()->getIndexNames();
 
         sort($indexes);
 
-        return $indexes;
+        $this->info('Showing indexes');
+
+        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+            $this->info("  Connection:" . $connectionDto->getName());
+
+            foreach ($connectionDto->getIndexes() as $indexDto) {
+                $index = $this->client->getIndex($indexDto->getNameWithPrefix());
+                $exists = $index->exists();
+
+                $this->info("    Index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no'));
+            }
+        }
+
+        $this->info('DONE');
     }
 
     public function createAll(): void
     {
-        $connections = $this->configGlobalFetcher->fetch();
+        $this->info('Creating indexes');
 
-        $this->output->writeln("<info>Creating indexes</info>");
-        foreach ($connections as $connection) {
-            /** @var ConnectionDto $connection */
+        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+            $this->info("  Connection:" . $connectionDto->getName());
 
-            $this->output->writeln("<info>  Connection:" . $connection->getName(). "</info>");
-
-            $indexes = $connection->getIndexes();
+            $indexes = $connectionDto->getIndexes();
             foreach ($indexes as $indexDto) {
-                /** @var IndexDto $indexDto */
-
                 $index = $this->client->getIndex($indexDto->getNameWithPrefix());
                 $exists = $index->exists();
 
-                $this->output->writeln("<info>    Creating index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no') . "</info>");
+                $this->info("    Index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no'));
 
                 if (!$exists) {
                     //TODO get mapping and settings
@@ -71,28 +79,29 @@ class IndexClient
             }
         }
 
-        $this->output->writeln("<info>DONE</info>");
+        $this->info('DONE');
     }
 
     public function deleteAll(): void
     {
-        $connections = $this->configGlobalFetcher->fetch();
+        $this->info('Deleting indexes');
 
-        $this->output->writeln("<info>Deleting indexes</info>");
-        foreach ($connections as $connection) {
-            /** @var ConnectionDto $connection */
+        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+            $this->info("  Connection:" . $connectionDto->getName(). ', prefix=' . $connectionDto->getPrefix());
 
-            $this->output->writeln("<info>  Connection:" . $connection->getName(). ', prefix=' . $connection->getPrefix(). "</info>");
-
-            $prefix = $connection->getPrefix();
-            $this->client->request(sprintf('%s*', $prefix), Request::DELETE)->getStatus();
+            $this->client->request(sprintf('%s*', $connectionDto->getPrefix()), Request::DELETE)->getStatus();
         }
 
-        $this->output->writeln("<info>DONE</info>");
+        $this->info('DONE');
     }
 
     public function setOutput(OutputStyle $output): void
     {
         $this->output = $output;
+    }
+
+    private function info(string $string): void
+    {
+        $this->output->writeln("<info>".$string."</info>");
     }
 }
