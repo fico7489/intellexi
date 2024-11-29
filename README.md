@@ -13,3 +13,7 @@
 - vendor/bin/phpunit
 
 
+### Maxwell
+
+docker exec -it intellexi_maxwell sh
+bin/maxwell --user='root' --password='root' --host='mysql' --producer=stdout
