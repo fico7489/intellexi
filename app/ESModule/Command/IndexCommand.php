@@ -12,7 +12,7 @@ class IndexCommand
 
     public function __construct(
         private readonly ConfigGlobalFetcher $configGlobalFetcher,
-        private readonly ClientAdapter       $clientAdapter,
+        private readonly ClientAdapter $clientAdapter,
     ) {
     }
 
@@ -85,7 +85,7 @@ class IndexCommand
             }
 
             foreach ($indexesByPrefix as $indexByPrefix) {
-                if(!in_array($indexByPrefix, $indexNamesFromConfig)) {
+                if (!in_array($indexByPrefix, $indexNamesFromConfig)) {
                     $this->info('    Index:'.$indexByPrefix.' is stale');
 
                     $this->clientAdapter->deleteByName($connectionDto, $indexByPrefix);

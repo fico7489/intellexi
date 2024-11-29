@@ -20,7 +20,7 @@ class ClientAdapter
         return new Client($params);
     }
 
-    public function getIndexes(ConnectionDto $connectionDto) : array
+    public function getIndexes(ConnectionDto $connectionDto): array
     {
         $client = $this->getClient($connectionDto);
 
@@ -30,13 +30,13 @@ class ClientAdapter
         return $indexes;
     }
 
-    public function getIndexesByPrefix(ConnectionDto $connectionDto) : array
+    public function getIndexesByPrefix(ConnectionDto $connectionDto): array
     {
         $indexes = $this->getIndexes($connectionDto);
 
         $indexesByPrefix = [];
         foreach ($indexes as $index) {
-            if(str_contains($index, $connectionDto->getPrefix())) {
+            if (str_contains($index, $connectionDto->getPrefix())) {
                 $indexesByPrefix[] = $index;
             }
         }
@@ -44,15 +44,17 @@ class ClientAdapter
         return $indexesByPrefix;
     }
 
-    public function indexExists(IndexDto $indexDto) : bool
+    public function indexExists(IndexDto $indexDto): bool
     {
         $client = $this->getClient($indexDto->getConnection());
 
         $index = $client->getIndex($indexDto->getNameWithPrefix());
+
         return $index->exists();
     }
 
-    public function createIndex(IndexDto $indexDto) : void{
+    public function createIndex(IndexDto $indexDto): void
+    {
         $client = $this->getClient($indexDto->getConnection());
 
         $index = $client->getIndex($indexDto->getNameWithPrefix());
@@ -64,13 +66,15 @@ class ClientAdapter
         $mappingObject->send($index);
     }
 
-    public function deleteByPrefix(ConnectionDto $connectionDto) : void{
+    public function deleteByPrefix(ConnectionDto $connectionDto): void
+    {
         $client = $this->getClient($connectionDto);
 
         $client->request(sprintf('%s*', $connectionDto->getPrefix()), Request::DELETE)->getStatus();
     }
 
-    public function deleteByName(ConnectionDto $connectionDto, string $indexName) : void{
+    public function deleteByName(ConnectionDto $connectionDto, string $indexName): void
+    {
         $client = $this->getClient($connectionDto);
 
         $index = $client->getIndex($indexName);

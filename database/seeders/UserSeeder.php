@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             $faker = Factory::create();
 
-            User::create([
+            $user = User::create([
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'email' => $faker->email,
@@ -34,6 +34,8 @@ class UserSeeder extends Seeder
                 'role' => User::ROLE_ADMINISTRATOR,
                 'user_type_id' => random_int(1, 3),
             ]);
+
+            $user->roles()->sync([random_int(1, 4), random_int(1, 4)]);
         }
     }
 }
