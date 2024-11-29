@@ -21,8 +21,6 @@ class IndexCommand
         $this->info('Showing indexes');
 
         foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
-            $indexes = $this->clientAdapter->getIndexes($connectionDto);
-
             $this->info('  Connection:'.$connectionDto->getName());
 
             foreach ($connectionDto->getIndexes() as $indexDto) {
@@ -67,6 +65,32 @@ class IndexCommand
             $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
 
             $this->clientAdapter->deleteByPrefix($connectionDto);
+        }
+
+        $this->info('DONE');
+    }
+
+    public function deleteStale(): void
+    {
+        $this->info('Deleting stale indexes');
+
+        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+            $indexesByPrefix = $this->clientAdapter->getIndexesByPrefix($connectionDto);
+
+            $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
+
+            $indexNamesFromConfig = [];
+            foreach ($connectionDto->getIndexes() as $indexDto) {
+                $indexNamesFromConfig[] = $indexDto->getNameWithPrefix();
+            }
+
+            foreach ($indexesByPrefix as $indexByPrefix) {
+                if(!in_array($indexByPrefix, $indexNamesFromConfig)) {
+                    $this->info('    Index:'.$indexByPrefix.' is stale');
+
+                    $this->clientAdapter->deleteByName($connectionDto, $indexByPrefix);
+                }
+            }
         }
 
         $this->info('DONE');

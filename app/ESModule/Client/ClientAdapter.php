@@ -30,6 +30,20 @@ class ClientAdapter
         return $indexes;
     }
 
+    public function getIndexesByPrefix(ConnectionDto $connectionDto) : array
+    {
+        $indexes = $this->getIndexes($connectionDto);
+
+        $indexesByPrefix = [];
+        foreach ($indexes as $index) {
+            if(str_contains($index, $connectionDto->getPrefix())) {
+                $indexesByPrefix[] = $index;
+            }
+        }
+
+        return $indexesByPrefix;
+    }
+
     public function indexExists(IndexDto $indexDto) : bool
     {
         $client = $this->getClient($indexDto->getConnection());
@@ -54,5 +68,13 @@ class ClientAdapter
         $client = $this->getClient($connectionDto);
 
         $client->request(sprintf('%s*', $connectionDto->getPrefix()), Request::DELETE)->getStatus();
+    }
+
+    public function deleteByName(ConnectionDto $connectionDto, string $indexName) : void{
+        $client = $this->getClient($connectionDto);
+
+        $index = $client->getIndex($indexName);
+
+        $index->delete();
     }
 }
