@@ -12,6 +12,7 @@ class CreateAllCommand extends Command
 
     public function handle()
     {
+        /** @var IndexClient $indexClient */
         $indexClient = app(IndexClient::class);
         $indexClient->setOutput($this->output);
 

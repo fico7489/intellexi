@@ -9,15 +9,12 @@ class DeleteAllCommand extends Command
 {
     protected $signature = 'es:index:delete-all';
 
-    public function __construct(
-        private readonly IndexClient $indexClient,
-    )
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
-        $this->indexClient->deleteAll();
+        /** @var IndexClient $indexClient */
+        $indexClient = app(IndexClient::class);
+        $indexClient->setOutput($this->output);
+
+        $indexClient->deleteAll();
     }
 }

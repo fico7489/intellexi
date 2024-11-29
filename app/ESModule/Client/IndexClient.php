@@ -38,7 +38,7 @@ class IndexClient
         return $indexes;
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $connections = $this->configGlobalFetcher->fetch();
 
@@ -58,6 +58,7 @@ class IndexClient
                 $this->output->writeln("<info>    Creating index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no') . "</info>");
 
                 if (!$exists) {
+                    //TODO get mapping and settings
                     $mapping = [];
                     $settings = [];
 
@@ -69,24 +70,25 @@ class IndexClient
                 }
             }
         }
+
+        $this->output->writeln("<info>DONE</info>");
     }
 
-    public function deleteAll(){
+    public function deleteAll(): void
+    {
         $connections = $this->configGlobalFetcher->fetch();
 
+        $this->output->writeln("<info>Deleting indexes</info>");
         foreach ($connections as $connection) {
             /** @var ConnectionDto $connection */
 
+            $this->output->writeln("<info>  Connection:" . $connection->getName(). ', prefix=' . $connection->getPrefix(). "</info>");
+
             $prefix = $connection->getPrefix();
-            $status = $this->client->request(sprintf('%s*', $prefix), Request::DELETE)->getStatus();
-            dd($status);
-
-            $indexes = $connection->getIndexes();
-
-            foreach ($indexes as $index) {
-                //
-            }
+            $this->client->request(sprintf('%s*', $prefix), Request::DELETE)->getStatus();
         }
+
+        $this->output->writeln("<info>DONE</info>");
     }
 
     public function setOutput(OutputStyle $output): void
