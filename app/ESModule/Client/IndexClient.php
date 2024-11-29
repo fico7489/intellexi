@@ -36,7 +36,7 @@ class IndexClient
         return $indexes;
     }
 
-    public function createAll($indexNames)
+    public function createAll()
     {
         $connections = $this->configGlobalFetcher->fetch();
 
@@ -62,7 +62,7 @@ class IndexClient
         }
     }
 
-    public function deleteAll(string $prefix){
+    public function deleteAll(){
         $connections = $this->configGlobalFetcher->fetch();
 
         foreach ($connections as $connection) {

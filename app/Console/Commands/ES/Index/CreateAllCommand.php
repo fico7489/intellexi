@@ -18,9 +18,6 @@ class CreateAllCommand extends Command
 
     public function handle()
     {
-        $this->indexClient->createAll([
-            'prefix_test',
-            'prefix_test2',
-        ]);
+        $this->indexClient->createAll();
     }
 }

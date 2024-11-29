@@ -18,6 +18,6 @@ class DeleteAllCommand extends Command
 
     public function handle()
     {
-        $this->indexClient->deleteAll('prefix_');
+        $this->indexClient->deleteAll();
     }
 }
