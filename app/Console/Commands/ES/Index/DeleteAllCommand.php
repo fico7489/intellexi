@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\ES\Index;
 
-use App\ESModule\Client\IndexClient;
+use App\ESModule\Command\IndexCommand;
 use Illuminate\Console\Command;
 
 class DeleteAllCommand extends Command
@@ -11,8 +11,8 @@ class DeleteAllCommand extends Command
 
     public function handle()
     {
-        /** @var IndexClient $indexClient */
-        $indexClient = app(IndexClient::class);
+        /** @var IndexCommand $indexClient */
+        $indexClient = app(IndexCommand::class);
         $indexClient->setOutput($this->output);
 
         $indexClient->deleteAll();

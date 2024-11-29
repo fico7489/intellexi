@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Client;
+namespace App\ESModule\Command;
 
 use App\ESModule\Config\ConfigGlobalFetcher;
 use Elastica\Client;
@@ -8,7 +8,7 @@ use Elastica\Mapping;
 use Elastica\Request;
 use Symfony\Component\Console\Style\OutputStyle;
 
-class IndexClient
+class IndexCommand
 {
     private OutputStyle $output;
     private Client $client;
@@ -99,6 +99,8 @@ class IndexClient
 
     private function info(string $string): void
     {
-        $this->output->writeln('<info>'.$string.'</info>');
+        if ($this->output) {
+            $this->output->writeln('<info>'.$string.'</info>');
+        }
     }
 }
