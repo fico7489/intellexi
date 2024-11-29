@@ -7,11 +7,17 @@ class ConnectionDto
     private array $indexes;
 
     public function __construct(
+        private readonly string $name,
         private readonly string $host,
         private readonly string $port,
         private readonly string $prefix,
     )
     {
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function getHost(): string

@@ -14,8 +14,8 @@ class GlobalConfigCommand extends Command
         /** @var ConfigGlobalFetcher $service */
         $service = app(ConfigGlobalFetcher::class);
 
-        $updatingMap = $service->fetch();
+        $config = $service->fetch();
 
-        dump($updatingMap);
+        dump($config);
     }
 }

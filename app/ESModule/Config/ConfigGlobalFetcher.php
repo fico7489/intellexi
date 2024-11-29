@@ -2,6 +2,7 @@
 
 namespace App\ESModule\Config;
 
+use App\ES\Connection\DefaultConnection;
 use App\ESModule\Config\Dto\ConnectionDto;
 use App\ESModule\Config\Dto\IndexDto;
 
@@ -20,15 +21,17 @@ readonly class ConfigGlobalFetcher
 
         $connectionDtos = [];
         foreach ($connectionsDefiners as $connectionDefiner) {
+            /** @var DefaultConnection $connectionDefiner */
             $connection = new ConnectionDto(
-                'elasticsearch',
-                '9200',
-                'test',
+                $connectionDefiner->getName(),
+                $connectionDefiner->getHost(),
+                $connectionDefiner->getPort(),
+                $connectionDefiner->getPrefix(),
             );
 
             $indexes = [];
             foreach ($indexDefiners as $indexDefiner) {
-                if($indexDefiner->getConnection() === $connectionDefiner->getName()) {
+                if($indexDefiner->getConnection() === $connection->getName()) {
                     $indexes[] = new IndexDto(
                         $indexDefiner->getIndexName(),
                         $indexDefiner->getMapping([]),

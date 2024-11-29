@@ -8,6 +8,10 @@ class DefaultConnection
         return 'default';
     }
 
+    public function getPrefix(): string{
+        return 'prefix_';
+    }
+
     public function getHost(): string
     {
         return 'elasticsearch';

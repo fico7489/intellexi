@@ -2,6 +2,8 @@
 
 namespace App\ESModule\Client;
 
+use App\ESModule\Config\ConfigGlobalFetcher;
+use App\ESModule\Config\Dto\ConnectionDto;
 use Elastica\Client;
 use Elastica\Mapping;
 use Elastica\Request;
@@ -10,7 +12,9 @@ class IndexClient
 {
     private Client $client;
 
-    public function __construct()
+    public function __construct(
+        private readonly ConfigGlobalFetcher $configGlobalFetcher,
+    )
     {
         $params = [
             'host' => 'elasticsearch',
@@ -49,8 +53,20 @@ class IndexClient
     }
 
     public function deleteAll(string $prefix){
-        $status = $this->client->request(sprintf('%s*', $prefix), Request::DELETE)->getStatus();
+        $connections = $this->configGlobalFetcher->fetch();
 
-        dd($status);
+        foreach ($connections as $connection) {
+            /** @var ConnectionDto $connection */
+
+            $prefix = $connection->getPrefix();
+            $status = $this->client->request(sprintf('%s*', $prefix), Request::DELETE)->getStatus();
+            dd($status);
+
+            $indexes = $connection->getIndexes();
+
+            foreach ($indexes as $index) {
+                //
+            }
+        }
     }
 }
