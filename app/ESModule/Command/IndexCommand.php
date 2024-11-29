@@ -16,7 +16,7 @@ class IndexCommand
     ) {
     }
 
-    public function fetchAll(): void
+    public function showAll(): void
     {
         $this->info('Showing indexes');
 

@@ -13,8 +13,8 @@ class ClientAdapter
     public function getClient(ConnectionDto $connectionDto): Client
     {
         $params = [
-            'host' => 'elasticsearch',
-            'port' => 9200,
+            'host' => $connectionDto->getHost(),
+            'port' => $connectionDto->getPort(),
         ];
 
         return new Client($params);

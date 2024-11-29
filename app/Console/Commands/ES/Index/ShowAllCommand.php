@@ -15,6 +15,6 @@ class ShowAllCommand extends Command
         $indexClient = app(IndexCommand::class);
         $indexClient->setOutput($this->output);
 
-        $indexClient->fetchAll();
+        $indexClient->showAll();
     }
 }
