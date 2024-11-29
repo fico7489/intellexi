@@ -4,6 +4,7 @@ namespace App\ESModule\Client;
 
 use App\ESModule\Config\ConfigGlobalFetcher;
 use App\ESModule\Config\Dto\ConnectionDto;
+use App\ESModule\Config\Dto\IndexDto;
 use Elastica\Client;
 use Elastica\Mapping;
 use Elastica\Request;
@@ -37,17 +38,26 @@ class IndexClient
 
     public function createAll($indexNames)
     {
-        foreach ($indexNames as $indexName) {
-            $index = $this->client->getIndex($indexName);
-            if (!$index->exists()) {
-                $mapping = [];
-                $settings = [];
+        $connections = $this->configGlobalFetcher->fetch();
 
-                $index->create($settings);
+        foreach ($connections as $connection) {
+            /** @var ConnectionDto $connection */
 
-                $mappingObject = new Mapping();
-                $mappingObject->setProperties($mapping);
-                $mappingObject->send($index);
+            $indexes = $connection->getIndexes();
+            foreach ($indexes as $indexDto) {
+                /** @var IndexDto $indexDto */
+
+                $index = $this->client->getIndex($indexDto->getNameWithPrefix());
+                if (!$index->exists()) {
+                    $mapping = [];
+                    $settings = [];
+
+                    $index->create($settings);
+
+                    $mappingObject = new Mapping();
+                    $mappingObject->setProperties($mapping);
+                    $mappingObject->send($index);
+                }
             }
         }
     }

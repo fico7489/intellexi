@@ -18,6 +18,11 @@ readonly class IndexDto
         return $this->name;
     }
 
+    public function getNameWithPrefix(): string
+    {
+        return $this->getConnection()->getPrefix().$this->getName();
+    }
+
     public function getMapping(): array
     {
         return $this->mapping;
