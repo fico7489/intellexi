@@ -8,9 +8,11 @@ use App\ESModule\Config\Dto\IndexDto;
 use Elastica\Client;
 use Elastica\Mapping;
 use Elastica\Request;
+use Symfony\Component\Console\Style\OutputStyle;
 
 class IndexClient
 {
+    private OutputStyle $output;
     private Client $client;
 
     public function __construct(
@@ -40,15 +42,22 @@ class IndexClient
     {
         $connections = $this->configGlobalFetcher->fetch();
 
+        $this->output->writeln("<info>Creating indexes</info>");
         foreach ($connections as $connection) {
             /** @var ConnectionDto $connection */
+
+            $this->output->writeln("<info>  Connection:" . $connection->getName(). "</info>");
 
             $indexes = $connection->getIndexes();
             foreach ($indexes as $indexDto) {
                 /** @var IndexDto $indexDto */
 
                 $index = $this->client->getIndex($indexDto->getNameWithPrefix());
-                if (!$index->exists()) {
+                $exists = $index->exists();
+
+                $this->output->writeln("<info>    Creating index:" . $indexDto->getNameWithPrefix(). ', exists:' . ($exists ? 'yes' : 'no') . "</info>");
+
+                if (!$exists) {
                     $mapping = [];
                     $settings = [];
 
@@ -78,5 +87,10 @@ class IndexClient
                 //
             }
         }
+    }
+
+    public function setOutput(OutputStyle $output): void
+    {
+        $this->output = $output;
     }
 }
