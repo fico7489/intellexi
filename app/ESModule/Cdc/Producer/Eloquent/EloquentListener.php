@@ -2,7 +2,8 @@
 
 namespace App\ESModule\Cdc\Producer\Eloquent;
 
-use App\ESModule\Cdc\Producer\Dispatcher\Dispatcher;
+use App\ESModule\Cdc\Producer\Dispatcher\DispatcherInterface;
+use App\ESModule\Cdc\Producer\Dispatcher\RedisPublish;
 use App\ESModule\Syncer\Adapter\MaxwellAdapter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
@@ -42,7 +43,8 @@ class EloquentListener
     {
         dump('dispatched', $data);
 
-        app(Dispatcher::class)->dispatch($data);
+        // TODO @DispatcherInterface
+        app(RedisPublish::class)->dispatch($data);
     }
 
     private function createArray(Model $model, array $changedFields = []): array
