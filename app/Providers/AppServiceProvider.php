@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\ESModule\Cdc\Consumer\Laravel\Maxwell\Redis\RedisSubscribe;
+use App\ESModule\Cdc\Producer\Eloquent\EloquentListener;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,5 +17,7 @@ class AppServiceProvider extends ServiceProvider
         $this->commands([
             RedisSubscribe::class
         ]);
+
+        app(EloquentListener::class)->listen();
     }
 }
