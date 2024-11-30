@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\ESModule\CdcConsumerLaravel\Maxwell\Redis\RedisSubscribe;
+use App\ESModule\Cdc\Consumer\Laravel\Maxwell\Redis\RedisSubscribe;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
