@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        /* CDC */
         $this->app->bind(DispatcherInterface::class, function ($app) {
             return new RedisPublish('eloquent');
         });
@@ -24,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ConverterInterface::class, function ($app) {
             return new GeneralConverter();
         });
+        /* CDC */
+
+
     }
 
     public function boot(): void
