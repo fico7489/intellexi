@@ -2,10 +2,8 @@
 
 namespace App\ESModule\Cdc\Producer\Listener;
 
-use App\ESModule\Syncer\Adapter\MaxwellAdapter;
-
 /**
- * Listen to database changes and dispatch changes to DispatcherInterface with this format
+ * Listen to database changes and dispatch changes to DispatcherInterface with this format.
  *
  * [
  *   'database' => string,

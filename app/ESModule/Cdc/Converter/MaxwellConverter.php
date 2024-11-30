@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ESModule\Syncer\Adapter;
+namespace App\ESModule\Cdc\Converter;
 
 use App\ESModule\Syncer\Dto\ChangedDbRow;
 
-class MaxwellAdapter
+class MaxwellConverter implements ConverterInterface
 {
     public const string INSERT = 'insert';
     public const string UPDATE = 'update';
@@ -28,6 +28,6 @@ class MaxwellAdapter
             }
         }
 
-        return new ChangedDbRow($database, $table, $identifier, $type, $changedFields);
+        return new ChangedDbRow($database, $table, $type, $identifier, $changedFields);
     }
 }

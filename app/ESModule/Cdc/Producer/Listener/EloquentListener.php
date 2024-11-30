@@ -6,8 +6,13 @@ use App\ESModule\Cdc\Producer\Dispatcher\DispatcherInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 
-class EloquentListener implements ListenerInterface
+readonly class EloquentListener implements ListenerInterface
 {
+    public function __construct(
+        private DispatcherInterface $dispatcher,
+    ) {
+    }
+
     public function listen(): void
     {
         Event::listen(['eloquent.created: *'], function ($event, $models) {
@@ -39,13 +44,13 @@ class EloquentListener implements ListenerInterface
     {
         dump('dispatched', $data);
 
-        app(DispatcherInterface::class)->dispatch($data);
+        $this->dispatcher->dispatch($data);
     }
 
     private function createArray(Model $model, string $type): array
     {
         $changedFields = [];
-        if($type === 'update'){
+        if ('update' === $type) {
             $changedFields = $this->detectChangedFields($model);
         }
 

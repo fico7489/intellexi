@@ -11,8 +11,8 @@ class ChangedDbRow
     public function __construct(
         private readonly string $database,
         private readonly string $table,
-        private readonly string $identifier,
         private readonly string $type,
+        private readonly string $identifier,
         private readonly array $changedFields = [],
     ) {
     }

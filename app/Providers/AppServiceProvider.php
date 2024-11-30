@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
-use App\ESModule\Cdc\Consumer\Laravel\Maxwell\RedisSubscribe;
+use App\ESModule\Cdc\Consumer\Laravel\RedisSubscribe;
+use App\ESModule\Cdc\Converter\ConverterInterface;
+use App\ESModule\Cdc\Converter\GeneralConverter;
+use App\ESModule\Cdc\Converter\MaxwellConverter;
 use App\ESModule\Cdc\Producer\Dispatcher\DispatcherInterface;
 use App\ESModule\Cdc\Producer\Dispatcher\RedisPublish;
 use App\ESModule\Cdc\Producer\Listener\EloquentListener;
@@ -13,7 +16,13 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DispatcherInterface::class, function ($app) {
-            return new RedisPublish();
+            return new RedisPublish('eloquent');
+        });
+        /*$this->app->bind(ConverterInterface::class, function ($app) {
+            return new MaxwellConverter();
+        });*/
+        $this->app->bind(ConverterInterface::class, function ($app) {
+            return new GeneralConverter();
         });
     }
 
