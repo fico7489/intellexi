@@ -8,6 +8,8 @@ class RedisLPush implements DispatcherInterface
 {
     public function dispatch(array $data): void
     {
-        Redis::lpush(random_int(1, 10000), json_encode($data));
+        Redis::lpush('queues:high', json_encode($data));
+
+        dump(11);
     }
 }

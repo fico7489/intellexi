@@ -15,6 +15,7 @@
 
 ### Maxwell
 
+https://redis.io/docs/latest/develop/data-types/lists/
 https://maxwells-daemon.io/config/
 https://redis.io/glossary/redis-queue/
 
@@ -22,7 +23,7 @@ docker exec -it intellexi_maxwell sh
 bin/maxwell --user='root' --password='root' --host='mysql' --producer=stdout
 bin/maxwell  --user='root' --password='root' --host='mysql' --producer=file --output_file="/app/test.txt"
 bin/maxwell  --user='root' --password='root' --host='mysql' --producer=redis --redis_host=redis --redis_database=0
-
+bin/maxwell  --user='root' --password='root' --host='mysql' --producer=redis --redis_host=redis --redis_database=0
 
 ### Redis
 
