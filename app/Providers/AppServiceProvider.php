@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->commands([
-            RedisSubscribe::class
+            RedisSubscribe::class,
         ]);
 
         app(EloquentListener::class)->listen();

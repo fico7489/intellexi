@@ -3,7 +3,6 @@
 namespace App\Console\Commands\ES;
 
 use App\Models\Role;
-use Elastica\Client;
 use Illuminate\Console\Command;
 
 class Test4Command extends Command

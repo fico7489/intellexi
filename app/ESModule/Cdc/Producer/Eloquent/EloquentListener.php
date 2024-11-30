@@ -14,7 +14,7 @@ class EloquentListener
             foreach ($models as $model) {
                 $changedFields = $this->detectChangedFields($model);
 
-                $data =$this->createArray($model, $changedFields);
+                $data = $this->createArray($model, $changedFields);
 
                 dump($data);
             }
@@ -22,7 +22,7 @@ class EloquentListener
 
         Event::listen(['eloquent.created: *'], function ($event, $models) {
             foreach ($models as $model) {
-                $data =$this->createArray($model);
+                $data = $this->createArray($model);
 
                 dump($data);
             }
@@ -30,7 +30,7 @@ class EloquentListener
 
         Event::listen(['eloquent.deleted: *'], function ($event, $models) {
             foreach ($models as $model) {
-                $data =$this->createArray($model);
+                $data = $this->createArray($model);
 
                 dump($data);
             }
@@ -48,7 +48,7 @@ class EloquentListener
         ];
     }
 
-    private function detectChangedFields(Model $model) : array
+    private function detectChangedFields(Model $model): array
     {
         /** @var Model $model */
         $changedFields = [];
