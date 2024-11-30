@@ -1,14 +1,13 @@
 <?php
 
-namespace App\ESModule\Cdc\Producer\Eloquent;
+namespace App\ESModule\Cdc\Producer\Listener;
 
 use App\ESModule\Cdc\Producer\Dispatcher\DispatcherInterface;
-use App\ESModule\Cdc\Producer\Dispatcher\RedisPublish;
 use App\ESModule\Syncer\Adapter\MaxwellAdapter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 
-class EloquentListener
+class EloquentListener implements ListenerInterface
 {
     public function listen(): void
     {
@@ -44,7 +43,7 @@ class EloquentListener
         dump('dispatched', $data);
 
         // TODO @DispatcherInterface
-        app(RedisPublish::class)->dispatch($data);
+        app(DispatcherInterface::class)->dispatch($data);
     }
 
     private function createArray(Model $model, array $changedFields = []): array
