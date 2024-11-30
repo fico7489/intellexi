@@ -2,6 +2,7 @@
 
 namespace App\ESModule\Cdc\Producer\Eloquent;
 
+use App\ESModule\Cdc\Producer\Dispatcher\Dispatcher;
 use App\ESModule\Syncer\Adapter\MaxwellAdapter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
@@ -16,7 +17,7 @@ class EloquentListener
 
                 $data = $this->createArray($model, $changedFields);
 
-                dump($data);
+                $this->dispatch($data);
             }
         });
 
@@ -24,7 +25,7 @@ class EloquentListener
             foreach ($models as $model) {
                 $data = $this->createArray($model);
 
-                dump($data);
+                $this->dispatch($data);
             }
         });
 
@@ -32,9 +33,16 @@ class EloquentListener
             foreach ($models as $model) {
                 $data = $this->createArray($model);
 
-                dump($data);
+                $this->dispatch($data);
             }
         });
+    }
+
+    private function dispatch(array $data): void
+    {
+        dump('dispatched', $data);
+
+        app(Dispatcher::class)->dispatch($data);
     }
 
     private function createArray(Model $model, array $changedFields = []): array
