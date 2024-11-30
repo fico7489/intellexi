@@ -19,15 +19,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DispatcherInterface::class, function ($app) {
             return new RedisPublish('eloquent');
         });
-        /*$this->app->bind(ConverterInterface::class, function ($app) {
-            return new MaxwellConverter();
-        });*/
-        $this->app->bind(ConverterInterface::class, function ($app) {
-            return new GeneralConverter();
-        });
         /* CDC */
-
-
     }
 
     public function boot(): void
