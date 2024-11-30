@@ -4,7 +4,7 @@ namespace App\ESModule\Cdc\Converter;
 
 use App\ESModule\Syncer\Dto\ChangedDbRow;
 
-class MaxwellConverter implements ConverterInterface
+class MaxwellConverter
 {
     public const string INSERT = 'insert';
     public const string UPDATE = 'update';
