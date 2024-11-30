@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\ESModule\CdcConsumerLaravel\Maxwell\Redis;
 
 use App\ESModule\Syncer\Adapter\MaxwellAdapter;
 use Illuminate\Console\Command;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redis;
 
 class RedisSubscribe extends Command
 {
-    protected $signature = 'redis:subscribe';
+    protected $signature = 'cdc-consumer-laravel:redis-subscribe';
 
     public function handle()
     {

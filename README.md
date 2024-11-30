@@ -16,6 +16,8 @@
 ### Maxwell
 
 https://maxwells-daemon.io/config/
+https://redis.io/glossary/redis-queue/
+
 docker exec -it intellexi_maxwell sh
 bin/maxwell --user='root' --password='root' --host='mysql' --producer=stdout
 bin/maxwell  --user='root' --password='root' --host='mysql' --producer=file --output_file="/app/test.txt"
