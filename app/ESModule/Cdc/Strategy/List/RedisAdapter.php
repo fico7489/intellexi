@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ESModule\Cdc\Storage;
+namespace App\ESModule\Cdc\Strategy\List;
 
 use Illuminate\Support\Facades\Redis;
 
-class RedisStorage
+class RedisAdapter implements Adapter
 {
     public function readCdc(int $limit): ?array
     {
