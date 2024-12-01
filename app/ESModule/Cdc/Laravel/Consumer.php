@@ -7,12 +7,10 @@ use Illuminate\Console\Command;
 
 class Consumer extends Command
 {
-    protected $signature = 'cdc:laravel:consume {channel}';
+    protected $signature = 'cdc:laravel:consume';
 
     public function handle()
     {
-        $channel = $this->argument('channel');
-
-        app(Worker::class)->work($channel);
+        app(Worker::class)->work();
     }
 }

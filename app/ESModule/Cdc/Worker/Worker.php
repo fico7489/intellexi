@@ -3,23 +3,26 @@
 namespace App\ESModule\Cdc\Worker;
 
 use App\ESModule\Cdc\Grouper\Grouper;
-use Illuminate\Support\Facades\Redis;
+use App\ESModule\Cdc\Storage\RedisStorage;
 
 class Worker
 {
-    public function work($channel)
+    public function work()
     {
+        /** @var RedisStorage $storage */
+        $storage = app(RedisStorage::class);
+
+        //TODO
         $time = time();
 
         while (true) {
-            $payload = Redis::rpop($channel);
+            $payload = $storage->readCdc();
 
-            if ('NULL' !== gettype($payload)) {
-                Redis::sadd('DATA', $payload);
-
-                dump($payload);
+            if (null !== $payload) {
+                $storage->store($payload);
             }
 
+            //TODO
             sleep(1);
 
             $timeCurrent = time();
@@ -28,8 +31,7 @@ class Worker
             if ($seconds > 5) {
                 $time = $timeCurrent;
 
-                $data = Redis::smembers('DATA');
-                Redis::del(['DATA']);
+                $data = $storage->readAndDelete();
 
                 app(Grouper::class)->group($data);
             }
