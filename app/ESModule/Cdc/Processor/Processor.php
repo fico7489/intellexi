@@ -21,6 +21,6 @@ readonly class Processor
 
         $dataGrouped = $this->grouper->group($payload);
 
-        $this->dispatcher->dispatch(new CdcGrouped($dataGrouped));
+        //$this->dispatcher->dispatch(new CdcGrouped($dataGrouped));
     }
 }

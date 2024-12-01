@@ -5,10 +5,10 @@ namespace App\ESModule\Cdc\Grouper;
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Dto\ChangedDbRow;
 
-readonly class Grouper
+ class Grouper
 {
     public function __construct(
-        private ConverterInterface $converter,
+        private readonly ConverterInterface $converter,
     ) {
     }
 
