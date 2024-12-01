@@ -24,12 +24,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             Consumer::class,
         ]);
 
-        //bind
+        // bind
         $this->app->bind(Storage::class, RedisStorage::class);
         $this->app->bind(EventDispatcherInterface::class, EventDispatcher::class);
         $this->app->bind(ConverterInterface::class, MaxwellConverter::class);
 
-        //config
+        // config
         $this->app->when(Algorithm::class)->needs('$limit')->give(100);
         $this->app->when(Algorithm::class)->needs('$sleep')->give(5);
 

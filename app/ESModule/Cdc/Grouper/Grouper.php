@@ -9,8 +9,7 @@ readonly class Grouper
 {
     public function __construct(
         private ConverterInterface $converter,
-    )
-    {
+    ) {
     }
 
     public function group($payloads): array

@@ -29,8 +29,8 @@ class UserIndex implements IndexDefinerModelInterface
             'id',
             'first_name',
             'roles' => [
-                'id'
-            ]
+                'id',
+            ],
         ];
     }
 

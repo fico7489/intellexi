@@ -14,7 +14,7 @@ class ChangedDbRow
         private readonly string $type,
         private readonly string $identifier,
         private readonly array $changedFields,
-        private readonly array $data ,
+        private readonly array $data,
     ) {
     }
 
