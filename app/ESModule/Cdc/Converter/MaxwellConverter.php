@@ -23,7 +23,6 @@ class MaxwellConverter
 
         // TODO
 
-
         $changedFields = [];
         if (self::UPDATE === $type) {
             foreach ($payload['old'] as $key => $value) {

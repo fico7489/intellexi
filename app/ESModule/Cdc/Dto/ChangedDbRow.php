@@ -12,7 +12,7 @@ class ChangedDbRow
         private readonly string $database,
         private readonly string $table,
         private readonly string $type,
-        private readonly string $identifier,//TODO do we need
+        private readonly string $identifier,// TODO do we need
         private readonly array $changedFields,
         private readonly array $data,
     ) {

@@ -3,6 +3,7 @@
 namespace App\ESModule\Cdc\Consumer;
 
 use App\ESModule\Cdc\Converter\MaxwellConverter;
+use App\ESModule\Cdc\Job\ChangedDbRowJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
@@ -14,17 +15,18 @@ class RedisConsumer extends Command
     {
         $channel = $this->argument('channel');
 
-        while(true){
+        while (true) {
             $payload = Redis::rpop($channel);
 
-            if(gettype($payload) === 'NULL'){
+            if ('NULL' === gettype($payload)) {
                 continue;
-            }else{
-                dump($payload);
+            } else {
+                // dump($payload);
 
                 $dto = app(MaxwellConverter::class)->convert($payload);
 
-                dump($dto);
+                // TODO
+                ChangedDbRowJob::dispatchSync($dto);
             }
 
             sleep(0.5);

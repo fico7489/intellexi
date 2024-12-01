@@ -17,6 +17,6 @@ class AppServiceProvider extends ServiceProvider
             RedisConsumer::class,
         ]);
 
-        //app(EloquentListener::class)->listen();
+        // app(EloquentListener::class)->listen();
     }
 }
