@@ -29,6 +29,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->when(Algorithm::class)->needs('$sleep')->give(5);
 
         $this->app->when(RedisStorage::class)->needs('$channel')->give('maxwell');
+        $this->app->when(RedisStorage::class)->needs('$options')->give(config('database.redis.default'));
+
 
         Event::listen(function (CdcRaw $event) {
             dump('laravel event listener raw', $event->getPayload());

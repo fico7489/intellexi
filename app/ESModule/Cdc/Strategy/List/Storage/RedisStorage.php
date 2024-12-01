@@ -8,12 +8,13 @@ readonly class RedisStorage implements Storage
 {
     public function __construct(
         private string $channel,
+        private array $options,
     ) {
     }
 
-    public function readCdc(int $limit): ?array
+    public function lmpop(int $limit): ?array
     {
-        $predis = new Client(config('database.redis.default'));
+        $predis = new Client($this->options);
         $payload = $predis->lmpop([$this->channel], 'left', $limit);
 
         if ('NULL' === gettype($payload)) {

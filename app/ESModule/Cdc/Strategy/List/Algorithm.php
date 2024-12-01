@@ -18,7 +18,7 @@ readonly class Algorithm
     public function run()
     {
         while (true) {
-            $payload = $this->storage->readCdc($this->limit);
+            $payload = $this->storage->lmpop($this->limit);
 
             if (null !== $payload) {
                 $this->processor->process($payload);
