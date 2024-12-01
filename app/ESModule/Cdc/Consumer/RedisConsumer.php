@@ -2,6 +2,7 @@
 
 namespace App\ESModule\Cdc\Consumer;
 
+use App\ESModule\Cdc\Converter\MaxwellConverter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
@@ -14,12 +15,16 @@ class RedisConsumer extends Command
         $channel = $this->argument('channel');
 
         while(true){
-            $data = Redis::rpop($channel);
+            $payload = Redis::rpop($channel);
 
-            if(gettype($data) === 'NULL'){
+            if(gettype($payload) === 'NULL'){
                 continue;
             }else{
-                dump($data);
+                dump($payload);
+
+                $dto = app(MaxwellConverter::class)->convert($payload);
+
+                dump($dto);
             }
 
             sleep(0.5);

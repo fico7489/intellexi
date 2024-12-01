@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Dto;
+namespace App\ESModule\Cdc\Dto;
 
 class ChangedDbRow
 {
@@ -12,8 +12,9 @@ class ChangedDbRow
         private readonly string $database,
         private readonly string $table,
         private readonly string $type,
-        private readonly string $identifier,
-        private readonly array $changedFields = [],
+        private readonly string $identifier,//TODO do we need
+        private readonly array $changedFields,
+        private readonly array $data,
     ) {
     }
 
@@ -40,5 +41,10 @@ class ChangedDbRow
     public function getChangedFields(): array
     {
         return $this->changedFields;
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
     }
 }

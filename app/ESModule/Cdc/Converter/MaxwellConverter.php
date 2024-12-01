@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Cdc\Converter;
 
-use App\ESModule\Syncer\Dto\ChangedDbRow;
+use App\ESModule\Cdc\Dto\ChangedDbRow;
 
 class MaxwellConverter
 {
@@ -10,24 +10,27 @@ class MaxwellConverter
     public const string UPDATE = 'update';
     public const string DELETE = 'delete';
 
-    public function convert(string $data): ChangedDbRow
+    public function convert(string $payload): ChangedDbRow
     {
-        $data = json_decode($data, true);
+        $payload = json_decode($payload, true);
 
-        $database = $data['database'];
-        $table = $data['table'];
-        $type = $data['type'];
+        $database = $payload['database'];
+        $table = $payload['table'];
+        $type = $payload['type'];
+        $identifier = $payload['data']['id'];
+        $changedFields = isset($payload['old']) ? array_keys($payload['old']) : [];
+        $data = $payload['data'];
 
         // TODO
-        $identifier = $data['data']['id'];
+
 
         $changedFields = [];
         if (self::UPDATE === $type) {
-            foreach ($data['old'] as $key => $value) {
+            foreach ($payload['old'] as $key => $value) {
                 $changedFields[] = $key;
             }
         }
 
-        return new ChangedDbRow($database, $table, $type, $identifier, $changedFields);
+        return new ChangedDbRow($database, $table, $type, $identifier, $changedFields, $data);
     }
 }
