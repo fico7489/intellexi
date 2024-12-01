@@ -10,6 +10,9 @@ class Worker
 {
     public function work()
     {
+        $limit = 100;
+        $sleep = 1;
+
         /** @var RedisStorage $storage */
         $storage = app(RedisStorage::class);
 
@@ -19,29 +22,16 @@ class Worker
         /** @var Grouper $grouper */
         $grouper = app(Grouper::class);
 
-        // TODO
-        $time = time();
-
         while (true) {
-            $payload = $storage->readCdc();
+            $payload = $storage->readCdc($limit);
 
-            if (null !== $payload) {
-                $storage->store($payload);
-            }
+            if($payload !== null){
+                $dataGrouped = $grouper->group($payload);
 
-            // TODO
-            sleep(1);
-
-            $timeCurrent = time();
-            $seconds = $timeCurrent - $time;
-
-            if ($seconds > 5) {
-                $time = $timeCurrent;
-
-                $data = $storage->readAndDelete();
-                $dataGrouped = $grouper->group($data);
                 $syncer->sync($dataGrouped);
             }
+
+            sleep($sleep);
         }
     }
 }
