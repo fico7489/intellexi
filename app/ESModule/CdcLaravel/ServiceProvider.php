@@ -2,6 +2,8 @@
 
 namespace App\ESModule\CdcLaravel;
 
+use App\ESModule\Cdc\Converter\ConverterInterface;
+use App\ESModule\Cdc\Converter\MaxwellConverter;
 use App\ESModule\Cdc\Event\CdcGrouped;
 use App\ESModule\Cdc\Event\CdcRaw;
 use App\ESModule\Cdc\Storage\List\Algorithm;
@@ -22,9 +24,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             Consumer::class,
         ]);
 
+        //bind
         $this->app->bind(Storage::class, RedisStorage::class);
         $this->app->bind(EventDispatcherInterface::class, EventDispatcher::class);
+        $this->app->bind(ConverterInterface::class, MaxwellConverter::class);
 
+        //config
         $this->app->when(Algorithm::class)->needs('$limit')->give(100);
         $this->app->when(Algorithm::class)->needs('$sleep')->give(5);
 

@@ -2,38 +2,47 @@
 
 namespace App\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Converter\MaxwellConverter;
+use App\ESModule\Cdc\Converter\ConverterInterface;
+use App\ESModule\Cdc\Dto\ChangedDbRow;
 
-class Grouper
+readonly class Grouper
 {
+    public function __construct(
+        private ConverterInterface $converter,
+    )
+    {
+    }
+
     public function group($payloads): array
     {
         $data = [];
         foreach ($payloads as $payload) {
             $payload = json_decode($payload, true);
 
-            /** @var MaxwellConverter $converter */
-            $converter = app(MaxwellConverter::class);
+            $changedDbRow = $this->converter->convert($payload);
 
-            list($table, $type, $identifier, $old) = $converter->convert($payload);
+            $table = $changedDbRow->getTable();
+            $identifier = $changedDbRow->getIdentifier();
+            $changedFields = $changedDbRow->getChangedFields();
 
-            if ('delete' === $type) {
+            $type = $changedDbRow->getType();
+            if (ChangedDbRow::TYPE_DELETE === $type) {
                 $data[$table][$identifier] = [
                     'type' => 'delete',
                 ];
-            } elseif ('update' === $type) {
-                if (isset($data[$table][$identifier])) {
+            } elseif (ChangedDbRow::TYPE_UPDATE === $type) {
+                if (isset($data[$table][$changedDbRow->getIdentifier()])) {
                     $data[$table][$identifier]['changed_fields'] = array_unique(array_merge(
                         $data[$table][$identifier]['changed_fields'],
-                        $old
+                        $changedFields
                     ));
                 } else {
                     $data[$table][$identifier] = [
                         'type' => 'update',
-                        'changed_fields' => $old,
+                        'changed_fields' => $changedFields,
                     ];
                 }
-            } elseif ('insert' === $type) {
+            } elseif (ChangedDbRow::TYPE_INSERT === $type) {
                 $data[$table][$identifier] = [
                     'type' => 'insert',
                 ];

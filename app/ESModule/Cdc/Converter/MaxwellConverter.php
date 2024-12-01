@@ -2,20 +2,22 @@
 
 namespace App\ESModule\Cdc\Converter;
 
-class MaxwellConverter
-{
-    public function convert(array $payload): array
-    {
-        $table = $payload['table'];
-        $type = $payload['type'];
-        $identifier = $payload['data']['id'];
-        $old = isset($payload['old']) ? array_keys($payload['old']) : [];
+use App\ESModule\Cdc\Dto\ChangedDbRow;
 
-        return [
-            $table,
-            $type,
+class MaxwellConverter implements ConverterInterface
+{
+    public function convert(array $payload): ChangedDbRow
+    {
+        $identifier = $payload['data']['id'];
+        $changedFields = isset($payload['old']) ? array_keys($payload['old']) : [];
+
+        return new ChangedDbRow(
+            $payload['database'],
+            $payload['table'],
+            $payload['type'],
             $identifier,
-            $old,
-        ];
+            $changedFields,
+            $payload['data'],
+        );
     }
 }

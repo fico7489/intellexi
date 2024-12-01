@@ -25,7 +25,13 @@ class UserIndex implements IndexDefinerModelInterface
 
     public function getConfigModel(): array
     {
-        return [];
+        return [
+            'id',
+            'first_name',
+            'roles' => [
+                'id'
+            ]
+        ];
     }
 
     public function getMapping(array $mapping): array
