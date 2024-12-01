@@ -5,19 +5,20 @@ namespace App\ESModule\Cdc\Processor;
 use App\ESModule\Cdc\Grouper\Grouper;
 use App\ESModule\Cdc\Syncer\Syncer;
 
-class Processor
+readonly class Processor
 {
+    public function __construct(
+        private Grouper $grouper,
+        private Syncer  $syncer,
+    )
+    {
+    }
+
     // TODO send DTO
     public function process($payload): void
     {
-        /** @var Grouper $grouper */
-        $grouper = app(Grouper::class);
+        $dataGrouped = $this->grouper->group($payload);
 
-        /** @var Syncer $syncer */
-        $syncer = app(Syncer::class);
-
-        $dataGrouped = $grouper->group($payload);
-
-        $syncer->sync($dataGrouped);
+        $this->syncer->sync($dataGrouped);
     }
 }

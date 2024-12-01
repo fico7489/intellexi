@@ -3,25 +3,26 @@
 namespace App\ESModule\Cdc\Strategy\List;
 
 use App\ESModule\Cdc\Processor\Processor;
-use App\ESModule\Cdc\Strategy\List\Storage\RedisAdapter;
+use App\ESModule\Cdc\Strategy\List\Storage\Adapter;
 
-class Algorithm
+readonly class Algorithm
 {
+    public function __construct(
+        private Processor $processor,
+        private Adapter $storage,
+    )
+    {
+    }
+
     public function run(){
         $limit = 100;
         $sleep = 1;
 
-        /** @var RedisAdapter $storage */
-        $storage = app(RedisAdapter::class);
-
-        /** @var Processor $syncer */
-        $syncer = app(Processor::class);
-
         while (true) {
-            $payload = $storage->readCdc($limit);
+            $payload = $this->storage->readCdc($limit);
 
             if($payload !== null){
-                $syncer->process($payload);
+                $this->processor->process($payload);
             }
 
             sleep($sleep);
