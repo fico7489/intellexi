@@ -2,11 +2,7 @@
 
 namespace App\ESModule\Cdc\Syncer;
 
-class Syncer
+interface Syncer
 {
-    // TODO send DTO
-    public function sync($payload): void
-    {
-        dump('syncer', $payload);
-    }
+    public function sync($payload): void;
 }
