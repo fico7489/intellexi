@@ -25,8 +25,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->bind(Storage::class, RedisStorage::class);
         $this->app->bind(EventDispatcherInterface::class, EventDispatcher::class);
 
-        $this->app->when(Algorithm::class)->needs('$limit')->give(1);
-        $this->app->when(Algorithm::class)->needs('$sleep')->give(0);
+        $this->app->when(Algorithm::class)->needs('$limit')->give(100);
+        $this->app->when(Algorithm::class)->needs('$sleep')->give(5);
 
         $this->app->when(RedisStorage::class)->needs('$channel')->give('maxwell');
 
