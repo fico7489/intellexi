@@ -4,6 +4,7 @@ namespace App\ESModule\Cdc\Worker;
 
 use App\ESModule\Cdc\Grouper\Grouper;
 use App\ESModule\Cdc\Storage\RedisStorage;
+use App\ESModule\Cdc\Syncer\Syncer;
 
 class Worker
 {
@@ -11,6 +12,12 @@ class Worker
     {
         /** @var RedisStorage $storage */
         $storage = app(RedisStorage::class);
+
+        /** @var Syncer $syncer */
+        $syncer = app(Syncer::class);
+
+        /** @var Grouper $grouper */
+        $grouper = app(Grouper::class);
 
         // TODO
         $time = time();
@@ -32,8 +39,8 @@ class Worker
                 $time = $timeCurrent;
 
                 $data = $storage->readAndDelete();
-
-                app(Grouper::class)->group($data);
+                $dataGrouped = $grouper->group($data);
+                $syncer->sync($dataGrouped);
             }
         }
     }

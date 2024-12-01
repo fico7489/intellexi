@@ -2,6 +2,8 @@
 
 namespace App\ESModule\Cdc\Grouper;
 
+use App\ESModule\Cdc\Converter\MaxwellConverter;
+
 class Grouper
 {
     public function group($payloads): array
@@ -10,9 +12,10 @@ class Grouper
         foreach ($payloads as $payload) {
             $payload = json_decode($payload, true);
 
-            $table = $payload['table'];
-            $type = $payload['type'];
-            $identifier = $payload['data']['id'];
+            /** @var MaxwellConverter $converter */
+            $converter = app(MaxwellConverter::class);
+
+            list($table, $type, $identifier, $old) = $converter->convert($payload);
 
             if ('delete' === $type) {
                 $data[$table][$identifier] = [
@@ -22,12 +25,12 @@ class Grouper
                 if (isset($data[$table][$identifier])) {
                     $data[$table][$identifier]['changed_fields'] = array_unique(array_merge(
                         $data[$table][$identifier]['changed_fields'],
-                        array_keys($payload['old'])
+                        $old
                     ));
                 } else {
                     $data[$table][$identifier] = [
                         'type' => 'update',
-                        'changed_fields' => array_keys($payload['old']),
+                        'changed_fields' => $old,
                     ];
                 }
             } elseif ('insert' === $type) {
@@ -36,8 +39,6 @@ class Grouper
                 ];
             }
         }
-
-        dump($data);
 
         return $data;
     }
