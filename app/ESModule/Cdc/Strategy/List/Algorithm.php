@@ -3,29 +3,29 @@
 namespace App\ESModule\Cdc\Strategy\List;
 
 use App\ESModule\Cdc\Processor\Processor;
-use App\ESModule\Cdc\Strategy\List\Storage\Adapter;
+use App\ESModule\Cdc\Strategy\List\Storage\Storage;
 
 readonly class Algorithm
 {
     public function __construct(
         private Processor $processor,
-        private Adapter $storage,
+        private Storage   $storage,
+        private string    $limit,
+        private string    $sleep,
     )
     {
     }
 
-    public function run(){
-        $limit = 100;
-        $sleep = 1;
-
+    public function run()
+    {
         while (true) {
-            $payload = $this->storage->readCdc($limit);
+            $payload = $this->storage->readCdc($this->limit);
 
-            if($payload !== null){
+            if ($payload !== null) {
                 $this->processor->process($payload);
             }
 
-            sleep($sleep);
+            sleep($this->sleep);
         }
     }
 }

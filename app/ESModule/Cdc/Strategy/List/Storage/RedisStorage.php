@@ -4,7 +4,7 @@ namespace App\ESModule\Cdc\Strategy\List\Storage;
 
 use Illuminate\Support\Facades\Redis;
 
-class RedisAdapter implements Adapter
+class RedisStorage implements Storage
 {
     public function readCdc(int $limit): ?array
     {

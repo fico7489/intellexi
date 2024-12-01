@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Cdc\Strategy\List\Storage;
 
-interface Adapter
+interface Storage
 {
     public function readCdc(int $limit): ?array;
 }
