@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Cdc\Event;
 
-readonly class CdcRaw
+readonly class CdcGrouped
 {
     public function __construct(
         private array $payload,
