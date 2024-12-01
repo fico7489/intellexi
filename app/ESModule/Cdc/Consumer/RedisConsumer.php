@@ -2,11 +2,12 @@
 
 namespace App\ESModule\Cdc\Consumer;
 
-use App\ESModule\Cdc\Converter\MaxwellConverter;
-use App\ESModule\Cdc\Job\ChangedDbRowJob;
+use App\ESModule\Syncer\Dto\ChangedDbRow;
+use App\ESModule\Syncer\Syncer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
+//maxwell redis consumer
 class RedisConsumer extends Command
 {
     protected $signature = 'cdc:consumer:redis-subscribe {channel}';
@@ -21,12 +22,23 @@ class RedisConsumer extends Command
             if ('NULL' === gettype($payload)) {
                 continue;
             } else {
-                // dump($payload);
+                $payload = json_decode($payload, true);
 
-                $dto = app(MaxwellConverter::class)->convert($payload);
+                $database = $payload['database'];
+                $table = $payload['table'];
+                $type = $payload['type'];
+                $identifier = $payload['data']['id'];
+                $changedFields = isset($payload['old']) ? array_keys($payload['old']) : [];
+                $data = $payload['data'];
 
-                // TODO
-                ChangedDbRowJob::dispatchSync($dto);
+                app(Syncer::class)->sync(new ChangedDbRow(
+                    $database,
+                    $table,
+                    $type,
+                    $identifier,
+                    $changedFields,
+                    $data
+                ));
             }
 
             sleep(0.5);

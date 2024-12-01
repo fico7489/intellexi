@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Cdc\Dto;
+namespace App\ESModule\Syncer\Dto;
 
 class ChangedDbRow
 {
