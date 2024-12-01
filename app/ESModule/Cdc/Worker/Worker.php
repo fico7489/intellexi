@@ -10,12 +10,12 @@ class Worker
 {
     public function work($channel)
     {
+        $time = time();
+
         while (true) {
             $payload = Redis::rpop($channel);
 
-            if ('NULL' === gettype($payload)) {
-                continue;
-            } else {
+            if ('NULL' !== gettype($payload)) {
                 $payload = json_decode($payload, true);
 
                 $database = $payload['database'];
@@ -35,7 +35,15 @@ class Worker
                 ));
             }
 
-            sleep(0.5);
+            sleep(1);
+
+            $timeCurrent = time();
+            $seconds = $timeCurrent -$time;
+
+           if ($seconds > 5) {
+               dump('sync....');
+               $time = $timeCurrent;
+           }
         }
     }
 }
