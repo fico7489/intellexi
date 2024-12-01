@@ -14,11 +14,11 @@ class Grouper
             $type = $payload['type'];
             $identifier = $payload['data']['id'];
 
-            if ($type === 'delete') {
+            if ('delete' === $type) {
                 $data[$table][$identifier] = [
                     'type' => 'delete',
                 ];
-            } elseif ($type === 'update') {
+            } elseif ('update' === $type) {
                 if (isset($data[$table][$identifier])) {
                     $data[$table][$identifier]['changed_fields'] = array_unique(array_merge(
                         $data[$table][$identifier]['changed_fields'],
@@ -30,7 +30,7 @@ class Grouper
                         'changed_fields' => array_keys($payload['old']),
                     ];
                 }
-            } elseif ($type === 'insert') {
+            } elseif ('insert' === $type) {
                 $data[$table][$identifier] = [
                     'type' => 'insert',
                 ];

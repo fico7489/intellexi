@@ -12,7 +12,7 @@ class Worker
         /** @var RedisStorage $storage */
         $storage = app(RedisStorage::class);
 
-        //TODO
+        // TODO
         $time = time();
 
         while (true) {
@@ -22,7 +22,7 @@ class Worker
                 $storage->store($payload);
             }
 
-            //TODO
+            // TODO
             sleep(1);
 
             $timeCurrent = time();

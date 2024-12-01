@@ -1,15 +1,14 @@
 <?php
 
-
 namespace App\ESModule\Cdc\Storage;
 
 use Illuminate\Support\Facades\Redis;
 
 class RedisStorage
 {
-    public function readCdc() : ?string
+    public function readCdc(): ?string
     {
-        //TODO
+        // TODO
         $channel = 'maxwell';
 
         $payload = Redis::rpop($channel);
@@ -18,10 +17,10 @@ class RedisStorage
             return null;
         }
 
-        return  $payload;
+        return $payload;
     }
 
-    public function store(string $payload) : void
+    public function store(string $payload): void
     {
         $key = 'DATA';
 
@@ -30,7 +29,7 @@ class RedisStorage
         dump('stored', $payload);
     }
 
-    public function readAndDelete() : array
+    public function readAndDelete(): array
     {
         $key = 'DATA';
 
