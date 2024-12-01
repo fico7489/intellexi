@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\ESModule\Cdc\Consumer\RedisConsumer;
+use App\ESModule\Cdc\Laravel\Consumer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->commands([
-            RedisConsumer::class,
+            Consumer::class,
         ]);
 
         // app(EloquentListener::class)->listen();

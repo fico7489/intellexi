@@ -25,7 +25,7 @@ class Worker
             $timeCurrent = time();
             $seconds = $timeCurrent - $time;
 
-            if ($seconds > 15) {
+            if ($seconds > 5) {
                 $time = $timeCurrent;
 
                 $data = Redis::smembers('DATA');

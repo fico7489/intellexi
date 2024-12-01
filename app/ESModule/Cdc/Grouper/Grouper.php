@@ -30,6 +30,10 @@ class Grouper
                         'changed_fields' => array_keys($payload['old']),
                     ];
                 }
+            } elseif ($type === 'insert') {
+                $data[$table][$identifier] = [
+                    'type' => 'insert',
+                ];
             }
         }
 

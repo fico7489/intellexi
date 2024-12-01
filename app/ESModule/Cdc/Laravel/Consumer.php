@@ -1,13 +1,13 @@
 <?php
 
-namespace App\ESModule\Cdc\Consumer;
+namespace App\ESModule\Cdc\Laravel;
 
 use App\ESModule\Cdc\Worker\Worker;
 use Illuminate\Console\Command;
 
-class RedisConsumer extends Command
+class Consumer extends Command
 {
-    protected $signature = 'cdc:consumer:redis-subscribe {channel}';
+    protected $signature = 'cdc:laravel:consume {channel}';
 
     public function handle()
     {
