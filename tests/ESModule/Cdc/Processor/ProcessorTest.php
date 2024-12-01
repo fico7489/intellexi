@@ -24,18 +24,21 @@ class ProcessorTest extends TestCase
         });
 
         $this->mock(EventDispatcherInterface::class, function ($mock) use ($payloadGrouped, $payload) {
-            //$mock->allows('dispatch');
             $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcRaw $cdcRaw) use ($payload, $payloadGrouped) {
+                ->withArgs(function (CdcRaw $cdcRaw) use ($payload) {
                     $this->assertEquals($payload, $cdcRaw->getPayload());
 
                     return true;
                 })
                 ->once();
 
-            /*$mock->shouldReceive('dispatch')
-                ->withArgs([new CdcGrouped($payloadGrouped)])
-                ->once();*/
+            $mock->shouldReceive('dispatch')
+                ->withArgs(function (CdcGrouped $cdcRaw) use ($payloadGrouped) {
+                    $this->assertEquals($payloadGrouped, $cdcRaw->getPayload());
+
+                    return true;
+                })
+                ->once();
         });
 
         app(Processor::class)->process($payload);
