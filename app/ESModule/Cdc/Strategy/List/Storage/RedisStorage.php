@@ -2,21 +2,24 @@
 
 namespace App\ESModule\Cdc\Strategy\List\Storage;
 
-use Illuminate\Support\Facades\Redis;
+use Predis\Client;
 
-class RedisStorage implements Storage
+readonly class RedisStorage implements Storage
 {
+    public function __construct(
+        private string $channel,
+    ) {
+    }
+
     public function readCdc(int $limit): ?array
     {
-        // TODO
-        $channel = 'maxwell';
-
-        $payload = Redis::lmpop([$channel], 'left', $limit);
+        $predis = new Client(config('database.redis.default'));
+        $payload = $predis->lmpop([$this->channel], 'left', $limit);
 
         if ('NULL' === gettype($payload)) {
             return null;
         }
 
-        return $payload[$channel];
+        return $payload[$this->channel];
     }
 }

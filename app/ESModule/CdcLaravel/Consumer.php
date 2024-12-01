@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Cdc\Laravel;
+namespace App\ESModule\CdcLaravel;
 
 use App\ESModule\Cdc\Strategy\List\Algorithm;
 use Illuminate\Console\Command;
@@ -9,7 +9,7 @@ class Consumer extends Command
 {
     protected $signature = 'cdc:laravel:consume';
 
-    public function handle()
+    public function handle(): void
     {
         /** @var Algorithm $algorithm */
         $algorithm = app(Algorithm::class);

@@ -9,11 +9,10 @@ readonly class Algorithm
 {
     public function __construct(
         private Processor $processor,
-        private Storage   $storage,
-        private string    $limit,
-        private string    $sleep,
-    )
-    {
+        private Storage $storage,
+        private string $limit,
+        private string $sleep,
+    ) {
     }
 
     public function run()
@@ -21,7 +20,7 @@ readonly class Algorithm
         while (true) {
             $payload = $this->storage->readCdc($this->limit);
 
-            if ($payload !== null) {
+            if (null !== $payload) {
                 $this->processor->process($payload);
             }
 
