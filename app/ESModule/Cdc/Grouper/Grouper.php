@@ -17,8 +17,6 @@ readonly class Grouper
     {
         $data = [];
         foreach ($payloads as $payload) {
-            $payload = json_decode($payload, true);
-
             $changedDbRow = $this->converter->convert($payload);
 
             $table = $changedDbRow->getTable();
