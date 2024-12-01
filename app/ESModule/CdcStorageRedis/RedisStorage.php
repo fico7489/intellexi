@@ -1,7 +1,8 @@
 <?php
 
-namespace App\ESModule\Cdc\Strategy\List\Storage;
+namespace App\ESModule\CdcStorageRedis;
 
+use App\ESModule\Cdc\Storage\List\Storage;
 use Predis\Client;
 
 readonly class RedisStorage implements Storage
@@ -12,7 +13,7 @@ readonly class RedisStorage implements Storage
     ) {
     }
 
-    public function lmpop(int $limit): ?array
+    public function pop(int $limit): ?array
     {
         $predis = new Client($this->options);
         $payload = $predis->lmpop([$this->channel], 'left', $limit);

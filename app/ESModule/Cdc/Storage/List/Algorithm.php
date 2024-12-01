@@ -1,9 +1,8 @@
 <?php
 
-namespace App\ESModule\Cdc\Strategy\List;
+namespace App\ESModule\Cdc\Storage\List;
 
 use App\ESModule\Cdc\Processor\Processor;
-use App\ESModule\Cdc\Strategy\List\Storage\Storage;
 
 readonly class Algorithm
 {
@@ -18,7 +17,7 @@ readonly class Algorithm
     public function run()
     {
         while (true) {
-            $payload = $this->storage->lmpop($this->limit);
+            $payload = $this->storage->pop($this->limit);
 
             if (null !== $payload) {
                 $this->processor->process($payload);

@@ -4,9 +4,9 @@ namespace App\ESModule\CdcLaravel;
 
 use App\ESModule\Cdc\Event\CdcGrouped;
 use App\ESModule\Cdc\Event\CdcRaw;
-use App\ESModule\Cdc\Strategy\List\Algorithm;
-use App\ESModule\Cdc\Strategy\List\Storage\RedisStorage;
-use App\ESModule\Cdc\Strategy\List\Storage\Storage;
+use App\ESModule\Cdc\Storage\List\Algorithm;
+use App\ESModule\Cdc\Storage\List\Storage;
+use App\ESModule\CdcStorageRedis\RedisStorage;
 use Illuminate\Support\Facades\Event;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -30,7 +30,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->app->when(RedisStorage::class)->needs('$channel')->give('maxwell');
         $this->app->when(RedisStorage::class)->needs('$options')->give(config('database.redis.default'));
-
 
         Event::listen(function (CdcRaw $event) {
             dump('laravel event listener raw', $event->getPayload());

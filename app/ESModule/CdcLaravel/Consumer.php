@@ -2,7 +2,7 @@
 
 namespace App\ESModule\CdcLaravel;
 
-use App\ESModule\Cdc\Strategy\List\Algorithm;
+use App\ESModule\Cdc\Storage\List\Algorithm;
 use Illuminate\Console\Command;
 
 class Consumer extends Command
