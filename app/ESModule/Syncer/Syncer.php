@@ -18,11 +18,15 @@ class Syncer
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
-
                 $dataSync = $this->getDataSync($dataSync, $changedRowGrouped);
             }
         }
 
+        $this->doSync($dataSync);
+    }
+
+    private function doSync($dataSync): void
+    {
         foreach ($dataSync as $indexName => $data) {
             $this->dataUpdate($indexName, $data);
         }
