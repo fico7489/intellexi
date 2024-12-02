@@ -10,8 +10,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class Processor
 {
     public function __construct(
-        private readonly EventDispatcherInterface $dispatcher,
-        private readonly ConverterInterface $converter,
+        private EventDispatcherInterface $dispatcher,
+        private ConverterInterface $converter,
     ) {
     }
 

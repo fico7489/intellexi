@@ -4,11 +4,8 @@ namespace Tests\ESModule\Cdc\Processor;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
-use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
 use App\ESModule\Cdc\Event\CdcDtosEvent;
 use App\ESModule\Cdc\Event\CdcPayloadsEvent;
-use App\ESModule\Cdc\Grouper\Grouper;
 use App\ESModule\Cdc\Processor\Processor;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tests\TestCase;
@@ -20,36 +17,21 @@ class ProcessorTest extends TestCase
         $payload = '{"test" : "payload"}';
         $payloads = [$payload];
 
-        $changedRow = new CdcDto('test', 'test', 'test', 'test', [], []);
-        $changedRows = [$changedRow];
+        $cdcDto = new CdcDto('test', 'test', 'test', [], [], []);
+        $cdcDtos = [$cdcDto];
 
-        $changedRowGrouped = new ChangedRowGroupedDto('test2', 'test2', 'test2', 'test2', [], []);
-        $changedRowsGrouped = [$changedRowGrouped];
-
-        $this->mock(Grouper::class, function ($mock) use ($changedRows, $changedRowsGrouped) {
-            $mock->shouldReceive('group')
-                ->withArgs(function ($changedRowsActual) use ($changedRows) {
-                    $this->assertEquals($changedRows, $changedRowsActual);
-
-                    return true;
-                })
-                ->once()
-                ->andReturn($changedRowsGrouped);
-        });
-
-        $this->mock(ConverterInterface::class, function ($mock) use ($payloads, $changedRows) {
-            $mock->shouldReceive('convert')
+        $this->mock(ConverterInterface::class, function ($mock) use ($payloads, $cdcDtos) {
+            $mock->shouldReceive('convertCdcPayloadsToCdcDtos')
                 ->withArgs(function ($payloadsActual) use ($payloads) {
                     $this->assertEquals($payloads, $payloadsActual);
 
                     return true;
                 })
                 ->once()
-                ->andReturn($changedRows)
-            ;
+                ->andReturn($cdcDtos);
         });
 
-        $this->mock(EventDispatcherInterface::class, function ($mock) use ($changedRowsGrouped, $changedRows, $payloads) {
+        $this->mock(EventDispatcherInterface::class, function ($mock) use ($cdcDtos, $payloads) {
             $mock->shouldReceive('dispatch')
                 ->withArgs(function (CdcPayloadsEvent $event) use ($payloads) {
                     $this->assertEquals($payloads, $event->getCdcPayloads());
@@ -59,22 +41,14 @@ class ProcessorTest extends TestCase
                 ->once();
 
             $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcDtosEvent $event) use ($changedRows) {
-                    $this->assertEquals($changedRows, $event->getCdcDtos());
-
-                    return true;
-                })
-                ->once();
-
-            $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcChangedRowsGrouped $event) use ($changedRowsGrouped) {
-                    $this->assertEquals($changedRowsGrouped, $event->getChangedRowsGrouped());
+                ->withArgs(function (CdcDtosEvent $event) use ($cdcDtos) {
+                    $this->assertEquals($cdcDtos, $event->getCdcDtos());
 
                     return true;
                 })
                 ->once();
         });
 
-        app(Processor::class)->process($payloads);
+        app(Processor::class)->processCdcPayloads($payloads);
     }
 }
