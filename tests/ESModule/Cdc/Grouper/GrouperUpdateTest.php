@@ -2,22 +2,10 @@
 
 namespace Tests\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Dto\ChangedDbRow;
 use App\ESModule\Cdc\Dto\SyncDbRow;
-use App\ESModule\Cdc\Grouper\Grouper;
-use Tests\TestCase;
 
-class GrouperTest extends TestCase
+class GrouperUpdateTest extends TestCase
 {
-    private Grouper $grouper;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->grouper = app(Grouper::class);
-    }
-
     public function testUpdateBasic()
     {
         $changedDbRow = $this->createChangedRow();
@@ -97,26 +85,5 @@ class GrouperTest extends TestCase
         $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow2->getIdentifier());
         $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow2->getData());
-    }
-
-    private function createChangedRow(
-        string $database = 'test-database',
-        string $table = 'test-table',
-        string $type = ChangedDbRow::TYPE_UPDATE,
-        mixed  $identifier = 1,
-        array  $changedFields = ['name'],
-        array  $data = ['id' => 1, 'name' => 'test2'],
-    )
-    {
-        $changedDbRow = new ChangedDbRow(
-            $database,
-            $table,
-            $type,
-            $identifier,
-            $changedFields,
-            $data
-        );
-
-        return $changedDbRow;
     }
 }
