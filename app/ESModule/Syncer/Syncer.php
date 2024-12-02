@@ -5,7 +5,6 @@ namespace App\ESModule\Syncer;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
 use App\Models\Application;
-use App\Models\Race;
 use App\Models\User;
 use GuzzleHttp\Client;
 
@@ -17,7 +16,6 @@ class Syncer
 
         $dataSync = [];
         foreach ($changedRowsGrouped as $table => $data) {
-
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
 
@@ -25,7 +23,7 @@ class Syncer
             }
         }
 
-        foreach ($dataSync as $indexName => $data){
+        foreach ($dataSync as $indexName => $data) {
             $this->dataUpdate($indexName, $data);
         }
     }
@@ -46,13 +44,13 @@ class Syncer
 
     private function detectModels(ChangedRowGroupedDto $changedRowGrouped): array
     {
-        $className = $changedRowGrouped->getTable() === 'applications' ? Application::class : User::class;
-        $indexName = $changedRowGrouped->getTable() === 'applications' ? 'prefix_applications' : 'prefix_users';
+        $className = 'applications' === $changedRowGrouped->getTable() ? Application::class : User::class;
+        $indexName = 'applications' === $changedRowGrouped->getTable() ? 'prefix_applications' : 'prefix_users';
 
         $model = $className::find($changedRowGrouped->getIdentifier());
 
         $models = [
-            $indexName => $model
+            $indexName => $model,
         ];
 
         return $models;
@@ -60,7 +58,7 @@ class Syncer
 
     private function documentPrepare(string $indexName, int $identifier, array $data): array
     {
-        //TODO delete
+        // TODO delete
 
         $data = ['doc' => array_merge(['id' => $identifier], $data), 'doc_as_upsert' => true];
 
@@ -94,7 +92,7 @@ class Syncer
 
         $documentJsons = '';
         foreach ($datas as $data) {
-            $documentJsons .= json_encode($data) . "\n";
+            $documentJsons .= json_encode($data)."\n";
         }
 
         if ('' === $documentJsons) {
@@ -104,16 +102,16 @@ class Syncer
         $documentJsons .= "\n";
 
         $url = '_bulk';
-        $response = $clientGuzzle->request('POST', '/' . $url,
+        $response = $clientGuzzle->request('POST', '/'.$url,
             [
                 'headers' => ['Content-type' => 'application/json'],
-                'body' => $documentJsons . "\n",
+                'body' => $documentJsons."\n",
             ]
         );
 
         dump($response->getStatusCode());
 
-        //TODO async
+        // TODO async
 
         return true;
     }

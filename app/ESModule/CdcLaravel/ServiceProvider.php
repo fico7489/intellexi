@@ -4,9 +4,7 @@ namespace App\ESModule\CdcLaravel;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Converter\MaxwellConverter;
-use App\ESModule\Cdc\Event\CdcChangedRows;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
-use App\ESModule\Cdc\Event\CdcPayloads;
 use App\ESModule\Cdc\Storage\List\Algorithm;
 use App\ESModule\Cdc\Storage\List\Storage;
 use App\ESModule\CdcStorageRedis\RedisStorage;
