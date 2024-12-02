@@ -14,13 +14,7 @@ class Syncer
     {
         $changedRowsGrouped = $event->getChangedRowsGrouped();
 
-        $documents = [];
-        foreach ($changedRowsGrouped as $table => $data) {
-            foreach ($data as $identifier => $changedRowGrouped) {
-                /* @var ChangedRowGroupedDto $changedRowGrouped */
-                $documents = $this->createDocuments($documents, $changedRowGrouped);
-            }
-        }
+        $documents = $this->createDocuments($changedRowsGrouped);
 
         $this->esIndexesSync($documents);
     }
@@ -32,18 +26,24 @@ class Syncer
         }
     }
 
-    private function createDocuments(array $dataSync, ChangedRowGroupedDto $changedRowGrouped): array
+    private function createDocuments($changedRowsGrouped): array
     {
-        $models = $this->detectModels($changedRowGrouped);
+        $documents = [];
+        foreach ($changedRowsGrouped as $table => $data) {
+            foreach ($data as $identifier => $changedRowGrouped) {
+                /* @var ChangedRowGroupedDto $changedRowGrouped */
+                $models = $this->detectModels($changedRowGrouped);
 
-        foreach ($models as $indexName => $model) {
-            $dataSync[$indexName][] = [
-                'identifier' => $changedRowGrouped->getIdentifier(),
-                'data' => $changedRowGrouped->getData(),
-            ];
+                foreach ($models as $indexName => $model) {
+                    $documents[$indexName][] = [
+                        'identifier' => $changedRowGrouped->getIdentifier(),
+                        'data' => $changedRowGrouped->getData(),
+                    ];
+                }
+            }
         }
 
-        return $dataSync;
+        return $documents;
     }
 
     private function detectModels(ChangedRowGroupedDto $changedRowGrouped): array
