@@ -27,6 +27,7 @@ class ItemsRootModelFetcher
                 $indexName = 'prefix_'.$index->getIndexName(); // TODO prefix
 
                 $model = $this->eloquentAdapter->fetchModel($className, $changedRowGrouped);
+                dd('key:', $model->getKeyName());
 
                 $items[$indexName] = $this->dataFetcher->fetch($index, $model, $changedRowGrouped);
             }
