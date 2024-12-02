@@ -41,7 +41,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         });
 
         Event::listen(function (CdcChangedRows $event) {
-            dump('laravel event listener grouped', $event->getPayload());
+            dump('laravel event listener grouped', $event->getChangedRows());
         });
     }
 }

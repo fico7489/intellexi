@@ -5,12 +5,12 @@ namespace App\ESModule\Cdc\Event;
 readonly class CdcChangedRows
 {
     public function __construct(
-        private array $payload,
+        private array $changedRows,
     ) {
     }
 
-    public function getPayload(): array
+    public function getChangedRows(): array
     {
-        return $this->payload;
+        return $this->changedRows;
     }
 }
