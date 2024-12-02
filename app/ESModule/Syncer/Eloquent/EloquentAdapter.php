@@ -9,6 +9,8 @@ class EloquentAdapter
 {
     public function fetchModel(string $className, ChangedRowGroupedDto $changedRowGrouped): ?Model
     {
+        // MAKE sure that newest model is fetched
+
         return $className::find($changedRowGrouped->getIdentifier());
     }
 }
