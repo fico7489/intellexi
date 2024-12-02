@@ -4,9 +4,6 @@ namespace App\ESModule\Syncer;
 
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Config\ConfigFetcher;
-use App\Models\Application;
-use App\Models\Race;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +11,7 @@ class SyncItemsFetcher
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
+        private readonly ModelMapper $modelMapper,
     ) {
     }
 
@@ -30,7 +28,7 @@ class SyncItemsFetcher
 
     private function addRootModelForSync(array $items, ChangedRowGroupedDto $changedRowGrouped): array
     {
-        $className = $this->tableToClassName($changedRowGrouped->getTable());
+        $className = $this->modelMapper->convertTableToClassName($changedRowGrouped->getTable());
 
         foreach ($this->configFetcher->fetchIndexes() as $index) {
             if ($className === $index->getClassName()) {
@@ -52,7 +50,7 @@ class SyncItemsFetcher
 
             foreach ($syncRelations as $classNameRelated => $data) {
                 foreach ($data as $relationRelated => $changedFields) {
-                    $tableRelated = $this->classNameToTable($classNameRelated);
+                    $tableRelated = $this->modelMapper->convertClassNameToTable($classNameRelated);
 
                     $relatedSyncs[] = [
                         'table' => $tableRelated,
@@ -91,33 +89,5 @@ class SyncItemsFetcher
     private function fetchModel(string $className, ChangedRowGroupedDto $changedRowGrouped): ?Model
     {
         return $className::find($changedRowGrouped->getIdentifier());
-    }
-
-    private function tableToClassName($table): string
-    {
-        // TODO
-        if ('races' === $table) {
-            return Race::class;
-        } elseif ('users' === $table) {
-            return User::class;
-        } elseif ('applications' === $table) {
-            return Application::class;
-        }
-
-        dd('unknown table....');
-    }
-
-    private function classNameToTable($className): string
-    {
-        // TODO
-        if (Race::class === $className) {
-            return 'races';
-        } elseif (User::class === $className) {
-            return 'users';
-        } elseif (Application::class === $className) {
-            return 'applications';
-        }
-
-        dd('unknown className....');
     }
 }

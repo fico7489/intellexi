@@ -13,7 +13,7 @@ class ModelMapper
         $models = collect(File::allFiles(app_path()))
             ->map(function ($item) {
                 $path = $item->getRelativePathName();
-                $class = sprintf('\%s%s',
+                $class = sprintf('%s%s',
                     Container::getInstance()->getNamespace(),
                     strtr(substr($path, 0, strrpos($path, '.')), '/', '\\'));
 
@@ -30,6 +30,29 @@ class ModelMapper
                 return $valid;
             });
 
-        return $models->values()->toArray();
+        $classNames = $models->values()->toArray();
+
+        $mapping = [];
+        foreach ($classNames as $className) {
+            $table = (new $className())->getTable();
+
+            $mapping[$table] = $className;
+        }
+
+        return $mapping;
+    }
+
+    public function convertTableToClassName($table): string
+    {
+        $mapping = $this->fetchAllModelClassNames();
+
+        return $mapping[$table];
+    }
+
+    public function convertClassNameToTable($className): string
+    {
+        $mapping = $this->fetchAllModelClassNames();
+
+        return array_flip($mapping)[$className];
     }
 }
