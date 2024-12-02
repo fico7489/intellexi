@@ -40,11 +40,11 @@ class CdcConverter
                     /** @var CdcDto $syncRowDto */
                     $syncRowDto = $syncRowDtos[$table][$identifier];
 
-                    if (CdcDto::TYPE_DELETE === $syncRowDto->getType()) {
+                    if (SyncRowDto::TYPE_DELETE === $syncRowDto->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
                     }
 
-                    if (CdcDto::TYPE_UPSERT === $syncRowDto->getType()) {
+                    if (SyncRowDto::TYPE_UPSERT === $syncRowDto->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncRowDto->getChangedFields(),
                             $changedFields
