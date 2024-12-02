@@ -14,8 +14,7 @@ class SyncDataDetector
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
-    )
-    {
+    ) {
     }
 
     public function detect(ChangedRowGroupedDto $changedRowGrouped): array
@@ -28,7 +27,7 @@ class SyncDataDetector
 
         foreach ($this->configFetcher->fetchIndexes() as $index) {
             if ($className === $index->getClassName()) {
-                $indexName = 'prefix_' . $index->getIndexName(); // TODO prefix
+                $indexName = 'prefix_'.$index->getIndexName(); // TODO prefix
                 $model = $this->fetchModel($className, $changedRowGrouped);
 
                 $items[$indexName] = $index->getData([], $model);
@@ -85,7 +84,7 @@ class SyncDataDetector
                         'table' => $tableRelated,
                         'className' => $classNameRelated,
                         'changedFields' => $changedFields,
-                        'relation' => $relationRelated
+                        'relation' => $relationRelated,
                     ];
                 }
             }
@@ -96,17 +95,17 @@ class SyncDataDetector
             $className = $data['className'];
             $relation = $data['relation'];
 
-            if($table === $changedRowGrouped->getTable()) {
+            if ($table === $changedRowGrouped->getTable()) {
                 $model2 = $this->fetchModel($className, $changedRowGrouped);
 
-                //TODO if only one
+                // TODO if only one
                 $models = $model2->{$relation};
 
                 foreach ($models as $model) {
-                    //TODO detect index
+                    // TODO detect index
                     $index = app(ApplicationIndex::class);
 
-                    $indexName = 'prefix_' . $index->getIndexName();
+                    $indexName = 'prefix_'.$index->getIndexName();
                     $items[$indexName] = $index->getData([], $model);
                 }
             }

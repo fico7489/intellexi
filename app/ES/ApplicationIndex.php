@@ -25,6 +25,8 @@ class ApplicationIndex implements IndexDefinerModelInterface
 
     public function getMapping(array $mapping): array
     {
+        return [];
+
         return [
             'id' => ['type' => 'integer'],
             'club' => ['type' => 'integer'],
@@ -33,6 +35,8 @@ class ApplicationIndex implements IndexDefinerModelInterface
 
     public function getSettings(array $settings): array
     {
+        return [];
+
         return [
             'settings' => [
                 'mapping' => [
