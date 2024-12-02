@@ -3,7 +3,6 @@
 namespace App\ES;
 
 use App\ESModule\Interface\IndexDefinerModelInterface;
-use App\Models\Application;
 use App\Models\User;
 
 class UserIndex implements IndexDefinerModelInterface
@@ -23,17 +22,6 @@ class UserIndex implements IndexDefinerModelInterface
         return User::class;
     }
 
-    public function getConfigModel(): array
-    {
-        return [
-            'id',
-            'first_name',
-            'roles' => [
-                'id',
-            ],
-        ];
-    }
-
     public function getMapping(array $mapping): array
     {
         return $mapping;
@@ -49,24 +37,6 @@ class UserIndex implements IndexDefinerModelInterface
         return [
             'id' => $model->id,
             'first_name' => $model->first_name,
-        ];
-    }
-
-    public function getUpdatingFields(): array
-    {
-        return [
-            'id',
-            'last_name',
-        ];
-    }
-
-    public function getUpdatingFieldsRelated(): array
-    {
-        return [
-            /*Application::class => [
-                'id',
-                'club',
-            ],*/
         ];
     }
 }

@@ -4,8 +4,6 @@ namespace App\ES;
 
 use App\ESModule\Interface\IndexDefinerModelInterface;
 use App\Models\Application;
-use App\Models\Race;
-use App\Models\User;
 
 class ApplicationIndex implements IndexDefinerModelInterface
 {
@@ -24,26 +22,6 @@ class ApplicationIndex implements IndexDefinerModelInterface
         return Application::class;
     }
 
-    public function getConfigModel(): array
-    {
-        return [
-            'first_name',
-            'last_name',
-            'race' => [
-                'name',
-            ],
-            'user' => [
-                'email',
-                'userType' => [
-                    'name',
-                ],
-                'applications' => [
-                    'club',
-                ],
-            ],
-        ];
-    }
-
     public function getMapping(array $mapping): array
     {
         return $mapping;
@@ -59,29 +37,6 @@ class ApplicationIndex implements IndexDefinerModelInterface
         return [
             'id' => $model->id,
             'club' => $model->club,
-        ];
-    }
-
-    public function getUpdatingFields(): array
-    {
-        return [
-            'first_name',
-            'last_name',
-        ];
-    }
-
-    public function getUpdatingFieldsRelated(): array
-    {
-        return [
-            User::class => [
-                'email',
-            ],
-            Race::class => [
-                'name',
-            ],
-            Application::class => [
-                'club',
-            ],
         ];
     }
 }
