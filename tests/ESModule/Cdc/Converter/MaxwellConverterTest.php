@@ -11,8 +11,9 @@ class MaxwellConverterTest extends TestCase
     public function testInsert()
     {
         $payload = '{"database":"test-db","table":"test-table","type":"insert","ts":1234,"xid":5678,"commit":true,"data":{"id":1,"name":"test-name"}}';
+        $payloads = [$payload];
 
-        $changedDbRow = app(MaxwellConverter::class)->convert($payload);
+        $changedDbRows = app(MaxwellConverter::class)->convert($payloads);
 
         $this->assertEquals(
             new ChangedRowDto(
@@ -26,15 +27,16 @@ class MaxwellConverterTest extends TestCase
                     'name' => 'test-name',
                 ]
             ),
-            $changedDbRow,
+            $changedDbRows[0],
         );
     }
 
     public function testDelete()
     {
         $payload = '{"database":"test-db","table":"test-table","type":"delete","ts":1234,"xid":5678,"commit":true,"data":{"id":1,"name":"test-name"}}';
+        $payloads = [$payload];
 
-        $changedDbRow = app(MaxwellConverter::class)->convert($payload);
+        $changedDbRows = app(MaxwellConverter::class)->convert($payloads);
 
         $this->assertEquals(
             new ChangedRowDto(
@@ -48,15 +50,16 @@ class MaxwellConverterTest extends TestCase
                     'name' => 'test-name',
                 ]
             ),
-            $changedDbRow,
+            $changedDbRows[0],
         );
     }
 
     public function testIUpdate()
     {
         $payload = '{"database":"test-db","table":"test-table","type":"update","ts":1234,"xid":5678,"commit":true,"data":{"id":1,"name":"test-name"}, "old" : {"name" : "test-name-old"}}';
+        $payloads = [$payload];
 
-        $changedDbRow = app(MaxwellConverter::class)->convert($payload);
+        $changedDbRows = app(MaxwellConverter::class)->convert($payloads);
 
         $this->assertEquals(
             new ChangedRowDto(
@@ -72,7 +75,7 @@ class MaxwellConverterTest extends TestCase
                     'name' => 'test-name',
                 ]
             ),
-            $changedDbRow,
+            $changedDbRows[0],
         );
     }
 }
