@@ -60,10 +60,10 @@ class UserIndex implements IndexDefinerModelInterface
     public function getUpdatingFieldsRelated(): array
     {
         return [
-            Application::class => [
+            /*Application::class => [
                 'id',
                 'club',
-            ],
+            ],*/
         ];
     }
 }

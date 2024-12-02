@@ -4,6 +4,7 @@ namespace App\ESModule;
 
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Interface\IndexDefinerModelInterface;
+use Illuminate\Database\Eloquent\Model;
 
 readonly class UpdatingMapFetcher
 {
@@ -22,13 +23,21 @@ readonly class UpdatingMapFetcher
             $className = $indexDefiner->getClassName();
 
             // root
+            /** @var Model $model */
+            $model = (new $className());
+            $table = $model->getTable();
+
             $updatingFields = $indexDefiner->getUpdatingFields();
-            $updatingMap[$className][$indexName] = $updatingFields;
+            $updatingMap[$indexName][$table] = $updatingFields;
 
             // related
             $updatingFieldsRelated = $indexDefiner->getUpdatingFieldsRelated();
             foreach ($updatingFieldsRelated as $classNameRelated => $fieldsRelated) {
-                $updatingMap[$classNameRelated][$indexName] = $fieldsRelated;
+                /** @var Model $modelRelated */
+                $modelRelated = (new $classNameRelated());
+                $tableRelated = $modelRelated->getTable();
+
+                $updatingMap[$indexName][$tableRelated] = $fieldsRelated;
             }
         }
 
