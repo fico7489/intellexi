@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Interface;
+namespace App\ESModule\Config\Interface;
 
 interface IndexDefinerModelInterface
 {

@@ -2,7 +2,7 @@
 
 namespace App\ES;
 
-use App\ESModule\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\Models\User;
 
 class User2Index implements IndexDefinerModelInterface

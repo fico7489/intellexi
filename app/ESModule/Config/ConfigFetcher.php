@@ -6,7 +6,7 @@ use App\ES\ApplicationIndex;
 use App\ES\Connection\DefaultConnection;
 use App\ES\User2Index;
 use App\ES\UserIndex;
-use App\ESModule\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 
 class ConfigFetcher
 {
