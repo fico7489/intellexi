@@ -39,4 +39,9 @@ class User2Index implements IndexDefinerModelInterface
             'last_name' => $model->last_name,
         ];
     }
+
+    public function getSyncRelations(): array
+    {
+        return [];
+    }
 }

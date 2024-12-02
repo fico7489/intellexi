@@ -9,8 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    public const ROLE_ADMINISTRATOR = 'Administrator';
-    public const ROLE_APPLICANT = 'Applicant';
+    public const string ROLE_ADMINISTRATOR = 'Administrator';
+    public const string ROLE_APPLICANT = 'Applicant';
 
     protected $fillable = [
         'first_name',

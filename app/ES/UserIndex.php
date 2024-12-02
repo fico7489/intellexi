@@ -39,4 +39,9 @@ class UserIndex implements IndexDefinerModelInterface
             'first_name' => $model->first_name,
         ];
     }
+
+    public function getSyncRelations(): array
+    {
+        return [];
+    }
 }

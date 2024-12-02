@@ -4,6 +4,7 @@ namespace App\ES;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\Models\Application;
+use App\Models\User;
 
 class ApplicationIndex implements IndexDefinerModelInterface
 {
@@ -51,6 +52,18 @@ class ApplicationIndex implements IndexDefinerModelInterface
         return [
             'id' => $model->id,
             'club' => $model->club,
+        ];
+    }
+
+    public function getSyncRelations(): array
+    {
+        return [
+            User::class => [
+                'applications' => [
+                    'id',
+                    'first_name',
+                ],
+            ],
         ];
     }
 }

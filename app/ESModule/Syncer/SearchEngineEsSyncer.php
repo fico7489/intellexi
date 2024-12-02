@@ -48,7 +48,7 @@ class SearchEngineEsSyncer
                 $datas[] = $data[1];
             }
         }
-
+dump($datas);
         $documentJsons = '';
         foreach ($datas as $data) {
             $documentJsons .= json_encode($data)."\n";

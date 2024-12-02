@@ -13,4 +13,6 @@ interface IndexDefinerModelInterface
     public function getSettings(array $settings): array;
 
     public function getData(array $data, mixed $model): array;
+
+    public function getSyncRelations(): array;
 }
