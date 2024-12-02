@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Cdc\Event;
 
-readonly class CdcGrouped
+readonly class CdcChangedRows
 {
     public function __construct(
         private array $payload,

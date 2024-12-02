@@ -4,8 +4,8 @@ namespace App\ESModule\CdcLaravel;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Converter\MaxwellConverter;
-use App\ESModule\Cdc\Event\CdcGrouped;
-use App\ESModule\Cdc\Event\CdcRaw;
+use App\ESModule\Cdc\Event\CdcChangedRows;
+use App\ESModule\Cdc\Event\CdcPayloads;
 use App\ESModule\Cdc\Storage\List\Algorithm;
 use App\ESModule\Cdc\Storage\List\Storage;
 use App\ESModule\CdcStorageRedis\RedisStorage;
@@ -36,11 +36,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->when(RedisStorage::class)->needs('$channel')->give('maxwell');
         $this->app->when(RedisStorage::class)->needs('$options')->give(config('database.redis.default'));
 
-        Event::listen(function (CdcRaw $event) {
+        Event::listen(function (CdcPayloads $event) {
             dump('laravel event listener raw', $event->getPayloads());
         });
 
-        Event::listen(function (CdcGrouped $event) {
+        Event::listen(function (CdcChangedRows $event) {
             dump('laravel event listener grouped', $event->getPayload());
         });
     }

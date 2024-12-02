@@ -4,7 +4,7 @@ namespace Tests\ESModule\Cdc\Processor;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Dto\ChangedRowDto;
-use App\ESModule\Cdc\Event\CdcRaw;
+use App\ESModule\Cdc\Event\CdcPayloads;
 use App\ESModule\Cdc\Grouper\Grouper;
 use App\ESModule\Cdc\Processor\Processor;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -47,7 +47,7 @@ class ProcessorTest extends TestCase
 
         $this->mock(EventDispatcherInterface::class, function ($mock) use ($payloads) {
             $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcRaw $cdcRaw) use ($payloads) {
+                ->withArgs(function (CdcPayloads $cdcRaw) use ($payloads) {
                     $this->assertEquals($payloads, $cdcRaw->getPayloads());
 
                     return true;
