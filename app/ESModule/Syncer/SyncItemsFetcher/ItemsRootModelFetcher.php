@@ -14,6 +14,7 @@ class ItemsRootModelFetcher
         private readonly ConfigFetcher $configFetcher,
         private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
+        private readonly EloquentAdapter $eloquentAdapter,
     ) {
     }
 
@@ -25,7 +26,9 @@ class ItemsRootModelFetcher
             if ($className === $index->getClassName()) {
                 $indexName = 'prefix_'.$index->getIndexName(); // TODO prefix
 
-                $items[$indexName] = $this->dataFetcher->fetch($index, $className, $changedRowGrouped);
+                $model = $this->eloquentAdapter->fetchModel($className, $changedRowGrouped);
+
+                $items[$indexName] = $this->dataFetcher->fetch($index, $model, $changedRowGrouped);
             }
         }
 
