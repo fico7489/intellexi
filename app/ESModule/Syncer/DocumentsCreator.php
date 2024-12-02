@@ -9,7 +9,7 @@ use App\ESModule\Syncer\Dto\Document;
 class DocumentsCreator
 {
     public function __construct(
-        private readonly SyncDataDetector $syncDataDetector,
+        private readonly SyncItemsFetcher $syncItemsFetcher,
     ) {
     }
 
@@ -19,7 +19,7 @@ class DocumentsCreator
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
-                $items = $this->syncDataDetector->detect($changedRowGrouped);
+                $items = $this->syncItemsFetcher->fetch($changedRowGrouped);
 
                 foreach ($items as $indexName => $data) {
                     $documents[$indexName][] = new Document(

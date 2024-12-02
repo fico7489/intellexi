@@ -2,28 +2,35 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ES\Index\Model\ApplicationIndex;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Config\ConfigFetcher;
 use App\Models\Application;
 use App\Models\Race;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class SyncDataDetector
+class SyncItemsFetcher
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
     ) {
     }
 
-    public function detect(ChangedRowGroupedDto $changedRowGrouped): array
+    public function fetch(ChangedRowGroupedDto $changedRowGrouped): array
     {
         $items = [];
 
-        $className = $this->tableToClassName($changedRowGrouped->getTable());
+        $items = $this->addRootModelForSync($items, $changedRowGrouped);
 
-        $items = $this->relatedLogic($items, $changedRowGrouped);
+        $items = $this->addRelatedModelsForSync($items, $changedRowGrouped);
+
+        return $items;
+    }
+
+    private function addRootModelForSync(array $items, ChangedRowGroupedDto $changedRowGrouped): array
+    {
+        $className = $this->tableToClassName($changedRowGrouped->getTable());
 
         foreach ($this->configFetcher->fetchIndexes() as $index) {
             if ($className === $index->getClassName()) {
@@ -31,6 +38,50 @@ class SyncDataDetector
                 $model = $this->fetchModel($className, $changedRowGrouped);
 
                 $items[$indexName] = $index->getData([], $model);
+            }
+        }
+
+        return $items;
+    }
+
+    private function addRelatedModelsForSync(array $items, ChangedRowGroupedDto $changedRowGrouped): array
+    {
+        $relatedSyncs = [];
+        foreach ($this->configFetcher->fetchIndexes() as $index) {
+            $syncRelations = $index->getSyncRelations();
+
+            foreach ($syncRelations as $classNameRelated => $data) {
+                foreach ($data as $relationRelated => $changedFields) {
+                    $tableRelated = $this->classNameToTable($classNameRelated);
+
+                    $relatedSyncs[] = [
+                        'table' => $tableRelated,
+                        'className' => $classNameRelated,
+                        'changedFields' => $changedFields,
+                        'relation' => $relationRelated,
+                        'index' => $index,
+                    ];
+                }
+            }
+        }
+
+        foreach ($relatedSyncs as $table => $data) {
+            $table = $data['table'];
+            $className = $data['className'];
+            $relation = $data['relation'];
+            $index = $data['index'];
+
+            if ($table === $changedRowGrouped->getTable()) {
+                $model = $this->fetchModel($className, $changedRowGrouped);
+
+                $models = $model->{$relation};
+
+                $models = $models instanceof Collection ? $models : [$models];
+
+                foreach ($models as $model) {
+                    $indexName = 'prefix_'.$index->getIndexName();
+                    $items[$indexName] = $index->getData([], $model);
+                }
             }
         }
 
@@ -68,49 +119,5 @@ class SyncDataDetector
         }
 
         dd('unknown className....');
-    }
-
-    private function relatedLogic(array $items, ChangedRowGroupedDto $changedRowGrouped): array
-    {
-        $relatedSyncs = [];
-        foreach ($this->configFetcher->fetchIndexes() as $index) {
-            $syncRelations = $index->getSyncRelations();
-
-            foreach ($syncRelations as $classNameRelated => $data) {
-                foreach ($data as $relationRelated => $changedFields) {
-                    $tableRelated = $this->classNameToTable($classNameRelated);
-
-                    $relatedSyncs[] = [
-                        'table' => $tableRelated,
-                        'className' => $classNameRelated,
-                        'changedFields' => $changedFields,
-                        'relation' => $relationRelated,
-                    ];
-                }
-            }
-        }
-
-        foreach ($relatedSyncs as $table => $data) {
-            $table = $data['table'];
-            $className = $data['className'];
-            $relation = $data['relation'];
-
-            if ($table === $changedRowGrouped->getTable()) {
-                $model2 = $this->fetchModel($className, $changedRowGrouped);
-
-                // TODO if only one
-                $models = $model2->{$relation};
-
-                foreach ($models as $model) {
-                    // TODO detect index
-                    $index = app(ApplicationIndex::class);
-
-                    $indexName = 'prefix_'.$index->getIndexName();
-                    $items[$indexName] = $index->getData([], $model);
-                }
-            }
-        }
-
-        return $items;
     }
 }
