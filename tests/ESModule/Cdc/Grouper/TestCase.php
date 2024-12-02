@@ -20,11 +20,10 @@ class TestCase extends \Tests\TestCase
         string $database = 'test-database',
         string $table = 'test-table',
         string $type = ChangedDbRow::TYPE_UPDATE,
-        mixed  $identifier = 1,
-        array  $changedFields = ['name'],
-        array  $data = ['id' => 1, 'name' => 'test2'],
-    )
-    {
+        mixed $identifier = 1,
+        array $changedFields = ['name'],
+        array $data = ['id' => 1, 'name' => 'test2'],
+    ) {
         $changedDbRow = new ChangedDbRow(
             $database,
             $table,

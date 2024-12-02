@@ -2,7 +2,9 @@
 
 namespace Tests\ESModule\Cdc\Grouper;
 
+use App\ESModule\Cdc\Dto\ChangedDbRow;
 use App\ESModule\Cdc\Dto\SyncDbRow;
+use App\ESModule\Cdc\Exception\GrouperException;
 
 class GrouperUpdateTest extends TestCase
 {
@@ -39,7 +41,7 @@ class GrouperUpdateTest extends TestCase
 
         $this->assertEquals(1, count($data));
 
-        /** @var SyncDbRow $syncDbRow */
+        /* @var SyncDbRow $syncDbRow */
         $this->assertEquals(1, count($data['test-table']));
 
         /** @var SyncDbRow $syncDbRow */
@@ -85,5 +87,19 @@ class GrouperUpdateTest extends TestCase
         $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow2->getIdentifier());
         $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow2->getData());
+    }
+
+    public function testUpdateExceptionAfterDelete()
+    {
+        $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_UPDATE, identifier: 1);
+
+        $changedDbRows = [$changedDbRow, $changedDbRow2];
+
+        try {
+            $data = $this->grouper->group($changedDbRows);
+        } catch (GrouperException $e) {
+            $this->assertEquals('Grouper: update detected after delete', $e->getMessage());
+        }
     }
 }

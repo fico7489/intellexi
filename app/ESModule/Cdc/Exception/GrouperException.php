@@ -2,6 +2,6 @@
 
 namespace App\ESModule\Cdc\Exception;
 
-class GrouperException extends \Exception{
-
+class GrouperException extends \Exception
+{
 }

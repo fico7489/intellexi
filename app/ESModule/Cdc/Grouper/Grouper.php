@@ -18,23 +18,23 @@ class Grouper
 
             $type = $changedDbRow->getType();
             if (ChangedDbRow::TYPE_DELETE === $type) {
-                if (isset($data[$table][$identifier]) &&  $data[$table][$identifier]->getType() === ChangedDbRow::TYPE_DELETE){
+                if (isset($data[$table][$identifier]) && ChangedDbRow::TYPE_DELETE === $data[$table][$identifier]->getType()) {
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
                 $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedDbRow::TYPE_DELETE);
             } elseif (ChangedDbRow::TYPE_UPDATE === $type) {
-                if (!isset($data[$table][$identifier])){
+                if (!isset($data[$table][$identifier])) {
                     $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncDbRow::TYPE_UPSERT);
-                }else{
+                } else {
                     /** @var SyncDbRow $syncDbRowExisting */
                     $syncDbRowExisting = $data[$table][$identifier];
 
-                    if($syncDbRowExisting->getType() === ChangedDbRow::TYPE_DELETE){
+                    if (ChangedDbRow::TYPE_DELETE === $syncDbRowExisting->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
                     }
 
-                    if($syncDbRowExisting->getType() === SyncDbRow::TYPE_UPSERT){
+                    if (SyncDbRow::TYPE_UPSERT === $syncDbRowExisting->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncDbRowExisting->getChangedFields(),
                             $changedFields
@@ -47,8 +47,8 @@ class Grouper
                     }
                 }
             } elseif (ChangedDbRow::TYPE_INSERT === $type) {
-                if (isset($data[$table][$identifier])){
-                    throw new GrouperException('Grouper: insert detected after delete or update');
+                if (isset($data[$table][$identifier])) {
+                    throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
                 $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncDbRow::TYPE_UPSERT);
