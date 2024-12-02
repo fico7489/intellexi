@@ -8,19 +8,19 @@ class Document
     final public const string TYPE_DELETE = 'delete';
 
     public function __construct(
-        private readonly Index $index,
+        private readonly string $index, // TODO index DTO
         private readonly mixed $identifierValue,
         private readonly array $data,
         private readonly string $type,
     ) {
     }
 
-    public function getIndex(): Index
+    public function getIndex(): string
     {
         return $this->index;
     }
 
-    public function getIdentifierValue(): mixed
+    public function getIdentifier(): mixed
     {
         return $this->identifierValue;
     }

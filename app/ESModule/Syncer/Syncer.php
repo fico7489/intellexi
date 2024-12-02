@@ -2,8 +2,10 @@
 
 namespace App\ESModule\Syncer;
 
+use App\ESModule\Cdc\Dto\ChangedRowDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
+use App\ESModule\Syncer\Dto\Document;
 use App\Models\Application;
 use App\Models\User;
 use GuzzleHttp\Client;
@@ -21,8 +23,8 @@ class Syncer
 
     private function esIndexesSync($dataSync): void
     {
-        foreach ($dataSync as $indexName => $data) {
-            $this->esIndexSync($indexName, $data);
+        foreach ($dataSync as $indexName => $documents) {
+            $this->esIndexSync($indexName, $documents);
         }
     }
 
@@ -35,10 +37,12 @@ class Syncer
                 $models = $this->detectModels($changedRowGrouped);
 
                 foreach ($models as $indexName => $model) {
-                    $documents[$indexName][] = [
-                        'identifier' => $changedRowGrouped->getIdentifier(),
-                        'data' => $changedRowGrouped->getData(),
-                    ];
+                    $documents[$indexName][] = new Document(
+                        $indexName,
+                        $changedRowGrouped->getIdentifier(),
+                        $changedRowGrouped->getData(),
+                        ChangedRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
+                    );
                 }
             }
         }
@@ -77,7 +81,7 @@ class Syncer
         ];
     }
 
-    public function esIndexSync(string $indexName, mixed $documents): bool
+    public function esIndexSync(string $indexName, array $documents): bool
     {
         $baseUri = 'http://elasticsearch:9200';
 
@@ -85,7 +89,8 @@ class Syncer
 
         $datas = [];
         foreach ($documents as $document) {
-            $data = $this->documentPrepare($indexName, $document['identifier'], $document['data']);
+            /** @var Document $document */
+            $data = $this->documentPrepare($indexName, $document->getIdentifier(), $document->getData());
 
             $datas[] = $data[0];
 
@@ -112,8 +117,6 @@ class Syncer
                 'body' => $documentJsons."\n",
             ]
         );
-
-        dump($response->getStatusCode());
 
         // TODO async
 
