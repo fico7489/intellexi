@@ -13,7 +13,10 @@ class DocumentsCreator
     ) {
     }
 
-    public function createDocuments($changedRowsGrouped): array
+    /**
+     * @return array<Document>
+     */
+    public function createDocuments(array $changedRowsGrouped): array
     {
         $documents = [];
         foreach ($changedRowsGrouped as $table => $data) {
