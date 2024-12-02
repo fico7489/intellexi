@@ -1,13 +1,14 @@
 <?php
 
-namespace App\ESModule\Syncer;
+namespace App\ESModule\Syncer\SyncItemsFetcher;
 
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Config\ConfigFetcher;
+use App\ESModule\Syncer\ModelMapper;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class SyncItemsFetcher
+class ItemsRelatedModelsFetcher
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
@@ -15,34 +16,7 @@ class SyncItemsFetcher
     ) {
     }
 
-    public function fetch(ChangedRowGroupedDto $changedRowGrouped): array
-    {
-        $items = [];
-
-        $items = $this->addRootModelForSync($items, $changedRowGrouped);
-
-        $items = $this->addRelatedModelsForSync($items, $changedRowGrouped);
-
-        return $items;
-    }
-
-    private function addRootModelForSync(array $items, ChangedRowGroupedDto $changedRowGrouped): array
-    {
-        $className = $this->modelMapper->convertTableToClassName($changedRowGrouped->getTable());
-
-        foreach ($this->configFetcher->fetchIndexes() as $index) {
-            if ($className === $index->getClassName()) {
-                $indexName = 'prefix_'.$index->getIndexName(); // TODO prefix
-                $model = $this->fetchModel($className, $changedRowGrouped);
-
-                $items[$indexName] = $index->getData([], $model);
-            }
-        }
-
-        return $items;
-    }
-
-    private function addRelatedModelsForSync(array $items, ChangedRowGroupedDto $changedRowGrouped): array
+    public function fetch(array $items, ChangedRowGroupedDto $changedRowGrouped): array
     {
         $relatedSyncs = [];
         foreach ($this->configFetcher->fetchIndexes() as $index) {

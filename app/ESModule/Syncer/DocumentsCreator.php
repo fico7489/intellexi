@@ -5,11 +5,12 @@ namespace App\ESModule\Syncer;
 use App\ESModule\Cdc\Dto\ChangedRowDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Syncer\Dto\Document;
+use App\ESModule\Syncer\SyncItemsFetcher\ItemsFetcher;
 
 class DocumentsCreator
 {
     public function __construct(
-        private readonly SyncItemsFetcher $syncItemsFetcher,
+        private readonly ItemsFetcher $syncItemsFetcher,
     ) {
     }
 
