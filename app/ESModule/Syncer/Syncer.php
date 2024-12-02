@@ -4,37 +4,31 @@ namespace App\ESModule\Syncer;
 
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
-use FHPlatform\Component\Config\DTO\Document;
-use FHPlatform\Component\Config\DTO\Index;
 use GuzzleHttp\Client;
 
 class Syncer
 {
-    public function sync(CdcChangedRowsGrouped $event)
+    public function sync(CdcChangedRowsGrouped $event): void
     {
         $changedRowsGrouped = $event->getChangedRowsGrouped();
 
-        $this->dataUpdate([[
-            'identifier' => 1,
-            'data' => [
-                'test' => 4,
-            ],
-        ]]);
-
         foreach ($changedRowsGrouped as $table => $data) {
+
+            $dataSync = [];
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
 
-                dump('SYNCER:',
-                    $table,
-                    $identifier,
-                    $changedRowGrouped,
-                );
+                $dataSync[] = [
+                    'identifier' => $identifier,
+                    'data' => $changedRowGrouped->getData(),
+                ];
             }
+
+            $this->dataUpdate($dataSync);
         }
     }
 
-    private function detectModels(ChangedRowGroupedDto $changedRowGrouped) : array
+    private function detectModels(ChangedRowGroupedDto $changedRowGrouped): array
     {
 
     }
@@ -77,7 +71,7 @@ class Syncer
 
         $documentJsons = '';
         foreach ($datas as $data) {
-            $documentJsons .= json_encode($data)."\n";
+            $documentJsons .= json_encode($data) . "\n";
         }
 
         if ('' === $documentJsons) {
@@ -87,10 +81,10 @@ class Syncer
         $documentJsons .= "\n";
 
         $url = '_bulk';
-        $response = $clientGuzzle->request('POST', '/'.$url,
+        $response = $clientGuzzle->request('POST', '/' . $url,
             [
                 'headers' => ['Content-type' => 'application/json'],
-                'body' => $documentJsons."\n",
+                'body' => $documentJsons . "\n",
             ]
         );
 
