@@ -8,12 +8,12 @@ use App\ESModule\Cdc\Event\CdcRaw;
 use App\ESModule\Cdc\Grouper\Grouper;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-readonly class Processor
+ class Processor
 {
     public function __construct(
         private Grouper $grouper,
-        private EventDispatcherInterface $dispatcher,
-        private readonly ConverterInterface $converter,
+        private  EventDispatcherInterface $dispatcher,
+        private  ConverterInterface $converter,
     ) {
     }
 
@@ -21,13 +21,10 @@ readonly class Processor
     {
         $this->dispatcher->dispatch(new CdcRaw($payloads));
 
-        $data = [];
-        foreach ($payloads as $payload) {
-            $data[] = $this->converter->convert($payload);
-        }
+        $changedRows = $this->converter->convert($payloads);
 
-        $dataGrouped = $this->grouper->group($data);
+        $changedRowsGrouped = $this->grouper->group($changedRows);
 
-        $this->dispatcher->dispatch(new CdcGrouped($dataGrouped));
+        $this->dispatcher->dispatch(new CdcGrouped($changedRowsGrouped));
     }
 }

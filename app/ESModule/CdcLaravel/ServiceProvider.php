@@ -37,7 +37,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->when(RedisStorage::class)->needs('$options')->give(config('database.redis.default'));
 
         Event::listen(function (CdcRaw $event) {
-            dump('laravel event listener raw', $event->getPayload());
+            dump('laravel event listener raw', $event->getPayloads());
         });
 
         Event::listen(function (CdcGrouped $event) {

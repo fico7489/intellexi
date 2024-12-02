@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Cdc\Dto;
 
-class ChangedDbRow
+class ChangedRowDto
 {
     final public const string TYPE_INSERT = 'insert';
     final public const string TYPE_UPDATE = 'update';

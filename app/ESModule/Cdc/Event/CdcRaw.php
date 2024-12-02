@@ -5,12 +5,12 @@ namespace App\ESModule\Cdc\Event;
 readonly class CdcRaw
 {
     public function __construct(
-        private array $payload,
+        private array $payloads,
     ) {
     }
 
-    public function getPayload(): array
+    public function getPayloads(): array
     {
-        return $this->payload;
+        return $this->payloads;
     }
 }

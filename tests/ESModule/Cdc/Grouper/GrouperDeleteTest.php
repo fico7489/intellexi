@@ -2,8 +2,8 @@
 
 namespace Tests\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Dto\ChangedDbRow;
-use App\ESModule\Cdc\Dto\SyncDbRow;
+use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\SyncRowDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 use App\ESModule\Cdc\Grouper\Grouper;
 
@@ -20,19 +20,19 @@ class GrouperDeleteTest extends TestCase
 
     public function testDeleteBasic()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE);
+        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE);
         $changedDbRows = [$changedDbRow];
 
         $data = $this->grouper->group($changedDbRows);
 
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncDbRow $syncDbRow */
+        /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
         $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
-        $this->assertEquals(ChangedDbRow::TYPE_DELETE, $syncDbRow->getType());
+        $this->assertEquals(ChangedRowDto::TYPE_DELETE, $syncDbRow->getType());
         $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals($changedDbRow->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
@@ -40,8 +40,8 @@ class GrouperDeleteTest extends TestCase
 
     public function testDeleteBasic2()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 2);
+        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE, identifier: 2);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
@@ -49,22 +49,22 @@ class GrouperDeleteTest extends TestCase
 
         $this->assertEquals(2, count($data['test-table']));
 
-        /** @var SyncDbRow $syncDbRow */
+        /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
         $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
-        $this->assertEquals(ChangedDbRow::TYPE_DELETE, $syncDbRow->getType());
+        $this->assertEquals(ChangedRowDto::TYPE_DELETE, $syncDbRow->getType());
         $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals($changedDbRow->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
 
-        /** @var SyncDbRow $syncDbRow2 */
+        /** @var SyncRowDto $syncDbRow2 */
         $syncDbRow2 = $data['test-table'][2];
 
         $this->assertEquals($changedDbRow2->getDatabase(), $syncDbRow2->getDatabase());
         $this->assertEquals($changedDbRow2->getTable(), $syncDbRow2->getTable());
-        $this->assertEquals(ChangedDbRow::TYPE_DELETE, $syncDbRow2->getType());
+        $this->assertEquals(ChangedRowDto::TYPE_DELETE, $syncDbRow2->getType());
         $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow2->getIdentifier());
         $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow2->getData());
@@ -72,8 +72,8 @@ class GrouperDeleteTest extends TestCase
 
     public function testDeleteAndUpsertExists()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_UPDATE);
-        $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE);
+        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_UPDATE);
+        $changedDbRow2 = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
@@ -81,12 +81,12 @@ class GrouperDeleteTest extends TestCase
 
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncDbRow $syncDbRow */
+        /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow2->getDatabase(), $syncDbRow->getDatabase());
         $this->assertEquals($changedDbRow2->getTable(), $syncDbRow->getTable());
-        $this->assertEquals(ChangedDbRow::TYPE_DELETE, $syncDbRow->getType());
+        $this->assertEquals(ChangedRowDto::TYPE_DELETE, $syncDbRow->getType());
         $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow->getData());
@@ -94,8 +94,8 @@ class GrouperDeleteTest extends TestCase
 
     public function testDeleteExceptionAlreadyExists()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
+        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE, identifier: 1);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 

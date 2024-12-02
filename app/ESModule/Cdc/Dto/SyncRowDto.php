@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Cdc\Dto;
 
-class SyncDbRow extends ChangedDbRow
+class SyncRowDto extends ChangedRowDto
 {
     final public const string TYPE_UPSERT = 'upsert';
 }

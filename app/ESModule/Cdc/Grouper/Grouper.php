@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Dto\ChangedDbRow;
-use App\ESModule\Cdc\Dto\SyncDbRow;
+use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\SyncRowDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 
 class Grouper
@@ -17,24 +17,24 @@ class Grouper
             $changedFields = $changedDbRow->getChangedFields();
 
             $type = $changedDbRow->getType();
-            if (ChangedDbRow::TYPE_DELETE === $type) {
-                if (isset($data[$table][$identifier]) && ChangedDbRow::TYPE_DELETE === $data[$table][$identifier]->getType()) {
+            if (ChangedRowDto::TYPE_DELETE === $type) {
+                if (isset($data[$table][$identifier]) && ChangedRowDto::TYPE_DELETE === $data[$table][$identifier]->getType()) {
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
-                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedDbRow::TYPE_DELETE);
-            } elseif (ChangedDbRow::TYPE_UPDATE === $type) {
+                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowDto::TYPE_DELETE);
+            } elseif (ChangedRowDto::TYPE_UPDATE === $type) {
                 if (!isset($data[$table][$identifier])) {
-                    $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncDbRow::TYPE_UPSERT);
+                    $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncRowDto::TYPE_UPSERT);
                 } else {
-                    /** @var SyncDbRow $syncDbRowExisting */
+                    /** @var SyncRowDto $syncDbRowExisting */
                     $syncDbRowExisting = $data[$table][$identifier];
 
-                    if (ChangedDbRow::TYPE_DELETE === $syncDbRowExisting->getType()) {
+                    if (ChangedRowDto::TYPE_DELETE === $syncDbRowExisting->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
                     }
 
-                    if (SyncDbRow::TYPE_UPSERT === $syncDbRowExisting->getType()) {
+                    if (SyncRowDto::TYPE_UPSERT === $syncDbRowExisting->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncDbRowExisting->getChangedFields(),
                             $changedFields
@@ -46,21 +46,21 @@ class Grouper
                         $data[$table][$identifier] = $syncDbRowExisting;
                     }
                 }
-            } elseif (ChangedDbRow::TYPE_INSERT === $type) {
+            } elseif (ChangedRowDto::TYPE_INSERT === $type) {
                 if (isset($data[$table][$identifier])) {
                     throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncDbRow::TYPE_UPSERT);
+                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncRowDto::TYPE_UPSERT);
             }
         }
 
         return $data;
     }
 
-    private function createSyncDbRow(ChangedDbRow $changedDbRow, string $type): SyncDbRow
+    private function createSyncDbRow(ChangedRowDto $changedDbRow, string $type): SyncRowDto
     {
-        return new SyncDbRow(
+        return new SyncRowDto(
             $changedDbRow->getDatabase(),
             $changedDbRow->getTable(),
             $type,
