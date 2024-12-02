@@ -45,10 +45,10 @@ class ProcessorTest extends TestCase
             ;
         });
 
-        $this->mock(EventDispatcherInterface::class, function ($mock) use ($payload) {
+        $this->mock(EventDispatcherInterface::class, function ($mock) use ($payloads) {
             $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcRaw $cdcRaw) use ($payload) {
-                    //$this->assertEquals([$payload], $cdcRaw->getPayload());
+                ->withArgs(function (CdcRaw $cdcRaw) use ($payloads) {
+                    $this->assertEquals($payloads, $cdcRaw->getPayloads());
 
                     return true;
                 })
