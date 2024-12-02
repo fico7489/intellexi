@@ -10,8 +10,8 @@ class DataFetcher
 {
     public function fetch(
         IndexDefinerModelInterface $index,
-        Model $model,
-        SyncRowDto $syncRowDto,
+        Model                      $model,
+        SyncRowDto                 $syncRowDto,
     ) {
         $data = [];
 

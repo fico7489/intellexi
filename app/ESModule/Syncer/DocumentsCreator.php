@@ -30,7 +30,7 @@ class DocumentsCreator
                         $indexName,
                         $changedRowGrouped->getIdentifier(),
                         $data,
-                        CdcDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
+                        SyncRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
                     );
                 }
             }

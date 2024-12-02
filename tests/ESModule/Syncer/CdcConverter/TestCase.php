@@ -1,36 +1,36 @@
 <?php
 
-namespace Tests\ESModule\Cdc\Grouper;
+namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Cdc\Grouper\Grouper;
+use App\ESModule\Syncer\CdcConverter\CdcConverter;
 
 class TestCase extends \Tests\TestCase
 {
-    protected Grouper $grouper;
+    protected CdcConverter $cdcConverter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->grouper = app(Grouper::class);
+        $this->cdcConverter = app(CdcConverter::class);
     }
 
-    protected function createChangedRow(
+    protected function createCdcDto(
         string $database = 'test-database',
         string $table = 'test-table',
         string $type = CdcDto::TYPE_UPDATE,
-        mixed $identifier = 1,
         array $changedFields = ['name'],
         array $data = ['id' => 1, 'name' => 'test2'],
-    ) {
+    ): CdcDto
+    {
         $changedDbRow = new CdcDto(
             $database,
             $table,
             $type,
-            $identifier,
+            $data,
             $changedFields,
-            $data
+            [],
         );
 
         return $changedDbRow;

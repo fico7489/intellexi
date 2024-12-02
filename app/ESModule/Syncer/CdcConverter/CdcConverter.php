@@ -32,19 +32,19 @@ class CdcConverter
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
-                $syncRowDtos[$table][$identifier] = $this->createSyncDbRow($cdcDto, CdcDto::TYPE_DELETE, $identifier);
+                $syncRowDtos[$table][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_DELETE, $identifier);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
                 if (!isset($syncRowDtos[$table][$identifier])) {
                     $syncRowDtos[$table][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_UPSERT, $identifier);
                 } else {
-                    /** @var SyncRowDto $syncRowDto */
+                    /** @var CdcDto $syncRowDto */
                     $syncRowDto = $syncRowDtos[$table][$identifier];
 
                     if (CdcDto::TYPE_DELETE === $syncRowDto->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
                     }
 
-                    if (SyncRowDto::TYPE_UPSERT === $syncRowDto->getType()) {
+                    if (CdcDto::TYPE_UPSERT === $syncRowDto->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncRowDto->getChangedFields(),
                             $changedFields

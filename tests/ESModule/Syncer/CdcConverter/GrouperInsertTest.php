@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\ESModule\Cdc\Grouper;
+namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
@@ -9,21 +9,21 @@ use App\ESModule\Cdc\Grouper\Grouper;
 
 class GrouperInsertTest extends TestCase
 {
-    protected Grouper $grouper;
+    protected Grouper $cdcConverter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->grouper = app(Grouper::class);
+        $this->cdcConverter = app(Grouper::class);
     }
 
     public function testInsertBasic()
     {
-        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_INSERT);
+        $changedDbRow = $this->createCdcDto(type: CdcDto::TYPE_INSERT);
         $changedDbRows = [$changedDbRow];
 
-        $data = $this->grouper->group($changedDbRows);
+        $data = $this->cdcConverter->convert($changedDbRows);
 
         $this->assertEquals(1, count($data['test-table']));
 
@@ -40,12 +40,12 @@ class GrouperInsertTest extends TestCase
 
     public function testInsertBasic2()
     {
-        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 2);
+        $changedDbRow = $this->createCdcDto(type: CdcDto::TYPE_INSERT, identifier: 1);
+        $changedDbRow2 = $this->createCdcDto(type: CdcDto::TYPE_INSERT, identifier: 2);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
-        $data = $this->grouper->group($changedDbRows);
+        $data = $this->cdcConverter->convert($changedDbRows);
 
         $this->assertEquals(2, count($data['test-table']));
 
@@ -72,13 +72,13 @@ class GrouperInsertTest extends TestCase
 
     public function testInsertExceptionAlreadyExists()
     {
-        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 1);
+        $changedDbRow = $this->createCdcDto(type: CdcDto::TYPE_INSERT, identifier: 1);
+        $changedDbRow2 = $this->createCdcDto(type: CdcDto::TYPE_INSERT, identifier: 1);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
         try {
-            $data = $this->grouper->group($changedDbRows);
+            $data = $this->cdcConverter->convert($changedDbRows);
         } catch (GrouperException $e) {
             $this->assertEquals('Grouper: insert detected after insert, delete or update', $e->getMessage());
         }

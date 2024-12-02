@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\ESModule\Cdc\Grouper;
+namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
@@ -10,10 +10,10 @@ class GrouperUpdateTest extends TestCase
 {
     public function testUpdateBasic()
     {
-        $changedDbRow = $this->createChangedRow();
+        $changedDbRow = $this->createCdcDto();
         $changedDbRows = [$changedDbRow];
 
-        $data = $this->grouper->group($changedDbRows);
+        $data = $this->cdcConverter->convert($changedDbRows);
 
         $this->assertEquals(1, count($data['test-table']));
 
@@ -33,11 +33,11 @@ class GrouperUpdateTest extends TestCase
         $data = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2'];
         $data2 = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2-2'];
 
-        $changedDbRow = $this->createChangedRow(changedFields: ['name'], data: $data);
-        $changedDbRow2 = $this->createChangedRow(changedFields: ['name2'], data: $data2);
+        $changedDbRow = $this->createCdcDto(changedFields: ['name'], data: $data);
+        $changedDbRow2 = $this->createCdcDto(changedFields: ['name2'], data: $data2);
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
-        $data = $this->grouper->group($changedDbRows);
+        $data = $this->cdcConverter->convert($changedDbRows);
 
         $this->assertEquals(1, count($data));
 
@@ -60,11 +60,11 @@ class GrouperUpdateTest extends TestCase
         $data = ['id' => 1, 'name' => 'test', 'name2' => 'test'];
         $data2 = ['id' => 2, 'name' => 'test2', 'name2' => 'test2'];
 
-        $changedDbRow = $this->createChangedRow(identifier: 1, changedFields: ['name'], data: $data);
-        $changedDbRow2 = $this->createChangedRow(identifier: 2, changedFields: ['name'], data: $data2);
+        $changedDbRow = $this->createCdcDto(identifier: 1, changedFields: ['name'], data: $data);
+        $changedDbRow2 = $this->createCdcDto(identifier: 2, changedFields: ['name'], data: $data2);
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
-        $data = $this->grouper->group($changedDbRows);
+        $data = $this->cdcConverter->convert($changedDbRows);
 
         $this->assertEquals(2, count($data['test-table']));
 
@@ -91,13 +91,13 @@ class GrouperUpdateTest extends TestCase
 
     public function testUpdateExceptionAfterDelete()
     {
-        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_DELETE, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: CdcDto::TYPE_UPDATE, identifier: 1);
+        $changedDbRow = $this->createCdcDto(type: CdcDto::TYPE_DELETE, identifier: 1);
+        $changedDbRow2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, identifier: 1);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
         try {
-            $data = $this->grouper->group($changedDbRows);
+            $data = $this->cdcConverter->convert($changedDbRows);
         } catch (GrouperException $e) {
             $this->assertEquals('Grouper: update detected after delete', $e->getMessage());
         }
