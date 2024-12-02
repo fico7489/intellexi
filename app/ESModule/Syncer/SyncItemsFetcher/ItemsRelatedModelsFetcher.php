@@ -23,6 +23,8 @@ class ItemsRelatedModelsFetcher
     {
         $updatingMap = $this->constructMap();
 
+        dump('updating map:', $updatingMap);
+
         foreach ($updatingMap as $table => $data) {
             $table = $data['table'];
             $className = $data['className'];
