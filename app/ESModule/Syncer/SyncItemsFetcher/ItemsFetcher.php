@@ -20,6 +20,8 @@ class ItemsFetcher
 
         $items = $this->itemsRelatedModelsFetcher->fetch($items, $changedRowGrouped);
 
+        // TODO group
+
         return $items;
     }
 }

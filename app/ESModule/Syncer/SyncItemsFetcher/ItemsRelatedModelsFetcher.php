@@ -4,15 +4,16 @@ namespace App\ESModule\Syncer\SyncItemsFetcher;
 
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Config\ConfigFetcher;
+use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\ModelMapper;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class ItemsRelatedModelsFetcher
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
         private readonly ModelMapper $modelMapper,
+        private readonly EloquentAdapter $eloquentAdapter,
     ) {
     }
 
@@ -44,7 +45,7 @@ class ItemsRelatedModelsFetcher
             $index = $data['index'];
 
             if ($table === $changedRowGrouped->getTable()) {
-                $model = $this->fetchModel($className, $changedRowGrouped);
+                $model = $this->eloquentAdapter->fetchModel($className, $changedRowGrouped);
 
                 $models = $model->{$relation};
 
@@ -58,10 +59,5 @@ class ItemsRelatedModelsFetcher
         }
 
         return $items;
-    }
-
-    private function fetchModel(string $className, ChangedRowGroupedDto $changedRowGrouped): ?Model
-    {
-        return $className::find($changedRowGrouped->getIdentifier());
     }
 }
