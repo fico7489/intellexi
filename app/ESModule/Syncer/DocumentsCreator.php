@@ -2,7 +2,6 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Dto\Document;
 use App\ESModule\Syncer\SyncItemsFetcher\ItemsFetcher;

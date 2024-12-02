@@ -82,7 +82,7 @@ class CdcConverter
 
     public function detectIdentifier(CdcDto $cdcDto): mixed
     {
-        //TODO
+        // TODO
         return 1;
     }
 

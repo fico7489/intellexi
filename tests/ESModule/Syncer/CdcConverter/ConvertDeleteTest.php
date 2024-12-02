@@ -34,7 +34,7 @@ class ConvertDeleteTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(CdcConverter::class, function ($mock) use ($cdcDto, $cdcDto2) {
+        $this->mock(CdcConverter::class, function ($mock) {
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
             $mock->shouldReceive('detectIdentifier')->andReturn(2)->once();
         })->makePartial();

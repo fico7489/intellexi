@@ -22,8 +22,7 @@ class TestCase extends \Tests\TestCase
         string $type = CdcDto::TYPE_UPDATE,
         array $changedFields = ['name'],
         array $data = ['id' => 1, 'name' => 'test2'],
-    ): CdcDto
-    {
+    ): CdcDto {
         $changedDbRow = new CdcDto(
             $database,
             $table,
