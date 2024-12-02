@@ -33,7 +33,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // config
         $this->app->when(Algorithm::class)->needs('$limit')->give(100);
-        $this->app->when(Algorithm::class)->needs('$sleep')->give(1);
+        $this->app->when(Algorithm::class)->needs('$sleep')->give(2);
 
         $this->app->when(RedisStorage::class)->needs('$channel')->give('maxwell');
         $this->app->when(RedisStorage::class)->needs('$options')->give(config('database.redis.default'));

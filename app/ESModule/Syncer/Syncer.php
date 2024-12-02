@@ -4,6 +4,9 @@ namespace App\ESModule\Syncer;
 
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
+use App\Models\Application;
+use App\Models\Race;
+use App\Models\User;
 use GuzzleHttp\Client;
 
 class Syncer
@@ -12,31 +15,51 @@ class Syncer
     {
         $changedRowsGrouped = $event->getChangedRowsGrouped();
 
+        $dataSync = [];
         foreach ($changedRowsGrouped as $table => $data) {
 
-            $dataSync = [];
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
 
-                $dataSync[] = [
-                    'identifier' => $identifier,
-                    'data' => $changedRowGrouped->getData(),
-                ];
+                $dataSync = $this->getDataSync($dataSync, $changedRowGrouped);
             }
-
-            $this->dataUpdate($dataSync);
         }
+
+        foreach ($dataSync as $indexName => $data){
+            $this->dataUpdate($indexName, $data);
+        }
+    }
+
+    private function getDataSync(array $dataSync, ChangedRowGroupedDto $changedRowGrouped): array
+    {
+        $models = $this->detectModels($changedRowGrouped);
+
+        foreach ($models as $indexName => $model) {
+            $dataSync[$indexName][] = [
+                'identifier' => $changedRowGrouped->getIdentifier(),
+                'data' => $changedRowGrouped->getData(),
+            ];
+        }
+
+        return $dataSync;
     }
 
     private function detectModels(ChangedRowGroupedDto $changedRowGrouped): array
     {
+        $className = $changedRowGrouped->getTable() === 'applications' ? Application::class : User::class;
+        $indexName = $changedRowGrouped->getTable() === 'applications' ? 'prefix_applications' : 'prefix_users';
 
+        $model = $className::find($changedRowGrouped->getIdentifier());
+
+        $models = [
+            $indexName => $model
+        ];
+
+        return $models;
     }
 
-    private function documentPrepare(int $identifier, array $data): array
+    private function documentPrepare(string $indexName, int $identifier, array $data): array
     {
-        $indexName = 'prefix_applications';
-
         //TODO delete
 
         $data = ['doc' => array_merge(['id' => $identifier], $data), 'doc_as_upsert' => true];
@@ -52,7 +75,7 @@ class Syncer
         ];
     }
 
-    public function dataUpdate(mixed $documents): bool
+    public function dataUpdate(string $indexName, mixed $documents): bool
     {
         $baseUri = 'http://elasticsearch:9200';
 
@@ -60,7 +83,7 @@ class Syncer
 
         $datas = [];
         foreach ($documents as $document) {
-            $data = $this->documentPrepare($document['identifier'], $document['data']);
+            $data = $this->documentPrepare($indexName, $document['identifier'], $document['data']);
 
             $datas[] = $data[0];
 
