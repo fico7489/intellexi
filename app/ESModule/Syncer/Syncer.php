@@ -3,13 +3,24 @@
 namespace App\ESModule\Syncer;
 
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
+use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
 
 class Syncer
 {
-    public function sync(array $changedRowsGrouped)
+    public function sync(CdcChangedRowsGrouped $event)
     {
-        foreach ($changedRowsGrouped as $changedRowGrouped) {
-            /* @var ChangedRowGroupedDto $changedRowGrouped */
+        $changedRowsGrouped = $event->getChangedRowsGrouped();
+
+        foreach ($changedRowsGrouped as $table => $data) {
+            foreach ($data as $identifier => $changedRowGrouped) {
+                /* @var ChangedRowGroupedDto $changedRowGrouped */
+
+                dump('SYNCER:',
+                    $table,
+                    $identifier,
+                    $changedRowGrouped,
+                );
+            }
         }
     }
 
