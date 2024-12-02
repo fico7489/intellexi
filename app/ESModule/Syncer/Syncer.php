@@ -7,7 +7,7 @@ use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
 class Syncer
 {
     public function __construct(
-        private readonly DocumentsCreator     $documentsCreator,
+        private readonly DocumentsCreator $documentsCreator,
         private readonly SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
