@@ -4,6 +4,7 @@ namespace App\ESModule\Cdc\Grouper;
 
 use App\ESModule\Cdc\Dto\ChangedDbRow;
 use App\ESModule\Cdc\Dto\SyncDbRow;
+use App\ESModule\Cdc\Exception\GrouperException;
 
 class Grouper
 {
@@ -17,6 +18,10 @@ class Grouper
 
             $type = $changedDbRow->getType();
             if (ChangedDbRow::TYPE_DELETE === $type) {
+                if (isset($data[$table][$identifier]) &&  $data[$table][$identifier]->getType() === ChangedDbRow::TYPE_DELETE){
+                    throw new GrouperException('Grouper: delete already deleted');
+                }
+
                 $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedDbRow::TYPE_DELETE);
             } elseif (ChangedDbRow::TYPE_UPDATE === $type) {
                 if (!isset($data[$table][$identifier])){
@@ -26,7 +31,7 @@ class Grouper
                     $syncDbRowExisting = $data[$table][$identifier];
 
                     if($syncDbRowExisting->getType() === ChangedDbRow::TYPE_DELETE){
-                        throw new \Exception('Grouper: update detected after delete');
+                        throw new GrouperException('Grouper: update detected after delete');
                     }
 
                     if($syncDbRowExisting->getType() === SyncDbRow::TYPE_UPSERT){
@@ -43,7 +48,7 @@ class Grouper
                 }
             } elseif (ChangedDbRow::TYPE_INSERT === $type) {
                 if (isset($data[$table][$identifier])){
-                    throw new \Exception('Grouper: insert detected after delete or update');
+                    throw new GrouperException('Grouper: insert detected after delete or update');
                 }
 
                 $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncDbRow::TYPE_UPSERT);

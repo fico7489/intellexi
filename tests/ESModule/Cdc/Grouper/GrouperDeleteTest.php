@@ -4,6 +4,7 @@ namespace Tests\ESModule\Cdc\Grouper;
 
 use App\ESModule\Cdc\Dto\ChangedDbRow;
 use App\ESModule\Cdc\Dto\SyncDbRow;
+use App\ESModule\Cdc\Exception\GrouperException;
 use App\ESModule\Cdc\Grouper\Grouper;
 
 class GrouperDeleteTest extends TestCase
@@ -17,7 +18,7 @@ class GrouperDeleteTest extends TestCase
         $this->grouper = app(Grouper::class);
     }
 
-    public function testUpdateBasic()
+    public function testDeleteBasic()
     {
         $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE);
         $changedDbRows = [$changedDbRow];
@@ -37,7 +38,7 @@ class GrouperDeleteTest extends TestCase
         $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
     }
 
-    public function testUpdate2Basic()
+    public function testDeleteBasic2()
     {
         $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
         $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 2);
@@ -69,7 +70,7 @@ class GrouperDeleteTest extends TestCase
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow2->getData());
     }
 
-    public function testUpdateWithUpsert()
+    public function testDeleteAndUpsertExists()
     {
         $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_UPDATE);
         $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE);
@@ -89,5 +90,19 @@ class GrouperDeleteTest extends TestCase
         $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow->getData());
+    }
+
+    public function testDeleteExceptionAlreadyExists()
+    {
+        $changedDbRow = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: ChangedDbRow::TYPE_DELETE, identifier: 1);
+
+        $changedDbRows = [$changedDbRow, $changedDbRow2];
+
+        try {
+            $data = $this->grouper->group($changedDbRows);
+        }catch (GrouperException $e){
+            $this->assertEquals(GrouperException::class, get_class($e));
+        }
     }
 }
