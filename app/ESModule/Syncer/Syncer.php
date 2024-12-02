@@ -24,7 +24,8 @@ class Syncer
         }
     }
 
-    private function detectModels()
+    private function detectModels(ChangedRowGroupedDto $changedRowGrouped) : array
     {
+
     }
 }
