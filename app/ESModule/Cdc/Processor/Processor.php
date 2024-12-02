@@ -4,6 +4,7 @@ namespace App\ESModule\Cdc\Processor;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Event\CdcChangedRows;
+use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
 use App\ESModule\Cdc\Event\CdcPayloads;
 use App\ESModule\Cdc\Grouper\Grouper;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -22,9 +23,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
         $this->dispatcher->dispatch(new CdcPayloads($payloads));
 
         $changedRows = $this->converter->convert($payloads);
+        $this->dispatcher->dispatch(new CdcChangedRows($changedRows));
 
         $changedRowsGrouped = $this->grouper->group($changedRows);
-
-        $this->dispatcher->dispatch(new CdcChangedRows($changedRowsGrouped));
+        $this->dispatcher->dispatch(new CdcChangedRowsGrouped($changedRowsGrouped));
     }
 }
