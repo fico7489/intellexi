@@ -80,8 +80,9 @@ class CdcConverter
         );
     }
 
-    private function detectIdentifier(CdcDto $cdcDto): mixed
+    public function detectIdentifier(CdcDto $cdcDto): mixed
     {
+        //TODO
         return 1;
     }
 
