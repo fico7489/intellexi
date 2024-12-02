@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 
 class EsSyncer
 {
-    public function esIndexesSync($dataSync): void
+    public function syncDocuments($dataSync): void
     {
         foreach ($dataSync as $indexName => $documents) {
             $this->esIndexSync($indexName, $documents);

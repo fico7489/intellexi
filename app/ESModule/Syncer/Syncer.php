@@ -8,7 +8,7 @@ class Syncer
 {
     public function __construct(
         private readonly DocumentsCreator $documentsCreator,
-        private readonly EsSyncer $esSyncer,
+        private readonly EsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
 
@@ -18,6 +18,6 @@ class Syncer
 
         $documents = $this->documentsCreator->createDocuments($changedRowsGrouped);
 
-        $this->esSyncer->esIndexesSync($documents);
+        $this->searchEngineSyncer->syncDocuments($documents);
     }
 }
