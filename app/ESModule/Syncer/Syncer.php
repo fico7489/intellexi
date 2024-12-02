@@ -14,25 +14,25 @@ class Syncer
     {
         $changedRowsGrouped = $event->getChangedRowsGrouped();
 
-        $dataSync = [];
+        $documents = [];
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
-                $dataSync = $this->getDataSync($dataSync, $changedRowGrouped);
+                $documents = $this->createDocuments($documents, $changedRowGrouped);
             }
         }
 
-        $this->doSync($dataSync);
+        $this->esIndexesSync($documents);
     }
 
-    private function doSync($dataSync): void
+    private function esIndexesSync($dataSync): void
     {
         foreach ($dataSync as $indexName => $data) {
-            $this->dataUpdate($indexName, $data);
+            $this->esIndexSync($indexName, $data);
         }
     }
 
-    private function getDataSync(array $dataSync, ChangedRowGroupedDto $changedRowGrouped): array
+    private function createDocuments(array $dataSync, ChangedRowGroupedDto $changedRowGrouped): array
     {
         $models = $this->detectModels($changedRowGrouped);
 
@@ -77,7 +77,7 @@ class Syncer
         ];
     }
 
-    public function dataUpdate(string $indexName, mixed $documents): bool
+    public function esIndexSync(string $indexName, mixed $documents): bool
     {
         $baseUri = 'http://elasticsearch:9200';
 
