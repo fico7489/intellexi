@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Cdc\Grouper;
 
 use App\ESModule\Cdc\Dto\ChangedRowDto;
-use App\ESModule\Cdc\Dto\SyncRowDto;
+use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 
 class GrouperUpdateTest extends TestCase
@@ -17,12 +17,12 @@ class GrouperUpdateTest extends TestCase
 
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
         $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
-        $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
+        $this->assertEquals(ChangedRowGroupedDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals($changedDbRow->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
@@ -41,15 +41,15 @@ class GrouperUpdateTest extends TestCase
 
         $this->assertEquals(1, count($data));
 
-        /* @var SyncRowDto $syncDbRow */
+        /* @var ChangedRowGroupedDto $syncDbRow */
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
         $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
-        $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
+        $this->assertEquals(ChangedRowGroupedDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals(['name', 'name2'], $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow->getData());
@@ -68,22 +68,22 @@ class GrouperUpdateTest extends TestCase
 
         $this->assertEquals(2, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
         $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
-        $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
+        $this->assertEquals(ChangedRowGroupedDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals($changedDbRow->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow2 = $data['test-table'][2];
 
         $this->assertEquals($changedDbRow2->getDatabase(), $syncDbRow2->getDatabase());
         $this->assertEquals($changedDbRow2->getTable(), $syncDbRow2->getTable());
-        $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow2->getType());
+        $this->assertEquals(ChangedRowGroupedDto::TYPE_UPSERT, $syncDbRow2->getType());
         $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow2->getIdentifier());
         $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow2->getData());

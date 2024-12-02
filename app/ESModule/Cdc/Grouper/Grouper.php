@@ -3,7 +3,7 @@
 namespace App\ESModule\Cdc\Grouper;
 
 use App\ESModule\Cdc\Dto\ChangedRowDto;
-use App\ESModule\Cdc\Dto\SyncRowDto;
+use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 
 class Grouper
@@ -25,16 +25,16 @@ class Grouper
                 $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowDto::TYPE_DELETE);
             } elseif (ChangedRowDto::TYPE_UPDATE === $type) {
                 if (!isset($data[$table][$identifier])) {
-                    $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncRowDto::TYPE_UPSERT);
+                    $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowGroupedDto::TYPE_UPSERT);
                 } else {
-                    /** @var SyncRowDto $syncDbRowExisting */
+                    /** @var ChangedRowGroupedDto $syncDbRowExisting */
                     $syncDbRowExisting = $data[$table][$identifier];
 
                     if (ChangedRowDto::TYPE_DELETE === $syncDbRowExisting->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
                     }
 
-                    if (SyncRowDto::TYPE_UPSERT === $syncDbRowExisting->getType()) {
+                    if (ChangedRowGroupedDto::TYPE_UPSERT === $syncDbRowExisting->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncDbRowExisting->getChangedFields(),
                             $changedFields
@@ -51,16 +51,16 @@ class Grouper
                     throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncRowDto::TYPE_UPSERT);
+                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowGroupedDto::TYPE_UPSERT);
             }
         }
 
         return $data;
     }
 
-    private function createSyncDbRow(ChangedRowDto $changedDbRow, string $type): SyncRowDto
+    private function createSyncDbRow(ChangedRowDto $changedDbRow, string $type): ChangedRowGroupedDto
     {
-        return new SyncRowDto(
+        return new ChangedRowGroupedDto(
             $changedDbRow->getDatabase(),
             $changedDbRow->getTable(),
             $type,

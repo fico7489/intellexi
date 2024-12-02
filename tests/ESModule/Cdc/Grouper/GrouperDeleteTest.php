@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Cdc\Grouper;
 
 use App\ESModule\Cdc\Dto\ChangedRowDto;
-use App\ESModule\Cdc\Dto\SyncRowDto;
+use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 use App\ESModule\Cdc\Grouper\Grouper;
 
@@ -27,7 +27,7 @@ class GrouperDeleteTest extends TestCase
 
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
@@ -49,7 +49,7 @@ class GrouperDeleteTest extends TestCase
 
         $this->assertEquals(2, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
@@ -59,7 +59,7 @@ class GrouperDeleteTest extends TestCase
         $this->assertEquals($changedDbRow->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
 
-        /** @var SyncRowDto $syncDbRow2 */
+        /** @var ChangedRowGroupedDto $syncDbRow2 */
         $syncDbRow2 = $data['test-table'][2];
 
         $this->assertEquals($changedDbRow2->getDatabase(), $syncDbRow2->getDatabase());
@@ -81,7 +81,7 @@ class GrouperDeleteTest extends TestCase
 
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var ChangedRowGroupedDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow2->getDatabase(), $syncDbRow->getDatabase());

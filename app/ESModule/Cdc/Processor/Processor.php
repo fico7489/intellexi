@@ -9,12 +9,12 @@ use App\ESModule\Cdc\Event\CdcPayloads;
 use App\ESModule\Cdc\Grouper\Grouper;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
- class Processor
+class Processor
 {
     public function __construct(
         private Grouper $grouper,
-        private  EventDispatcherInterface $dispatcher,
-        private  ConverterInterface $converter,
+        private EventDispatcherInterface $dispatcher,
+        private ConverterInterface $converter,
     ) {
     }
 

@@ -15,7 +15,7 @@ class MaxwellConverter implements ConverterInterface
             $identifier = $payload['data']['id'];
             $changedFields = isset($payload['old']) ? array_keys($payload['old']) : [];
 
-            $changedRowsDtos[]= new ChangedRowDto(
+            $changedRowsDtos[] = new ChangedRowDto(
                 $payload['database'],
                 $payload['table'],
                 $payload['type'],

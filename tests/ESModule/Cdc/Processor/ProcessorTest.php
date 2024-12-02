@@ -4,6 +4,7 @@ namespace Tests\ESModule\Cdc\Processor;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Event\CdcChangedRows;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
 use App\ESModule\Cdc\Event\CdcPayloads;
@@ -22,11 +23,12 @@ class ProcessorTest extends TestCase
         $changedRow = new ChangedRowDto('test', 'test', 'test', 'test', [], []);
         $changedRows = [$changedRow];
 
-        $changedRowsGrouped = [$changedRow];
+        $changedRowGrouped = new ChangedRowGroupedDto('test2', 'test2', 'test2', 'test2', [], []);
+        $changedRowsGrouped = [$changedRowGrouped];
 
         $this->mock(Grouper::class, function ($mock) use ($changedRows, $changedRowsGrouped) {
             $mock->shouldReceive('group')
-                ->withArgs(function ($changedRowsActual) use ($changedRows, $changedRowsGrouped) {
+                ->withArgs(function ($changedRowsActual) use ($changedRows) {
                     $this->assertEquals($changedRows, $changedRowsActual);
 
                     return true;
