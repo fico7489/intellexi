@@ -25,7 +25,7 @@ class GrouperTest extends TestCase
 
         $data = $this->grouper->group($changedDbRows);
 
-        $this->assertEquals(1, count($data));
+        $this->assertEquals(1, count($data['test-table']));
 
         /** @var SyncDbRow $syncDbRow */
         $syncDbRow = $data['test-table'][1];
@@ -52,6 +52,9 @@ class GrouperTest extends TestCase
         $this->assertEquals(1, count($data));
 
         /** @var SyncDbRow $syncDbRow */
+        $this->assertEquals(1, count($data['test-table']));
+
+        /** @var SyncDbRow $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
@@ -60,6 +63,40 @@ class GrouperTest extends TestCase
         $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
         $this->assertEquals(['name', 'name2'], $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow->getData());
+    }
+
+    public function testUpdateTwoDifferentRow()
+    {
+        $data = ['id' => 1, 'name' => 'test', 'name2' => 'test'];
+        $data2 = ['id' => 2, 'name' => 'test2', 'name2' => 'test2'];
+
+        $changedDbRow = $this->createChangedRow(identifier: 1, changedFields: ['name'], data: $data);
+        $changedDbRow2 = $this->createChangedRow(identifier: 2, changedFields: ['name'], data: $data2);
+        $changedDbRows = [$changedDbRow, $changedDbRow2];
+
+        $data = $this->grouper->group($changedDbRows);
+
+        $this->assertEquals(2, count($data['test-table']));
+
+        /** @var SyncDbRow $syncDbRow */
+        $syncDbRow = $data['test-table'][1];
+
+        $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
+        $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
+        $this->assertEquals(SyncDbRow::TYPE_UPSERT, $syncDbRow->getType());
+        $this->assertEquals($changedDbRow->getIdentifier(), $syncDbRow->getIdentifier());
+        $this->assertEquals($changedDbRow->getChangedFields(), $syncDbRow->getChangedFields());
+        $this->assertEquals($changedDbRow->getData(), $syncDbRow->getData());
+
+        /** @var SyncDbRow $syncDbRow */
+        $syncDbRow2 = $data['test-table'][2];
+
+        $this->assertEquals($changedDbRow2->getDatabase(), $syncDbRow2->getDatabase());
+        $this->assertEquals($changedDbRow2->getTable(), $syncDbRow2->getTable());
+        $this->assertEquals(SyncDbRow::TYPE_UPSERT, $syncDbRow2->getType());
+        $this->assertEquals($changedDbRow2->getIdentifier(), $syncDbRow2->getIdentifier());
+        $this->assertEquals($changedDbRow2->getChangedFields(), $syncDbRow2->getChangedFields());
+        $this->assertEquals($changedDbRow2->getData(), $syncDbRow2->getData());
     }
 
     private function createChangedRow(

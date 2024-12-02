@@ -26,7 +26,7 @@ class Grouper
                     $syncDbRowExisting = $data[$table][$identifier];
 
                     if($syncDbRowExisting->getType() === ChangedDbRow::TYPE_DELETE){
-                        //do nothing
+                        throw new \Exception('Grouper: update detected after delete');
                     }
 
                     if($syncDbRowExisting->getType() === SyncDbRow::TYPE_UPSERT){
@@ -42,7 +42,11 @@ class Grouper
                     }
                 }
             } elseif (ChangedDbRow::TYPE_INSERT === $type) {
-                $data[$table][$identifier] = $changedDbRow;
+                if (isset($data[$table][$identifier])){
+                    throw new \Exception('Grouper: insert detected after delete or update');
+                }
+
+                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, SyncDbRow::TYPE_UPSERT);
             }
         }
 
