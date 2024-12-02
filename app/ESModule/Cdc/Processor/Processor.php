@@ -3,29 +3,23 @@
 namespace App\ESModule\Cdc\Processor;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
-use App\ESModule\Cdc\Event\CdcChangedRows;
-use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
-use App\ESModule\Cdc\Event\CdcPayloads;
-use App\ESModule\Cdc\Grouper\Grouper;
+use App\ESModule\Cdc\Event\CdcDtosEvent;
+use App\ESModule\Cdc\Event\CdcPayloadsEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 class Processor
 {
     public function __construct(
-        private Grouper $grouper,
-        private EventDispatcherInterface $dispatcher,
-        private ConverterInterface $converter,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly ConverterInterface $converter,
     ) {
     }
 
-    public function process(array $payloads): void
+    public function processCdcPayloads(array $cdcPayloads): void
     {
-        $this->dispatcher->dispatch(new CdcPayloads($payloads));
+        $this->dispatcher->dispatch(new CdcPayloadsEvent($cdcPayloads));
 
-        $changedRows = $this->converter->convert($payloads);
-        $this->dispatcher->dispatch(new CdcChangedRows($changedRows));
-
-        $changedRowsGrouped = $this->grouper->group($changedRows);
-        $this->dispatcher->dispatch(new CdcChangedRowsGrouped($changedRowsGrouped));
+        $cdcDtos = $this->converter->convertCdcPayloadsToCdcDtos($cdcPayloads);
+        $this->dispatcher->dispatch(new CdcDtosEvent($cdcDtos));
     }
 }

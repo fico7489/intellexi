@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 use App\ESModule\Cdc\Grouper\Grouper;
@@ -20,7 +20,7 @@ class GrouperInsertTest extends TestCase
 
     public function testInsertBasic()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_INSERT);
+        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_INSERT);
         $changedDbRows = [$changedDbRow];
 
         $data = $this->grouper->group($changedDbRows);
@@ -40,8 +40,8 @@ class GrouperInsertTest extends TestCase
 
     public function testInsertBasic2()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_INSERT, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: ChangedRowDto::TYPE_INSERT, identifier: 2);
+        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 2);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
@@ -72,8 +72,8 @@ class GrouperInsertTest extends TestCase
 
     public function testInsertExceptionAlreadyExists()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_INSERT, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: ChangedRowDto::TYPE_INSERT, identifier: 1);
+        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: CdcDto::TYPE_INSERT, identifier: 1);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 

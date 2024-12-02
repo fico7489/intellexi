@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Grouper\Grouper;
 
 class TestCase extends \Tests\TestCase
@@ -19,12 +19,12 @@ class TestCase extends \Tests\TestCase
     protected function createChangedRow(
         string $database = 'test-database',
         string $table = 'test-table',
-        string $type = ChangedRowDto::TYPE_UPDATE,
+        string $type = CdcDto::TYPE_UPDATE,
         mixed $identifier = 1,
         array $changedFields = ['name'],
         array $data = ['id' => 1, 'name' => 'test2'],
     ) {
-        $changedDbRow = new ChangedRowDto(
+        $changedDbRow = new CdcDto(
             $database,
             $table,
             $type,

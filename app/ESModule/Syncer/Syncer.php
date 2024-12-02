@@ -2,21 +2,25 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
+use App\ESModule\Cdc\Event\CdcDtosEvent;
+use App\ESModule\Syncer\CdcConverter\CdcConverter;
 
 class Syncer
 {
     public function __construct(
+        private readonly CdcConverter $cdcConverter,
         private readonly DocumentsCreator $documentsCreator,
         private readonly SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
 
-    public function sync(CdcChangedRowsGrouped $event): void
+    public function sync(CdcDtosEvent $event): void
     {
-        $changedRowsGrouped = $event->getChangedRowsGrouped();
+        $cdcDtos = $event->getCdcDtos();
 
-        $documents = $this->documentsCreator->createDocuments($changedRowsGrouped);
+        $syncRowDtos = $this->cdcConverter->convert($cdcDtos);
+
+        $documents = $this->documentsCreator->createDocuments($syncRowDtos);
 
         $this->searchEngineSyncer->syncDocuments($documents);
     }

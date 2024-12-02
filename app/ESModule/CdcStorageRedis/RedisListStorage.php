@@ -2,10 +2,10 @@
 
 namespace App\ESModule\CdcStorageRedis;
 
-use App\ESModule\Cdc\Storage\List\Storage;
+use App\ESModule\Cdc\Storage\List\ListStorage;
 use Predis\Client;
 
-readonly class RedisStorage implements Storage
+readonly class RedisListStorage implements ListStorage
 {
     public function __construct(
         private string $channel,
@@ -13,7 +13,7 @@ readonly class RedisStorage implements Storage
     ) {
     }
 
-    public function pop(int $limit): ?array
+    public function popFromList(int $limit): ?array
     {
         $predis = new Client($this->options);
         $payload = $predis->lmpop([$this->channel], 'left', $limit);

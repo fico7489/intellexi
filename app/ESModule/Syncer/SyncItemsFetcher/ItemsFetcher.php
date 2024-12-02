@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\SyncItemsFetcher;
 
-use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
+use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 
 class ItemsFetcher
 {
@@ -12,13 +12,13 @@ class ItemsFetcher
     ) {
     }
 
-    public function fetch(ChangedRowGroupedDto $changedRowGrouped): array
+    public function fetch(SyncRowDto $syncRowDto): array
     {
         $items = [];
 
-        $items = $this->itemsRootModelFetcher->fetch($items, $changedRowGrouped);
+        $items = $this->itemsRootModelFetcher->fetch($items, $syncRowDto);
 
-        $items = $this->itemsRelatedModelsFetcher->fetch($items, $changedRowGrouped);
+        $items = $this->itemsRelatedModelsFetcher->fetch($items, $syncRowDto);
 
         // TODO group
 

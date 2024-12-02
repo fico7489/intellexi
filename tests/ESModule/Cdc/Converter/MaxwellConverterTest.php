@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Cdc\Converter;
 
 use App\ESModule\Cdc\Converter\MaxwellConverter;
-use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\CdcDto;
 use Tests\TestCase;
 
 class MaxwellConverterTest extends TestCase
@@ -16,7 +16,7 @@ class MaxwellConverterTest extends TestCase
         $changedDbRows = app(MaxwellConverter::class)->convert($payloads);
 
         $this->assertEquals(
-            new ChangedRowDto(
+            new CdcDto(
                 'test-db',
                 'test-table',
                 'insert',
@@ -39,7 +39,7 @@ class MaxwellConverterTest extends TestCase
         $changedDbRows = app(MaxwellConverter::class)->convert($payloads);
 
         $this->assertEquals(
-            new ChangedRowDto(
+            new CdcDto(
                 'test-db',
                 'test-table',
                 'delete',
@@ -62,7 +62,7 @@ class MaxwellConverterTest extends TestCase
         $changedDbRows = app(MaxwellConverter::class)->convert($payloads);
 
         $this->assertEquals(
-            new ChangedRowDto(
+            new CdcDto(
                 'test-db',
                 'test-table',
                 'update',

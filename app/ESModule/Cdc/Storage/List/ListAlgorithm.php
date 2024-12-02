@@ -4,11 +4,11 @@ namespace App\ESModule\Cdc\Storage\List;
 
 use App\ESModule\Cdc\Processor\Processor;
 
-readonly class Algorithm
+readonly class ListAlgorithm
 {
     public function __construct(
         private Processor $processor,
-        private Storage $storage,
+        private ListStorage $storage,
         private string $limit,
         private string $sleep,
     ) {
@@ -17,10 +17,10 @@ readonly class Algorithm
     public function run()
     {
         while (true) {
-            $payload = $this->storage->pop($this->limit);
+            $cdcPayloads = $this->storage->popFromList($this->limit);
 
-            if (null !== $payload) {
-                $this->processor->process($payload);
+            if (null !== $cdcPayloads) {
+                $this->processor->processCdcPayloads($cdcPayloads);
             }
 
             sleep($this->sleep);

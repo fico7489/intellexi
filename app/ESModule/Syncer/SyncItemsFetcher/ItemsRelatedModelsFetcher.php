@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Syncer\SyncItemsFetcher;
 
-use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Config\ConfigFetcher;
+use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\ModelMapper;
@@ -19,7 +19,7 @@ class ItemsRelatedModelsFetcher
     ) {
     }
 
-    public function fetch(array $items, ChangedRowGroupedDto $changedRowGrouped): array
+    public function fetch(array $items, SyncRowDto $syncRowDto): array
     {
         $updatingMap = $this->constructMap();
 
@@ -31,8 +31,8 @@ class ItemsRelatedModelsFetcher
             $relation = $data['relation'];
             $index = $data['index'];
 
-            if ($table === $changedRowGrouped->getTable()) {
-                $model = $this->eloquentAdapter->fetchModel($className, $changedRowGrouped);
+            if ($table === $syncRowDto->getTable()) {
+                $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
                 $models = $model->{$relation};
 
@@ -42,7 +42,7 @@ class ItemsRelatedModelsFetcher
                     $indexName = 'prefix_'.$index->getIndexName();
                     // TODO
 
-                    $items[$indexName] = $this->dataFetcher->fetch($index, $model, $changedRowGrouped);
+                    $items[$indexName] = $this->dataFetcher->fetch($index, $model, $syncRowDto);
                 }
             }
         }

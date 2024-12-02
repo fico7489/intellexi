@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Cdc\Exception;
+namespace App\ESModule\Syncer\CdcConverter\Exception;
 
 class GrouperException extends \Exception
 {

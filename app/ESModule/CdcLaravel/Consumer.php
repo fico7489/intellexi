@@ -2,7 +2,7 @@
 
 namespace App\ESModule\CdcLaravel;
 
-use App\ESModule\Cdc\Storage\List\Algorithm;
+use App\ESModule\Cdc\Storage\List\ListAlgorithm;
 use Illuminate\Console\Command;
 
 class Consumer extends Command
@@ -11,8 +11,8 @@ class Consumer extends Command
 
     public function handle(): void
     {
-        /** @var Algorithm $algorithm */
-        $algorithm = app(Algorithm::class);
+        /** @var ListAlgorithm $algorithm */
+        $algorithm = app(ListAlgorithm::class);
 
         $algorithm->run();
     }

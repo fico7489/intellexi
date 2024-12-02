@@ -3,11 +3,11 @@
 namespace Tests\ESModule\Cdc\Processor;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
-use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
-use App\ESModule\Cdc\Event\CdcChangedRows;
 use App\ESModule\Cdc\Event\CdcChangedRowsGrouped;
-use App\ESModule\Cdc\Event\CdcPayloads;
+use App\ESModule\Cdc\Event\CdcDtosEvent;
+use App\ESModule\Cdc\Event\CdcPayloadsEvent;
 use App\ESModule\Cdc\Grouper\Grouper;
 use App\ESModule\Cdc\Processor\Processor;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -20,7 +20,7 @@ class ProcessorTest extends TestCase
         $payload = '{"test" : "payload"}';
         $payloads = [$payload];
 
-        $changedRow = new ChangedRowDto('test', 'test', 'test', 'test', [], []);
+        $changedRow = new CdcDto('test', 'test', 'test', 'test', [], []);
         $changedRows = [$changedRow];
 
         $changedRowGrouped = new ChangedRowGroupedDto('test2', 'test2', 'test2', 'test2', [], []);
@@ -51,16 +51,16 @@ class ProcessorTest extends TestCase
 
         $this->mock(EventDispatcherInterface::class, function ($mock) use ($changedRowsGrouped, $changedRows, $payloads) {
             $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcPayloads $event) use ($payloads) {
-                    $this->assertEquals($payloads, $event->getPayloads());
+                ->withArgs(function (CdcPayloadsEvent $event) use ($payloads) {
+                    $this->assertEquals($payloads, $event->getCdcPayloads());
 
                     return true;
                 })
                 ->once();
 
             $mock->shouldReceive('dispatch')
-                ->withArgs(function (CdcChangedRows $event) use ($changedRows) {
-                    $this->assertEquals($changedRows, $event->getChangedRows());
+                ->withArgs(function (CdcDtosEvent $event) use ($changedRows) {
+                    $this->assertEquals($changedRows, $event->getCdcDtos());
 
                     return true;
                 })

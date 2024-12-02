@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Cdc\Grouper;
 
-use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Cdc\Exception\GrouperException;
 
@@ -91,8 +91,8 @@ class GrouperUpdateTest extends TestCase
 
     public function testUpdateExceptionAfterDelete()
     {
-        $changedDbRow = $this->createChangedRow(type: ChangedRowDto::TYPE_DELETE, identifier: 1);
-        $changedDbRow2 = $this->createChangedRow(type: ChangedRowDto::TYPE_UPDATE, identifier: 1);
+        $changedDbRow = $this->createChangedRow(type: CdcDto::TYPE_DELETE, identifier: 1);
+        $changedDbRow2 = $this->createChangedRow(type: CdcDto::TYPE_UPDATE, identifier: 1);
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 

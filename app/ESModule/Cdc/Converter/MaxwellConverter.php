@@ -2,27 +2,32 @@
 
 namespace App\ESModule\Cdc\Converter;
 
-use App\ESModule\Cdc\Dto\ChangedRowDto;
+use App\ESModule\Cdc\Dto\CdcDto;
 
 class MaxwellConverter implements ConverterInterface
 {
-    public function convert(array $payloads): array
+    /**
+     * @return array<CdcDto>
+     */
+    public function convertCdcPayloadsToCdcDtos(array $cdcPayloads): array
     {
-        $changedRowsDtos = [];
-        foreach ($payloads as $payload) {
-            $payload = json_decode($payload, true);
+        $cdcDtos = [];
+        foreach ($cdcPayloads as $cdcPayload) {
+            $cdcPayload = json_decode($cdcPayload, true);
 
-            $changedFields = isset($payload['old']) ? array_keys($payload['old']) : [];
+            $changedFields = isset($cdcPayload['old']) ? array_keys($cdcPayload['old']) : [];
+            $additional = [];
 
-            $changedRowsDtos[] = new ChangedRowDto(
-                $payload['database'],
-                $payload['table'],
-                $payload['type'],
+            $cdcDtos[] = new CdcDto(
+                $cdcPayload['database'],
+                $cdcPayload['table'],
+                $cdcPayload['type'],
+                $cdcPayload['data'],
                 $changedFields,
-                $payload['data'],
+                $additional
             );
         }
 
-        return $changedRowsDtos;
+        return $cdcDtos;
     }
 }

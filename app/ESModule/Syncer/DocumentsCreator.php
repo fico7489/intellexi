@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Cdc\Dto\ChangedRowDto;
-use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
+use App\ESModule\Cdc\Dto\CdcDto;
+use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Dto\Document;
 use App\ESModule\Syncer\SyncItemsFetcher\ItemsFetcher;
 
@@ -22,7 +22,7 @@ class DocumentsCreator
         $documents = [];
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $changedRowGrouped) {
-                /* @var ChangedRowGroupedDto $changedRowGrouped */
+                /* @var SyncRowDto $changedRowGrouped */
                 $items = $this->syncItemsFetcher->fetch($changedRowGrouped);
 
                 foreach ($items as $indexName => $data) {
@@ -30,7 +30,7 @@ class DocumentsCreator
                         $indexName,
                         $changedRowGrouped->getIdentifier(),
                         $data,
-                        ChangedRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
+                        CdcDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
                     );
                 }
             }

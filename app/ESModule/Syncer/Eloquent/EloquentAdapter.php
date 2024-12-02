@@ -2,15 +2,15 @@
 
 namespace App\ESModule\Syncer\Eloquent;
 
-use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
+use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use Illuminate\Database\Eloquent\Model;
 
 class EloquentAdapter
 {
-    public function fetchModel(string $className, ChangedRowGroupedDto $changedRowGrouped): ?Model
+    public function fetchModel(string $className, SyncRowDto $syncRowDto): ?Model
     {
         // MAKE sure that newest model is fetched
 
-        return $className::find($changedRowGrouped->getIdentifier());
+        return $className::find($syncRowDto->getIdentifier());
     }
 }
