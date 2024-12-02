@@ -20,7 +20,7 @@ class DocumentsCreator
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
                 $items = $this->syncDataDetector->detect($changedRowGrouped);
-                dump($items);
+
                 foreach ($items as $indexName => $data) {
                     $documents[$indexName][] = new Document(
                         $indexName,

@@ -42,7 +42,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
                         'limit' => 301,
                     ],
                 ],
-            ]
+            ],
         ];
     }
 
