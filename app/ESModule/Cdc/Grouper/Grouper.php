@@ -13,22 +13,22 @@ class Grouper
         $data = [];
         foreach ($data2 as $changedDbRow) {
             $table = $changedDbRow->getTable();
-            $identifier = $changedDbRow->getIdentifier();
+            $idddentifier = 1;  //TODO
             $changedFields = $changedDbRow->getChangedFields();
 
             $type = $changedDbRow->getType();
             if (ChangedRowDto::TYPE_DELETE === $type) {
-                if (isset($data[$table][$identifier]) && ChangedRowDto::TYPE_DELETE === $data[$table][$identifier]->getType()) {
+                if (isset($data[$table][$idddentifier]) && ChangedRowDto::TYPE_DELETE === $data[$table][$idddentifier]->getType()) {
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
-                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowDto::TYPE_DELETE);
+                $data[$table][$idddentifier] = $this->createSyncDbRow($changedDbRow, ChangedRowDto::TYPE_DELETE);
             } elseif (ChangedRowDto::TYPE_UPDATE === $type) {
-                if (!isset($data[$table][$identifier])) {
-                    $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowGroupedDto::TYPE_UPSERT);
+                if (!isset($data[$table][$idddentifier])) {
+                    $data[$table][$idddentifier] = $this->createSyncDbRow($changedDbRow, ChangedRowGroupedDto::TYPE_UPSERT);
                 } else {
                     /** @var ChangedRowGroupedDto $syncDbRowExisting */
-                    $syncDbRowExisting = $data[$table][$identifier];
+                    $syncDbRowExisting = $data[$table][$idddentifier];
 
                     if (ChangedRowDto::TYPE_DELETE === $syncDbRowExisting->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
@@ -43,15 +43,15 @@ class Grouper
                         $syncDbRowExisting->setChangedFields($changedFields);
                         $syncDbRowExisting->setData($changedDbRow->getData());
 
-                        $data[$table][$identifier] = $syncDbRowExisting;
+                        $data[$table][$idddentifier] = $syncDbRowExisting;
                     }
                 }
             } elseif (ChangedRowDto::TYPE_INSERT === $type) {
-                if (isset($data[$table][$identifier])) {
+                if (isset($data[$table][$idddentifier])) {
                     throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $data[$table][$identifier] = $this->createSyncDbRow($changedDbRow, ChangedRowGroupedDto::TYPE_UPSERT);
+                $data[$table][$idddentifier] = $this->createSyncDbRow($changedDbRow, ChangedRowGroupedDto::TYPE_UPSERT);
             }
         }
 
@@ -64,7 +64,6 @@ class Grouper
             $changedDbRow->getDatabase(),
             $changedDbRow->getTable(),
             $type,
-            $changedDbRow->getIdentifier(),
             $changedDbRow->getChangedFields(),
             $changedDbRow->getData()
         );

@@ -12,14 +12,12 @@ class MaxwellConverter implements ConverterInterface
         foreach ($payloads as $payload) {
             $payload = json_decode($payload, true);
 
-            $identifier = $payload['data']['id'];
             $changedFields = isset($payload['old']) ? array_keys($payload['old']) : [];
 
             $changedRowsDtos[] = new ChangedRowDto(
                 $payload['database'],
                 $payload['table'],
                 $payload['type'],
-                $identifier,
                 $changedFields,
                 $payload['data'],
             );

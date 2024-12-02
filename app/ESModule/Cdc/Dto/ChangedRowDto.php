@@ -12,7 +12,6 @@ class ChangedRowDto
         private string $database,
         private string $table,
         private string $type,
-        private string $identifier,
         private array $changedFields,
         private array $data,
     ) {
@@ -31,11 +30,6 @@ class ChangedRowDto
     public function getType(): string
     {
         return $this->type;
-    }
-
-    public function getIdentifier(): string
-    {
-        return $this->identifier;
     }
 
     public function getChangedFields(): array
