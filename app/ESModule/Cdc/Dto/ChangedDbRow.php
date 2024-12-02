@@ -9,12 +9,12 @@ class ChangedDbRow
     final public const string TYPE_DELETE = 'delete';
 
     public function __construct(
-        private readonly string $database,
-        private readonly string $table,
-        private readonly string $type,
-        private readonly string $identifier,
-        private readonly array $changedFields,
-        private readonly array $data,
+        private string $database,
+        private string $table,
+        private string $type,
+        private string $identifier,
+        private array $changedFields,
+        private array $data,
     ) {
     }
 
@@ -46,5 +46,15 @@ class ChangedDbRow
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function setChangedFields(array $changedFields): void
+    {
+        $this->changedFields = $changedFields;
+    }
+
+    public function setData(array $data): void
+    {
+        $this->data = $data;
     }
 }
