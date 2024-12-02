@@ -6,7 +6,7 @@ use App\ESModule\Interface\IndexDefinerModelInterface;
 use App\Models\Application;
 use App\Models\User;
 
-class UserIndex implements IndexDefinerModelInterface
+class User2Index implements IndexDefinerModelInterface
 {
     public function getConnection(): string
     {
@@ -15,7 +15,7 @@ class UserIndex implements IndexDefinerModelInterface
 
     public function getIndexName(): string
     {
-        return 'users';
+        return 'users2';
     }
 
     public function getClassName(): string
@@ -48,7 +48,7 @@ class UserIndex implements IndexDefinerModelInterface
     {
         return [
             'id' => $model->id,
-            'first_name' => $model->first_name,
+            'last_name' => $model->last_name,
         ];
     }
 

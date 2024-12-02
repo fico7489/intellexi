@@ -56,7 +56,10 @@ class ApplicationIndex implements IndexDefinerModelInterface
 
     public function getData(array $data, mixed $model): array
     {
-        return $data;
+        return [
+            'id' => $model->id,
+            'club' => $model->club,
+        ];
     }
 
     public function getUpdatingFields(): array

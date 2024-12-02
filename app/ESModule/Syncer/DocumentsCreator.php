@@ -9,7 +9,7 @@ use App\ESModule\Syncer\Dto\Document;
 class DocumentsCreator
 {
     public function __construct(
-        private readonly ModelsDetector $modelsDetector,
+        private readonly SyncDataDetector $syncDataDetector,
     ) {
     }
 
@@ -19,13 +19,13 @@ class DocumentsCreator
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var ChangedRowGroupedDto $changedRowGrouped */
-                $models = $this->modelsDetector->detectModels($changedRowGrouped);
-
-                foreach ($models as $indexName => $model) {
+                $items = $this->syncDataDetector->detect($changedRowGrouped);
+                dump($items);
+                foreach ($items as $indexName => $data) {
                     $documents[$indexName][] = new Document(
                         $indexName,
                         $changedRowGrouped->getIdentifier(),
-                        $changedRowGrouped->getData(),
+                        $data,
                         ChangedRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
                     );
                 }

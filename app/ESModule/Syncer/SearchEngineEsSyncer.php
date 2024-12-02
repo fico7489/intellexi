@@ -68,6 +68,8 @@ class SearchEngineEsSyncer
             ]
         );
 
+        dump('status code:'.$response->getStatusCode());
+
         // TODO async
 
         return true;
