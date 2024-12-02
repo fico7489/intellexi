@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ES;
+namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\Models\User;

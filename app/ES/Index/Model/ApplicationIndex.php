@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ES;
+namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\Models\Application;
@@ -25,6 +25,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
 
     public function getMapping(array $mapping): array
     {
+        // TODO resolve
         return [];
 
         return [
@@ -35,6 +36,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
 
     public function getSettings(array $settings): array
     {
+        // TODO resolve
         return [];
 
         return [

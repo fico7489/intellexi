@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ES\ApplicationIndex;
+use App\ES\Index\Model\ApplicationIndex;
 use App\ESModule\Cdc\Dto\ChangedRowGroupedDto;
 use App\ESModule\Config\ConfigFetcher;
 use App\Models\Application;
