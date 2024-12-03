@@ -3,17 +3,17 @@
 namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\CdcConverter\CdcConverter;
+use App\ESModule\Syncer\CdcConverter\SyncRowsCreator;
 
 class TestCase extends \Tests\TestCase
 {
-    protected CdcConverter $cdcConverter;
+    protected SyncRowsCreator $cdcConverter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->cdcConverter = app(CdcConverter::class);
+        $this->cdcConverter = app(SyncRowsCreator::class);
     }
 
     protected function createCdcDto(

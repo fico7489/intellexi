@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Syncer\Dto\Document;
+use App\ESModule\Syncer\Dto\DocumentDto;
 use GuzzleHttp\Client;
 
 class SearchEngineEsSyncer
@@ -39,11 +39,11 @@ class SearchEngineEsSyncer
 
         $datas = [];
         foreach ($documents as $document) {
-            /* @var Document $document */
+            /* @var DocumentDto $document */
             dump($document);
             // dump('SYNC:' . $document->getIndex() . ' - ' $document->getIdentifier());
 
-            /** @var Document $document */
+            /** @var DocumentDto $document */
             $data = $this->documentPrepare($indexName, $document->getIdentifier(), $document->getData());
 
             $datas[] = $data[0];

@@ -3,8 +3,7 @@
 namespace App\ESModule\Syncer;
 
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
-use App\ESModule\Syncer\Dto\Document;
-use App\ESModule\Syncer\SyncItemsFetcher\ItemsFetcher;
+use App\ESModule\Syncer\Dto\DocumentDto;
 use App\ESModule\Syncer\SyncItemsFetcher\ItemsRelatedModelsFetcher;
 
 class DocumentsCreator
@@ -16,19 +15,17 @@ class DocumentsCreator
     }
 
     /**
-     * @return array<Document>
+     * @return array<DocumentDto>
      */
-    public function createDocuments(array $changedRowsGrouped): array
+    public function create(array $syncRowDtos): array
     {
         $documents2 = [];
-        foreach ($changedRowsGrouped as $table => $data) {
-            foreach ($data as $identifier => $syncRowDto) {
-                /* @var SyncRowDto $syncRowDto */
-                $documents = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
+        foreach ($syncRowDtos as $syncRowDto) {
+            /* @var SyncRowDto $syncRowDto */
+            $documents = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
 
-                foreach ($documents as $document) {
-                    $documents2[$document->getIndex()][] = $document;
-                }
+            foreach ($documents as $document) {
+                $documents2[$document->getIndex()][] = $document;
             }
         }
 

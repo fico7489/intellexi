@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\CdcConverter\CdcConverter;
+use App\ESModule\Syncer\CdcConverter\SyncRowsCreator;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\CdcConverter\Exception\GrouperException;
 
@@ -14,7 +14,7 @@ class ConvertDeleteTest extends TestCase
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDtos = [$cdcDto];
 
-        $data = $this->cdcConverter->convert($cdcDtos);
+        $data = $this->cdcConverter->create($cdcDtos);
 
         $this->assertEquals(1, count($data['test-table']));
 
@@ -34,12 +34,12 @@ class ConvertDeleteTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(CdcConverter::class, function ($mock) {
+        $this->mock(SyncRowsCreator::class, function ($mock) {
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
             $mock->shouldReceive('detectIdentifier')->andReturn(2)->once();
         })->makePartial();
 
-        $data = app(CdcConverter::class)->convert($cdcDtos);
+        $data = app(SyncRowsCreator::class)->convert($cdcDtos);
 
         $this->assertEquals(2, count($data['test-table']));
 
@@ -71,7 +71,7 @@ class ConvertDeleteTest extends TestCase
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
-        $data = $this->cdcConverter->convert($changedDbRows);
+        $data = $this->cdcConverter->create($changedDbRows);
 
         $this->assertEquals(1, count($data['test-table']));
 
@@ -93,7 +93,7 @@ class ConvertDeleteTest extends TestCase
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
         try {
-            $data = $this->cdcConverter->convert($changedDbRows);
+            $data = $this->cdcConverter->create($changedDbRows);
         } catch (GrouperException $e) {
             $this->assertEquals('Grouper: delete already deleted', $e->getMessage());
         }

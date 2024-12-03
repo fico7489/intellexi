@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Dto;
 
-class Document
+class DocumentDto
 {
     final public const string TYPE_UPSERT = 'upsert';
     final public const string TYPE_DELETE = 'delete';

@@ -7,7 +7,7 @@ use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\CdcConverter\Exception\GrouperException;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 
-class CdcConverter
+class SyncRowsCreator
 {
     public function __construct(
         private readonly ModelMapper $modelMapper,
@@ -16,10 +16,11 @@ class CdcConverter
 
     /**
      * @param array $cdcDtos <CdcDto>
+     * @return array<SyncRowDto>
      *
      * @throws GrouperException
      */
-    public function convert(array $cdcDtos): array
+    public function create(array $cdcDtos): array
     {
         $syncRowDtos = [];
         foreach ($cdcDtos as $cdcDto) {
@@ -77,7 +78,14 @@ class CdcConverter
             }
         }
 
-        return $syncRowDtos;
+        $syncRowDtos2 = [];
+        foreach ($syncRowDtos as $table => $data) {
+            foreach ($data as $identifier => $syncRowDto) {
+                $syncRowDtos2[] = $syncRowDto;
+            }
+        }
+
+        return $syncRowDtos2;
     }
 
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifier): SyncRowDto

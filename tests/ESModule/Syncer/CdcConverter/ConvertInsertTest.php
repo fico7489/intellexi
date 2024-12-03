@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\CdcConverter\CdcConverter;
+use App\ESModule\Syncer\CdcConverter\SyncRowsCreator;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\CdcConverter\Exception\GrouperException;
 
@@ -14,7 +14,7 @@ class ConvertInsertTest extends TestCase
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_INSERT);
         $cdcDtos = [$cdcDto];
 
-        $data = $this->cdcConverter->convert($cdcDtos);
+        $data = $this->cdcConverter->create($cdcDtos);
 
         $this->assertEquals(1, count($data['test-table']));
 
@@ -34,12 +34,12 @@ class ConvertInsertTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_INSERT);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(CdcConverter::class, function ($mock) {
+        $this->mock(SyncRowsCreator::class, function ($mock) {
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
             $mock->shouldReceive('detectIdentifier')->andReturn(2)->once();
         })->makePartial();
 
-        $data = app(CdcConverter::class)->convert($cdcDtos);
+        $data = app(SyncRowsCreator::class)->convert($cdcDtos);
 
         $this->assertEquals(2, count($data['test-table']));
 
@@ -69,13 +69,13 @@ class ConvertInsertTest extends TestCase
 
         $changedDbRows = [$changedDbRow, $changedDbRow2];
 
-        $this->mock(CdcConverter::class, function ($mock) {
+        $this->mock(SyncRowsCreator::class, function ($mock) {
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
         })->makePartial();
 
         try {
-            $data = app(CdcConverter::class)->convert($changedDbRows);
+            $data = app(SyncRowsCreator::class)->convert($changedDbRows);
         } catch (GrouperException $e) {
             $this->assertEquals('Grouper: insert detected after insert, delete or update', $e->getMessage());
         }
