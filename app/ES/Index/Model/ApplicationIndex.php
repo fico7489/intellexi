@@ -82,20 +82,14 @@ class ApplicationIndex implements IndexDefinerModelInterface
         return [
             new SyncRelation(
                 User::class,
-                [
-                    'id',
-                    'first_name',
-                ],
+                ['id', 'first_name'],
                 new RelationType('applications')
             ),
             new SyncRelation(
                 User::class,
                 ['id'],
                 new ModelClosureType(function (Model $model, SyncRowDto $syncRowDto): array {
-                    return [
-                        Application::find(1),
-                        Application::find(17),
-                    ];
+                    return [Application::find(1), Application::find(17)];
                 })
             ),
         ];
