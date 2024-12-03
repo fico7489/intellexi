@@ -41,7 +41,7 @@ class ItemsRelatedModelsFetcher
                         if ($relation) {
                             // TODO by type, closure, relation or root
                             $models = $model->{$relation};
-                        }else{
+                        } else {
                             $models = $model;
                         }
 

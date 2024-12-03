@@ -10,11 +10,12 @@ class DocumentsCreator
 {
     public function __construct(
         private readonly ItemsRelatedModelsFetcher $itemsRelatedModelsFetcher,
-    )
-    {
+    ) {
     }
 
     /**
+     * @param array<SyncRowDto> $syncRowDtos
+     *
      * @return array<DocumentDto>
      */
     public function create(array $syncRowDtos): array

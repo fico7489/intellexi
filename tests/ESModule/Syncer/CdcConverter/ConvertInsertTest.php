@@ -3,9 +3,9 @@
 namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\CdcConverter\SyncRowsCreator;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\CdcConverter\Exception\GrouperException;
+use App\ESModule\Syncer\CdcConverter\SyncRowsCreator;
 
 class ConvertInsertTest extends TestCase
 {

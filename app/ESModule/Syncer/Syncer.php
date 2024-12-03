@@ -8,8 +8,8 @@ use App\ESModule\Syncer\CdcConverter\SyncRowsCreator;
 class Syncer
 {
     public function __construct(
-        private readonly SyncRowsCreator      $syncRowsCreator,
-        private readonly DocumentsCreator     $documentsCreator,
+        private readonly SyncRowsCreator $syncRowsCreator,
+        private readonly DocumentsCreator $documentsCreator,
         private readonly SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
