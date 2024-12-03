@@ -3,6 +3,7 @@
 namespace App\ESModule\Syncer\SyncItemsFetcher;
 
 use App\ESModule\Config\ConfigFetcher;
+use App\ESModule\Config\Related\SyncRelationDto;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
@@ -56,18 +57,21 @@ class ItemsRelatedModelsFetcher
         foreach ($this->configFetcher->fetchIndexes() as $index) {
             $syncRelations = $index->getSyncRelations();
 
-            foreach ($syncRelations as $classNameRelated => $data) {
-                foreach ($data as $relationRelated => $changedFields) {
-                    $tableRelated = $this->modelMapper->convertClassNameToTable($classNameRelated);
+            foreach ($syncRelations as $syncRelationDto) {
+                /** @var SyncRelationDto $syncRelationDto */
+                $className = $syncRelationDto->getClassName();
+                $relation = $syncRelationDto->getRelation();
+                $includedFields = $syncRelationDto->getUpdatingFields();
 
-                    $relatedSyncs[] = [
-                        'table' => $tableRelated,
-                        'className' => $classNameRelated,
-                        'changedFields' => $changedFields,
-                        'relation' => $relationRelated,
-                        'index' => $index,
-                    ];
-                }
+                $tableRelated = $this->modelMapper->convertClassNameToTable($className);
+
+                $relatedSyncs[] = [
+                    'table' => $tableRelated,
+                    'className' => $className,
+                    'relation' => $relation,
+                    'changedFields' => $includedFields,
+                    'index' => $index,
+                ];
             }
         }
 

@@ -13,7 +13,10 @@ class TestCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        $data = app(ModelMapper::class)->fetchAllClassNames();
+        /** @var ModelMapper $modelMapper */
+        $modelMapper = app(ModelMapper::class);
+        $data = $modelMapper->fetchDatabaseMapping();
+
         dump($data);
 
         dump((floor(microtime(true) * 1000) - $milliseconds).' ms');

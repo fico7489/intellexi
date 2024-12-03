@@ -19,8 +19,6 @@ class ModelMapper
     {
         $databaseMapping = $this->fetchDatabaseMapping();
 
-        dump($databaseMapping, $databaseName, $tableName);
-
         return isset($databaseMapping[$databaseName][$tableName]);
     }
 
@@ -37,8 +35,7 @@ class ModelMapper
             // TODO add related tables
             // TODO add related tables by attributes
 
-            $databaseMapping[$databaseName][$tableName] = true;
-            //  $databaseMapping[$databaseName][$tableName] = [...TODO...];
+            $databaseMapping[$databaseName][$tableName] = $indexDefiner->getUpdatingFields();
         }
 
         return $databaseMapping;

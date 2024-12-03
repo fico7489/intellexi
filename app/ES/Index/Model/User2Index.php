@@ -40,6 +40,13 @@ class User2Index implements IndexDefinerModelInterface
         ];
     }
 
+    public function getUpdatingFields(): array
+    {
+        return [
+            'id',
+        ];
+    }
+
     public function getSyncRelations(): array
     {
         return [];

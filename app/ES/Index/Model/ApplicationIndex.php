@@ -3,6 +3,7 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Related\SyncRelationDto;
 use App\Models\Application;
 use App\Models\User;
 
@@ -61,15 +62,24 @@ class ApplicationIndex implements IndexDefinerModelInterface
         ];
     }
 
+    public function getUpdatingFields(): array
+    {
+        return [
+            'id',
+            'club',
+        ];
+    }
+
+    /**
+     * @return array<SyncRelationDto>
+     */
     public function getSyncRelations(): array
     {
         return [
-            User::class => [
-                'applications' => [
-                    'id',
-                    'first_name',
-                ],
-            ],
+            new SyncRelationDto(User::class, 'applications', [
+                'id',
+                'first_name',
+            ]),
         ];
     }
 }
