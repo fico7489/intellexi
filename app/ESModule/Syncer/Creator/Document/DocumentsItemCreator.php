@@ -53,6 +53,8 @@ class DocumentsItemCreator
                             continue;
                         }
 
+                        //TODO make updates unique by model->id
+
                         foreach ($models as $model) {
                             if(!$model instanceof $className){
                                 //throw new \Exception('TODO wron className');

@@ -91,7 +91,10 @@ class ApplicationIndex implements IndexDefinerModelInterface
                 User::class,
                 ['id'],
                 new ModelClosureType(function (Model $model) : array {
-                    return [Application::find(1)];
+                    return [
+                        Application::find(1),
+                        Application::find(17)
+                    ];
                 })
             )
         ];
