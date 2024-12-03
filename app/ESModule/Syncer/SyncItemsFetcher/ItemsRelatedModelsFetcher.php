@@ -3,6 +3,7 @@
 namespace App\ESModule\Syncer\SyncItemsFetcher;
 
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
+use App\ESModule\Syncer\Dto\Document;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
@@ -17,9 +18,12 @@ class ItemsRelatedModelsFetcher
     ) {
     }
 
+    /**
+     * @return array<Document>
+     */
     public function fetch(SyncRowDto $syncRowDto): array
     {
-        $items = [];
+        $documents = [];
 
         $updatingMap = $this->modelMapper->fetchDatabaseMapping();
 
@@ -50,13 +54,20 @@ class ItemsRelatedModelsFetcher
                             // TODO
                             $identifier = $model->id;
 
-                            $items[$indexName][$identifier] = $this->dataFetcher->fetch($index, $model);
+                            $document = new Document(
+                                $indexName,
+                                $identifier,
+                                $this->dataFetcher->fetch($index, $model),
+                                SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
+                            );
+
+                            $documents[] = $document;
                         }
                     }
                 }
             }
         }
 
-        return $items;
+        return $documents;
     }
 }

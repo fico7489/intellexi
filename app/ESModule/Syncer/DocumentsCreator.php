@@ -11,7 +11,8 @@ class DocumentsCreator
 {
     public function __construct(
         private readonly ItemsRelatedModelsFetcher $itemsRelatedModelsFetcher,
-    ) {
+    )
+    {
     }
 
     /**
@@ -19,25 +20,18 @@ class DocumentsCreator
      */
     public function createDocuments(array $changedRowsGrouped): array
     {
-        $documents = [];
+        $documents2 = [];
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $syncRowDto) {
                 /* @var SyncRowDto $syncRowDto */
-                $items = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
+                $documents = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
 
-                foreach ($items as $indexName => $item) {
-                    foreach ($item as $identifier => $data) {
-                        $documents[$indexName][] = new Document(
-                            $indexName,
-                            $identifier,
-                            $data,
-                            SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
-                        );
-                    }
+                foreach ($documents as $document) {
+                    $documents2[$document->getIndex()][] = $document;
                 }
             }
         }
 
-        return $documents;
+        return $documents2;
     }
 }
