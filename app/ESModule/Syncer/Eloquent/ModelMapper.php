@@ -33,20 +33,10 @@ class ModelMapper
             $className = $indexDefiner->getClassName();
             $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $tableName = $this->convertClassNameToTable($className);
-
-            $databaseMapping[$databaseName][$tableName][] = [
-                'index' => $indexDefiner,
-                'relation' => '',
-                'updatingFields' => $indexDefiner->getUpdatingFields(),
-            ];
-        }
-
-        foreach ($indexDefiners as $indexDefiner) {
-            $className = $indexDefiner->getClassName();
-            $databaseName = $this->fetchDatabaseNameFromClassName($className);
-            $tableName = $this->convertClassNameToTable($className);
             $syncRelations = $indexDefiner->getSyncRelations();
             $indexName = $indexDefiner->getIndexName();
+
+            $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableName, $indexDefiner->getIndexName(), null, $indexDefiner->getUpdatingFields());
 
             foreach ($syncRelations as $syncRelationDto) {
                 /** @var SyncRelationDto $syncRelationDto */
@@ -56,13 +46,20 @@ class ModelMapper
 
                 $tableNameRelated = $this->convertClassNameToTable($className);
 
-                $databaseMapping[$databaseName][$tableNameRelated][] = [
-                    'index' => $this->detectIndexDefinerByName($indexName),
-                    'relation' => $relation,
-                    'updatingFields' => $updatingFields,
-                ];
+                $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $relation, $updatingFields);
             }
         }
+
+        return $databaseMapping;
+    }
+
+    private function addMapping(array $databaseMapping, $databaseName, $tableNameRelated, $indexName, $relation, $updatingFields): array
+    {
+        $databaseMapping[$databaseName][$tableNameRelated][] = [
+            'index' => $this->detectIndexDefinerByName($indexName),
+            'relation' => $relation,
+            'updatingFields' => $updatingFields,
+        ];
 
         return $databaseMapping;
     }
