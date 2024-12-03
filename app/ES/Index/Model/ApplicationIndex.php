@@ -90,13 +90,13 @@ class ApplicationIndex implements IndexDefinerModelInterface
             new SyncRelationDto(
                 User::class,
                 ['id'],
-                new ModelClosureType(function (Model $model) : array {
+                new ModelClosureType(function (Model $model): array {
                     return [
                         Application::find(1),
-                        Application::find(17)
+                        Application::find(17),
                     ];
                 })
-            )
+            ),
         ];
     }
 }

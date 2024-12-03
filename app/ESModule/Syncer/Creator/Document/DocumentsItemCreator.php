@@ -42,28 +42,26 @@ class DocumentsItemCreator
                     if ($tableName === $syncRowDto->getTable()) {
                         $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
-                        if($detection instanceof RootType){
+                        if ($detection instanceof RootType) {
                             $models = [$model];
-                        }elseif ($detection instanceof RelationType) {
+                        } elseif ($detection instanceof RelationType) {
                             $models = $model->{$detection->getRelation()};
                             $models = $models instanceof Collection ? $models : [$models];
-                        }elseif ($detection instanceof ModelClosureType) {
+                        } elseif ($detection instanceof ModelClosureType) {
                             $models = $detection->getClosure()($model);
-                        }else{
+                        } else {
                             continue;
                         }
 
-                        //TODO make updates unique by model->id
+                        // TODO make updates unique by model->id
 
                         foreach ($models as $model) {
-                            if(!$model instanceof $className){
-                                //throw new \Exception('TODO wron className');
+                            if (!$model instanceof $className) {
+                                // throw new \Exception('TODO wron className');
                             }
 
+                            // TODO prefix
                             $indexName = 'prefix_'.$index->getIndexName();
-                            // TODO
-
-                            // TODO
 
                             $identifier = $model->id;
 

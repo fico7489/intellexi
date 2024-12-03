@@ -6,8 +6,8 @@ class SyncRelationDto
 {
     public function __construct(
         private readonly string $className,
-        private readonly array  $updatingFields,
-        private readonly mixed  $detection, //TODO
+        private readonly array $updatingFields,
+        private readonly mixed $detection, // TODO
     ) {
     }
 
