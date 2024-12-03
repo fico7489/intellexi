@@ -76,7 +76,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
     public function getSyncRelations(): array
     {
         return [
-            new SyncRelationDto(User::class, 'applications', 'users', [
+            new SyncRelationDto(User::class, 'applications', [
                 'id',
                 'first_name',
             ]),

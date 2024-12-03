@@ -50,12 +50,12 @@ class ModelMapper
             $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $tableName = $this->convertClassNameToTable($className);
             $syncRelations = $indexDefiner->getSyncRelations();
+            $indexName = $indexDefiner->getIndexName();
 
             foreach ($syncRelations as $syncRelationDto) {
                 /** @var SyncRelationDto $syncRelationDto */
                 $className = $syncRelationDto->getClassName();
                 $relation = $syncRelationDto->getRelation();
-                $indexName = $indexDefiner->getIndexName();
                 $updatingFields = $syncRelationDto->getUpdatingFields();
 
                 $tableNameRelated = $this->convertClassNameToTable($className);
