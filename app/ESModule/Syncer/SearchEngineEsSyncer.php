@@ -39,6 +39,10 @@ class SearchEngineEsSyncer
 
         $datas = [];
         foreach ($documents as $document) {
+            /* @var Document $document */
+            dump($document);
+            // dump('SYNC:' . $document->getIndex() . ' - ' $document->getIdentifier());
+
             /** @var Document $document */
             $data = $this->documentPrepare($indexName, $document->getIdentifier(), $document->getData());
 
@@ -48,7 +52,8 @@ class SearchEngineEsSyncer
                 $datas[] = $data[1];
             }
         }
-        dump($datas);
+        // dump($datas);
+
         $documentJsons = '';
         foreach ($datas as $data) {
             $documentJsons .= json_encode($data)."\n";
@@ -68,7 +73,7 @@ class SearchEngineEsSyncer
             ]
         );
 
-        dump('status code:'.$response->getStatusCode());
+        // dump('status code:'.$response->getStatusCode());
 
         // TODO async
 

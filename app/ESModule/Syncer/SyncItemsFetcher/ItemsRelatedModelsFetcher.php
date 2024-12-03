@@ -2,8 +2,6 @@
 
 namespace App\ESModule\Syncer\SyncItemsFetcher;
 
-use App\ESModule\Config\ConfigFetcher;
-use App\ESModule\Config\Related\SyncRelationDto;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
@@ -13,7 +11,6 @@ use Illuminate\Database\Eloquent\Collection;
 class ItemsRelatedModelsFetcher
 {
     public function __construct(
-        private readonly ConfigFetcher $configFetcher,
         private readonly ModelMapper $modelMapper,
         private readonly EloquentAdapter $eloquentAdapter,
         private readonly DataFetcher $dataFetcher,
@@ -22,59 +19,44 @@ class ItemsRelatedModelsFetcher
 
     public function fetch(array $items, SyncRowDto $syncRowDto): array
     {
-        $updatingMap = $this->constructMap();
+        $updatingMap = $this->modelMapper->fetchDatabaseMapping();
 
-        dump('updating map:', $updatingMap);
+        foreach ($updatingMap as $databaseName => $data) {
+            foreach ($data as $tableName => $items2) {
+                foreach ($items2 as $item2) {
+                    $className = $item2['className'];
+                    $index = $item2['index'];
+                    $relation = $item2['relation'];
+                    $updatingFields = $item2['updatingFields'];
 
-        foreach ($updatingMap as $table => $data) {
-            $table = $data['table'];
-            $className = $data['className'];
-            $relation = $data['relation'];
-            $index = $data['index'];
+                    if ($tableName === $syncRowDto->getTable()) {
+                        $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
-            if ($table === $syncRowDto->getTable()) {
-                $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+                        if (!$relation) {
+                            continue;
+                        }
 
-                $models = $model->{$relation};
+                        if ($relation) {
+                            // TODO by type, closure, relation or root
+                            $models = $model->{$relation};
+                        }
 
-                $models = $models instanceof Collection ? $models : [$models];
+                        $models = $models instanceof Collection ? $models : [$models];
 
-                foreach ($models as $model) {
-                    $indexName = 'prefix_'.$index->getIndexName();
-                    // TODO
+                        foreach ($models as $model) {
+                            $indexName = 'prefix_'.$index->getIndexName();
+                            // TODO
 
-                    $items[$indexName] = $this->dataFetcher->fetch($index, $model, $syncRowDto);
+                            // TODO
+                            $identifier = $model->id;
+
+                            $items[$indexName][$identifier] = $this->dataFetcher->fetch($index, $model);
+                        }
+                    }
                 }
             }
         }
 
         return $items;
-    }
-
-    private function constructMap(): array
-    {
-        $relatedSyncs = [];
-        foreach ($this->configFetcher->fetchIndexes() as $index) {
-            $syncRelations = $index->getSyncRelations();
-
-            foreach ($syncRelations as $syncRelationDto) {
-                /** @var SyncRelationDto $syncRelationDto */
-                $className = $syncRelationDto->getClassName();
-                $relation = $syncRelationDto->getRelation();
-                $includedFields = $syncRelationDto->getUpdatingFields();
-
-                $tableRelated = $this->modelMapper->convertClassNameToTable($className);
-
-                $relatedSyncs[] = [
-                    'table' => $tableRelated,
-                    'className' => $className,
-                    'relation' => $relation,
-                    'changedFields' => $includedFields,
-                    'index' => $index,
-                ];
-            }
-        }
-
-        return $relatedSyncs;
     }
 }

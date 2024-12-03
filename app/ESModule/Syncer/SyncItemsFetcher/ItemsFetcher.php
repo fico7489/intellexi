@@ -19,7 +19,6 @@ class ItemsFetcher
         $items = $this->itemsRootModelFetcher->fetch($items, $syncRowDto);
 
         $items = $this->itemsRelatedModelsFetcher->fetch($items, $syncRowDto);
-
         // TODO group
 
         return $items;

@@ -28,7 +28,10 @@ class ItemsRootModelFetcher
 
                 $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
-                $items[$indexName] = $this->dataFetcher->fetch($index, $model, $syncRowDto);
+                // TODO
+                $identifier = $model->id;
+
+                $items[$indexName][$identifier] = $this->dataFetcher->fetch($index, $model);
             }
         }
 

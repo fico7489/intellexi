@@ -3,6 +3,8 @@
 namespace App\ESModule\Syncer\Eloquent;
 
 use App\ESModule\Config\ConfigFetcher;
+use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Related\SyncRelationDto;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -35,10 +37,52 @@ class ModelMapper
             // TODO add related tables
             // TODO add related tables by attributes
 
-            $databaseMapping[$databaseName][$tableName] = $indexDefiner->getUpdatingFields();
+            $databaseMapping[$databaseName][$tableName][] = [
+                'className' => $className,
+                'index' => $indexDefiner,
+                'relation' => '',
+                'updatingFields' => $indexDefiner->getUpdatingFields(),
+            ];
+        }
+
+        foreach ($indexDefiners as $indexDefiner) {
+            $className = $indexDefiner->getClassName();
+            $databaseName = $this->fetchDatabaseNameFromClassName($className);
+            $tableName = $this->convertClassNameToTable($className);
+            $syncRelations = $indexDefiner->getSyncRelations();
+
+            foreach ($syncRelations as $syncRelationDto) {
+                /** @var SyncRelationDto $syncRelationDto */
+                $className = $syncRelationDto->getClassName();
+                $relation = $syncRelationDto->getRelation();
+                $indexName = $indexDefiner->getIndexName();
+                $updatingFields = $syncRelationDto->getUpdatingFields();
+
+                $tableNameRelated = $this->convertClassNameToTable($className);
+
+                $databaseMapping[$databaseName][$tableNameRelated][] = [
+                    'className' => $className,
+                    'index' => $this->detectIndexDefinerByName($indexName),
+                    'relation' => $relation,
+                    'updatingFields' => $updatingFields,
+                ];
+            }
         }
 
         return $databaseMapping;
+    }
+
+    public function detectIndexDefinerByName(string $indexName): ?IndexDefinerModelInterface
+    {
+        $indexDefiners = $this->configFetcher->fetchIndexes();
+
+        foreach ($indexDefiners as $indexDefiner) {
+            if ($indexDefiner->getIndexName() === $indexName) {
+                return $indexDefiner;
+            }
+        }
+
+        return null;
     }
 
     public function fetchAllClassNames(): array

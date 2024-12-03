@@ -95,6 +95,6 @@ class CdcConverter
     public function detectIdentifier(CdcDto $cdcDto): mixed
     {
         // TODO
-        return 1;
+        return $cdcDto->getData()['id'];
     }
 }

@@ -24,13 +24,15 @@ class DocumentsCreator
                 /* @var SyncRowDto $changedRowGrouped */
                 $items = $this->syncItemsFetcher->fetch($changedRowGrouped);
 
-                foreach ($items as $indexName => $data) {
-                    $documents[$indexName][] = new Document(
-                        $indexName,
-                        $changedRowGrouped->getIdentifier(),
-                        $data,
-                        SyncRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
-                    );
+                foreach ($items as $indexName => $item) {
+                    foreach ($item as $identifier => $data) {
+                        $documents[$indexName][] = new Document(
+                            $indexName,
+                            $identifier,
+                            $data,
+                            SyncRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
+                        );
+                    }
                 }
             }
         }

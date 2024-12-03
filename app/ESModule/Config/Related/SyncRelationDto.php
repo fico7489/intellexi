@@ -7,6 +7,7 @@ class SyncRelationDto
     public function __construct(
         private readonly string $className,
         private readonly string $relation,
+        private readonly string $indexName,
         private readonly array $updatingFields,
     ) {
     }
@@ -19,6 +20,11 @@ class SyncRelationDto
     public function getRelation(): string
     {
         return $this->relation;
+    }
+
+    public function getIndexName(): string
+    {
+        return $this->indexName;
     }
 
     public function getUpdatingFields(): array
