@@ -38,7 +38,7 @@ class ModelMapper
             // TODO add related tables by attributes
 
             $databaseMapping[$databaseName][$tableName][] = [
-                'className' => $className,
+                // 'className' => $className,
                 'index' => $indexDefiner,
                 'relation' => '',
                 'updatingFields' => $indexDefiner->getUpdatingFields(),
@@ -61,7 +61,7 @@ class ModelMapper
                 $tableNameRelated = $this->convertClassNameToTable($className);
 
                 $databaseMapping[$databaseName][$tableNameRelated][] = [
-                    'className' => $className,
+                    // 'className' => $className,
                     'index' => $this->detectIndexDefinerByName($indexName),
                     'relation' => $relation,
                     'updatingFields' => $updatingFields,

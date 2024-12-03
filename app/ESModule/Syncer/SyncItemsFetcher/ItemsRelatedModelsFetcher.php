@@ -24,7 +24,7 @@ class ItemsRelatedModelsFetcher
         foreach ($updatingMap as $databaseName => $data) {
             foreach ($data as $tableName => $items2) {
                 foreach ($items2 as $item2) {
-                    $className = $item2['className'];
+                    $className = $this->modelMapper->convertTableToClassName($tableName);
                     $index = $item2['index'];
                     $relation = $item2['relation'];
                     $updatingFields = $item2['updatingFields'];
