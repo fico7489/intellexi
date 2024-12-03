@@ -5,11 +5,12 @@ namespace App\ESModule\Syncer;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Dto\Document;
 use App\ESModule\Syncer\SyncItemsFetcher\ItemsFetcher;
+use App\ESModule\Syncer\SyncItemsFetcher\ItemsRelatedModelsFetcher;
 
 class DocumentsCreator
 {
     public function __construct(
-        private readonly ItemsFetcher $syncItemsFetcher,
+        private readonly ItemsRelatedModelsFetcher $itemsRelatedModelsFetcher,
     ) {
     }
 
@@ -22,7 +23,8 @@ class DocumentsCreator
         foreach ($changedRowsGrouped as $table => $data) {
             foreach ($data as $identifier => $changedRowGrouped) {
                 /* @var SyncRowDto $changedRowGrouped */
-                $items = $this->syncItemsFetcher->fetch($changedRowGrouped);
+                $items = [];
+                $items = $this->itemsRelatedModelsFetcher->fetch($items, $changedRowGrouped);
 
                 foreach ($items as $indexName => $item) {
                     foreach ($item as $identifier => $data) {

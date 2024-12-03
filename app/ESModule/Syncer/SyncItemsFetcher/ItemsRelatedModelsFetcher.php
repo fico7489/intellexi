@@ -32,13 +32,11 @@ class ItemsRelatedModelsFetcher
                     if ($tableName === $syncRowDto->getTable()) {
                         $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
-                        if (!$relation) {
-                            continue;
-                        }
-
                         if ($relation) {
                             // TODO by type, closure, relation or root
                             $models = $model->{$relation};
+                        }else{
+                            $models = $model;
                         }
 
                         $models = $models instanceof Collection ? $models : [$models];
