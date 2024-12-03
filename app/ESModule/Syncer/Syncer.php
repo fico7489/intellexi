@@ -8,7 +8,7 @@ use App\ESModule\Syncer\CdcConverter\CdcConverter;
 class Syncer
 {
     public function __construct(
-         private CdcConverter $cdcConverter,
+        private CdcConverter $cdcConverter,
         private DocumentsCreator $documentsCreator,
         private SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {

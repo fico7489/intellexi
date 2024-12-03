@@ -31,12 +31,9 @@ class CdcConverter
             $changedFields = $cdcDto->getChangedFields();
 
             if (!$this->modelMapper->syncForDatabaseAndTableName($database, $table)) {
-                dump('NOOOO');
-
                 // TODO we should check if that table is in ES
                 continue;
             }
-            dump('YESSSS');
 
             // detect identifier
             $identifier = $this->detectIdentifier($cdcDto);

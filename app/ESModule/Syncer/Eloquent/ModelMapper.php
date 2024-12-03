@@ -11,13 +11,15 @@ class ModelMapper
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
-        //private readonly ModelMapper $modelMapper,
+        // private readonly ModelMapper $modelMapper,
     ) {
     }
 
     public function syncForDatabaseAndTableName($databaseName, $tableName): bool
     {
         $databaseMapping = $this->fetchDatabaseMapping();
+
+        dump($databaseMapping, $databaseName, $tableName);
 
         return isset($databaseMapping[$databaseName][$tableName]);
     }
@@ -92,8 +94,9 @@ class ModelMapper
 
     public function fetchDatabaseNameFromClassName($className): string
     {
-        $mapping = $this->fetchAllClassNames();
+        /** @var Model $model */
+        $model = (new $className());
 
-        return array_flip($mapping)[$className];
+        return $model->getConnection()->getDatabaseName();
     }
 }
