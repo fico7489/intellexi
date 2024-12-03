@@ -21,11 +21,6 @@ class SyncRelationDto
         return $this->relation;
     }
 
-    public function getIndexName(): string
-    {
-        return $this->indexName;
-    }
-
     public function getUpdatingFields(): array
     {
         return $this->updatingFields;
