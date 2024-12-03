@@ -12,16 +12,18 @@ use Illuminate\Database\Eloquent\Collection;
 class DocumentsItemCreator
 {
     public function __construct(
-        private readonly ModelMapper $modelMapper,
+        private readonly ModelMapper     $modelMapper,
         private readonly EloquentAdapter $eloquentAdapter,
-        private readonly DataFetcher $dataFetcher,
-    ) {
+        private readonly DataFetcher     $dataFetcher,
+    )
+    {
     }
 
     /**
+     * @param SyncRowDto $syncRowDto
      * @return array<DocumentDto>
      */
-    public function fetch(SyncRowDto $syncRowDto): array
+    public function create(SyncRowDto $syncRowDto): array
     {
         $documents = [];
 
@@ -48,7 +50,7 @@ class DocumentsItemCreator
                         $models = $models instanceof Collection ? $models : [$models];
 
                         foreach ($models as $model) {
-                            $indexName = 'prefix_'.$index->getIndexName();
+                            $indexName = 'prefix_' . $index->getIndexName();
                             // TODO
 
                             // TODO

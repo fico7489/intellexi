@@ -21,8 +21,7 @@ class DocumentsCreator
     {
         $documentsGrouped = [];
         foreach ($syncRowDtos as $syncRowDto) {
-            /* @var SyncRowDto $syncRowDto */
-            $documents = $this->documentsItemCreator->fetch($syncRowDto);
+            $documents = $this->documentsItemCreator->create($syncRowDto);
 
             foreach ($documents as $document) {
                 $documentsGrouped[$document->getIndex()][] = $document;
