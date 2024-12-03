@@ -108,19 +108,19 @@ class ModelMapper
 
         $mapping = [];
         foreach ($classNames as $className) {
-            $table = (new $className())->getTable();
+            $tableName = (new $className())->getTable();
 
-            $mapping[$table] = $className;
+            $mapping[$tableName] = $className;
         }
 
         return $mapping;
     }
 
-    public function convertTableToClassName($table): string
+    public function convertTableNameToClassName($tableName): string
     {
         $mapping = $this->fetchAllClassNames();
 
-        return $mapping[$table];
+        return $mapping[$tableName];
     }
 
     public function convertClassNameToTable($className): string

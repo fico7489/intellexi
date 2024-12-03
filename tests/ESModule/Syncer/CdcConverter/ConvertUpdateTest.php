@@ -21,8 +21,8 @@ class ConvertUpdateTest extends TestCase
         /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
-        $this->assertEquals($cdcDto->getDatabase(), $syncDbRow->getDatabase());
-        $this->assertEquals($cdcDto->getTable(), $syncDbRow->getTable());
+        $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
+        $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
@@ -47,8 +47,8 @@ class ConvertUpdateTest extends TestCase
         /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
-        $this->assertEquals($changedDbRow->getDatabase(), $syncDbRow->getDatabase());
-        $this->assertEquals($changedDbRow->getTable(), $syncDbRow->getTable());
+        $this->assertEquals($changedDbRow->getDatabaseName(), $syncDbRow->getDatabaseName());
+        $this->assertEquals($changedDbRow->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals(['name', 'name2'], $syncDbRow->getChangedFields());
         $this->assertEquals($changedDbRow2->getData(), $syncDbRow->getData());
@@ -75,8 +75,8 @@ class ConvertUpdateTest extends TestCase
         /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
-        $this->assertEquals($cdcDto->getDatabase(), $syncDbRow->getDatabase());
-        $this->assertEquals($cdcDto->getTable(), $syncDbRow->getTable());
+        $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
+        $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals(1, $syncDbRow->getIdentifier());
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
@@ -85,8 +85,8 @@ class ConvertUpdateTest extends TestCase
         /** @var SyncRowDto $syncDbRow */
         $syncDbRow2 = $data['test-table'][2];
 
-        $this->assertEquals($cdcDto2->getDatabase(), $syncDbRow2->getDatabase());
-        $this->assertEquals($cdcDto2->getTable(), $syncDbRow2->getTable());
+        $this->assertEquals($cdcDto2->getDatabaseName(), $syncDbRow2->getDatabase());
+        $this->assertEquals($cdcDto2->getTableName(), $syncDbRow2->getTable());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow2->getType());
         $this->assertEquals(2, $syncDbRow2->getIdentifier());
         $this->assertEquals($cdcDto2->getChangedFields(), $syncDbRow2->getChangedFields());

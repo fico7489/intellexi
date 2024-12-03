@@ -27,14 +27,13 @@ class SyncRowsCreator
     {
         $syncRowDtosGrouped = [];
         foreach ($cdcDtos as $cdcDto) {
-            /** @var CdcDto $cdcDto */
-            $database = $cdcDto->getDatabase();
-            $table = $cdcDto->getTable();
+            $databaseName = $cdcDto->getDatabaseName();
+            $tableName = $cdcDto->getTableName();
             $type = $cdcDto->getType();
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
-            if (!$this->modelMapper->syncForDatabaseAndTableName($database, $table)) {
+            if (!$this->modelMapper->syncForDatabaseAndTableName($databaseName, $tableName)) {
                 // TODO we should check if that table is in ES
                 continue;
             }
@@ -44,17 +43,17 @@ class SyncRowsCreator
 
             $type = $cdcDto->getType();
             if (CdcDto::TYPE_DELETE === $type) {
-                if (isset($syncRowDtosGrouped[$table][$identifier]) && CdcDto::TYPE_DELETE === $syncRowDtosGrouped[$table][$identifier]->getType()) {
+                if (isset($syncRowDtosGrouped[$tableName][$identifier]) && CdcDto::TYPE_DELETE === $syncRowDtosGrouped[$tableName][$identifier]->getType()) {
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
-                $syncRowDtosGrouped[$table][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_DELETE, $identifier);
+                $syncRowDtosGrouped[$tableName][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_DELETE, $identifier);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
-                if (!isset($syncRowDtosGrouped[$table][$identifier])) {
-                    $syncRowDtosGrouped[$table][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_UPSERT, $identifier);
+                if (!isset($syncRowDtosGrouped[$tableName][$identifier])) {
+                    $syncRowDtosGrouped[$tableName][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_UPSERT, $identifier);
                 } else {
                     /** @var CdcDto $syncRowDto */
-                    $syncRowDto = $syncRowDtosGrouped[$table][$identifier];
+                    $syncRowDto = $syncRowDtosGrouped[$tableName][$identifier];
 
                     if (SyncRowDto::TYPE_DELETE === $syncRowDto->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
@@ -69,20 +68,20 @@ class SyncRowsCreator
                         $syncRowDto->setChangedFields($changedFields);
                         $syncRowDto->setData($cdcDto->getData());
 
-                        $syncRowDtosGrouped[$table][$identifier] = $syncRowDto;
+                        $syncRowDtosGrouped[$tableName][$identifier] = $syncRowDto;
                     }
                 }
             } elseif (CdcDto::TYPE_INSERT === $type) {
-                if (isset($syncRowDtosGrouped[$table][$identifier])) {
+                if (isset($syncRowDtosGrouped[$tableName][$identifier])) {
                     throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $syncRowDtosGrouped[$table][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_UPSERT, $identifier);
+                $syncRowDtosGrouped[$tableName][$identifier] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_UPSERT, $identifier);
             }
         }
 
         $syncRowDtos = [];
-        foreach ($syncRowDtosGrouped as $table => $data) {
+        foreach ($syncRowDtosGrouped as $tableName => $data) {
             foreach ($data as $identifier => $syncRowDto) {
                 $syncRowDtos[] = $syncRowDto;
             }
@@ -94,8 +93,8 @@ class SyncRowsCreator
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifier): SyncRowDto
     {
         return new SyncRowDto(
-            $cdcDto->getDatabase(),
-            $cdcDto->getTable(),
+            $cdcDto->getDatabaseName(),
+            $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),
             $cdcDto->getChangedFields(),

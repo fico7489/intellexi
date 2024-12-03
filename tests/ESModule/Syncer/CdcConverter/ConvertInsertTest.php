@@ -21,8 +21,8 @@ class ConvertInsertTest extends TestCase
         /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
-        $this->assertEquals($cdcDto->getDatabase(), $syncDbRow->getDatabase());
-        $this->assertEquals($cdcDto->getTable(), $syncDbRow->getTable());
+        $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
+        $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
@@ -46,8 +46,8 @@ class ConvertInsertTest extends TestCase
         /** @var SyncRowDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
-        $this->assertEquals($cdcDto->getDatabase(), $syncDbRow->getDatabase());
-        $this->assertEquals($cdcDto->getTable(), $syncDbRow->getTable());
+        $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
+        $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
@@ -55,8 +55,8 @@ class ConvertInsertTest extends TestCase
         /** @var SyncRowDto $syncDbRow2 */
         $syncDbRow2 = $data['test-table'][2];
 
-        $this->assertEquals($cdcDto2->getDatabase(), $syncDbRow2->getDatabase());
-        $this->assertEquals($cdcDto2->getTable(), $syncDbRow2->getTable());
+        $this->assertEquals($cdcDto2->getDatabaseName(), $syncDbRow2->getDatabaseName());
+        $this->assertEquals($cdcDto2->getTableName(), $syncDbRow2->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow2->getType());
         $this->assertEquals($cdcDto2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($cdcDto2->getData(), $syncDbRow2->getData());

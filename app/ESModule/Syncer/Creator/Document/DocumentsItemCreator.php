@@ -32,12 +32,12 @@ class DocumentsItemCreator
         foreach ($updatingMap as $databaseName => $data) {
             foreach ($data as $tableName => $items2) {
                 foreach ($items2 as $item2) {
-                    $className = $this->modelMapper->convertTableToClassName($tableName);
+                    $className = $this->modelMapper->convertTableNameToClassName($tableName);
                     $index = $item2['index'];
                     $fetchType = $item2['fetchType'];
                     $updatingFields = $item2['updatingFields'];
 
-                    if ($tableName === $syncRowDto->getTable()) {
+                    if ($tableName === $syncRowDto->getTableName()) {
                         $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
                         if (null === $fetchType) {
