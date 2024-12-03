@@ -8,9 +8,9 @@ use App\ESModule\Syncer\CdcConverter\CdcConverter;
 class Syncer
 {
     public function __construct(
-        private readonly CdcConverter $cdcConverter,
-        private readonly DocumentsCreator $documentsCreator,
-        private readonly SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
+         private CdcConverter $cdcConverter,
+        private DocumentsCreator $documentsCreator,
+        private SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
 

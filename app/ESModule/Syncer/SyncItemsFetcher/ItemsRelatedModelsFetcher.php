@@ -5,8 +5,8 @@ namespace App\ESModule\Syncer\SyncItemsFetcher;
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
+use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
-use App\ESModule\Syncer\ModelMapper;
 use Illuminate\Database\Eloquent\Collection;
 
 class ItemsRelatedModelsFetcher

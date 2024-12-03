@@ -5,9 +5,15 @@ namespace App\ESModule\Syncer\CdcConverter;
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
 use App\ESModule\Syncer\CdcConverter\Exception\GrouperException;
+use App\ESModule\Syncer\Eloquent\ModelMapper;
 
 class CdcConverter
 {
+    public function __construct(
+        private readonly ModelMapper $modelMapper,
+    ) {
+    }
+
     /**
      * @param array $cdcDtos <CdcDto>
      *
@@ -17,14 +23,23 @@ class CdcConverter
     {
         $syncRowDtos = [];
         foreach ($cdcDtos as $cdcDto) {
-            if (!$this->processTable($cdcDto)) {
-                // TODO test case
+            /** @var CdcDto $cdcDto */
+            $database = $cdcDto->getDatabase();
+            $table = $cdcDto->getTable();
+            $type = $cdcDto->getType();
+            $data = $cdcDto->getData();
+            $changedFields = $cdcDto->getChangedFields();
+
+            if (!$this->modelMapper->syncForDatabaseAndTableName($database, $table)) {
+                dump('NOOOO');
+
+                // TODO we should check if that table is in ES
                 continue;
             }
+            dump('YESSSS');
 
-            $table = $cdcDto->getTable();
+            // detect identifier
             $identifier = $this->detectIdentifier($cdcDto);
-            $changedFields = $cdcDto->getChangedFields();
 
             $type = $cdcDto->getType();
             if (CdcDto::TYPE_DELETE === $type) {
@@ -84,12 +99,5 @@ class CdcConverter
     {
         // TODO
         return 1;
-    }
-
-    private function processTable(CdcDto $cdcDto): bool
-    {
-        // TODO we should check if that table is in ES
-
-        return true;
     }
 }

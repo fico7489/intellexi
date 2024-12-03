@@ -42,9 +42,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         });*/
 
         Event::listen(function (CdcDtosEvent $event) {
+            $syncer = app(Syncer::class);
+
             dump('laravel event CdcChangedRowsGrouped:', $event->getCdcDtos());
 
-            app(Syncer::class)->sync($event);
+            dump('00');
+            $syncer->sync($event);
+            dump('99');
         });
     }
 }

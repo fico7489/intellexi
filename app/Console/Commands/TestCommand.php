@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\ESModule\Syncer\ModelMapper;
+use App\ESModule\Syncer\Eloquent\ModelMapper;
 use Illuminate\Console\Command;
 
 class TestCommand extends Command
@@ -13,7 +13,7 @@ class TestCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        $data = app(ModelMapper::class)->fetchAllModelClassNames();
+        $data = app(ModelMapper::class)->fetchAllClassNames();
         dump($data);
 
         dump((floor(microtime(true) * 1000) - $milliseconds).' ms');
