@@ -47,7 +47,7 @@ class UserIndex implements IndexDefinerModelInterface
         ];
     }
 
-    public function getSyncRelations(): array
+    public function getModelRelated(): array
     {
         return [];
     }

@@ -47,7 +47,7 @@ class User2Index implements IndexDefinerModelInterface
         ];
     }
 
-    public function getSyncRelations(): array
+    public function getModelRelated(): array
     {
         return [];
     }

@@ -33,16 +33,16 @@ class ModelMapper
             $className = $indexDefiner->getClassName();
             $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $tableName = $this->convertClassNameToTable($className);
-            $syncRelations = $indexDefiner->getSyncRelations();
             $indexName = $indexDefiner->getIndexName();
 
             $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableName, $indexDefiner->getIndexName(), null, $indexDefiner->getUpdatingFields());
 
-            foreach ($syncRelations as $syncRelationDto) {
-                /** @var ModelRelated $syncRelationDto */
-                $className = $syncRelationDto->getClassName();
-                $fetchType = $syncRelationDto->getFetchType();
-                $updatingFields = $syncRelationDto->getUpdatingFields();
+            $modelRelated = $indexDefiner->getModelRelated();
+            foreach ($modelRelated as $modelRelatedItem) {
+                /** @var ModelRelated $modelRelatedItem */
+                $className = $modelRelatedItem->getClassName();
+                $fetchType = $modelRelatedItem->getFetchType();
+                $updatingFields = $modelRelatedItem->getUpdatingFields();
                 $tableNameRelated = $this->convertClassNameToTable($className);
 
                 $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);

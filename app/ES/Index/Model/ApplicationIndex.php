@@ -77,7 +77,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
     /**
      * @return array<ModelRelated>
      */
-    public function getSyncRelations(): array
+    public function getModelRelated(): array
     {
         return [
             new ModelRelated(

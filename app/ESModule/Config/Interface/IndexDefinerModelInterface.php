@@ -16,5 +16,5 @@ interface IndexDefinerModelInterface
 
     public function getUpdatingFields(): array;
 
-    public function getSyncRelations(): array;
+    public function getModelRelated(): array;
 }
