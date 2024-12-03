@@ -48,7 +48,7 @@ class DocumentsItemCreator
                             $models = $model->{$detection->getRelation()};
                             $models = $models instanceof Collection ? $models : [$models];
                         } elseif ($detection instanceof ModelClosureType) {
-                            $models = $detection->getClosure()($model);
+                            $models = $detection->getClosure()($model, $syncRowDto);
                         } else {
                             continue;
                         }

@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Config\Related;
 
-class SyncRelationDto
+class SyncRelation
 {
     public function __construct(
         private readonly string $className,

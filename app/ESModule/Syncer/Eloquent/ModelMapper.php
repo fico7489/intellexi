@@ -4,7 +4,7 @@ namespace App\ESModule\Syncer\Eloquent;
 
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Related\SyncRelationDto;
+use App\ESModule\Config\Related\SyncRelation;
 use App\ESModule\Config\Related\Type\RootType;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
@@ -40,7 +40,7 @@ class ModelMapper
             $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableName, $indexDefiner->getIndexName(), new RootType(), $indexDefiner->getUpdatingFields());
 
             foreach ($syncRelations as $syncRelationDto) {
-                /** @var SyncRelationDto $syncRelationDto */
+                /** @var SyncRelation $syncRelationDto */
                 $className = $syncRelationDto->getClassName();
                 $detection = $syncRelationDto->getDetection();
                 $updatingFields = $syncRelationDto->getUpdatingFields();

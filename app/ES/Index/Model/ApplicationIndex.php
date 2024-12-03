@@ -3,9 +3,10 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Related\SyncRelationDto;
+use App\ESModule\Config\Related\SyncRelation;
 use App\ESModule\Config\Related\Type\ModelClosureType;
 use App\ESModule\Config\Related\Type\RelationType;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\Application;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -74,12 +75,12 @@ class ApplicationIndex implements IndexDefinerModelInterface
     }
 
     /**
-     * @return array<SyncRelationDto>
+     * @return array<SyncRelation>
      */
     public function getSyncRelations(): array
     {
         return [
-            new SyncRelationDto(
+            new SyncRelation(
                 User::class,
                 [
                     'id',
@@ -87,10 +88,10 @@ class ApplicationIndex implements IndexDefinerModelInterface
                 ],
                 new RelationType('applications')
             ),
-            new SyncRelationDto(
+            new SyncRelation(
                 User::class,
                 ['id'],
-                new ModelClosureType(function (Model $model): array {
+                new ModelClosureType(function (Model $model, SyncRowDto $syncRowDto): array {
                     return [
                         Application::find(1),
                         Application::find(17),
