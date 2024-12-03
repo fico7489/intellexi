@@ -20,16 +20,16 @@ class DocumentsCreator
      */
     public function create(array $syncRowDtos): array
     {
-        $documents2 = [];
+        $documentsGrouped = [];
         foreach ($syncRowDtos as $syncRowDto) {
             /* @var SyncRowDto $syncRowDto */
             $documents = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
 
             foreach ($documents as $document) {
-                $documents2[$document->getIndex()][] = $document;
+                $documentsGrouped[$document->getIndex()][] = $document;
             }
         }
 
-        return $documents2;
+        return $documentsGrouped;
     }
 }

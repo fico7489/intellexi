@@ -20,8 +20,8 @@ class Syncer
 
         $syncRowDtos = $this->syncRowsCreator->create($cdcDtos);
 
-        $documentsDtos = $this->documentsCreator->create($syncRowDtos);
+        $documentDtos = $this->documentsCreator->create($syncRowDtos);
 
-        $this->searchEngineSyncer->syncDocuments($documentsDtos);
+        $this->searchEngineSyncer->syncDocuments($documentDtos);
     }
 }
