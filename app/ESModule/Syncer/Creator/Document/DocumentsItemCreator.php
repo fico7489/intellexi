@@ -10,7 +10,6 @@ use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class DocumentsItemCreator
 {

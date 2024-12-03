@@ -5,6 +5,7 @@ namespace App\ESModule\Syncer\Eloquent;
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\Related\ModelRelated;
+use App\ESModule\Config\Related\TableRelated;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -37,13 +38,18 @@ class ModelMapper
 
             $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableName, $indexDefiner->getIndexName(), null, $indexDefiner->getUpdatingFields());
 
-            $modelRelated = $indexDefiner->getModelRelated();
+            $modelRelated = $indexDefiner->getRelatedSync();
             foreach ($modelRelated as $modelRelatedItem) {
-                /** @var ModelRelated $modelRelatedItem */
-                $className = $modelRelatedItem->getClassName();
+                if ($modelRelatedItem instanceof ModelRelated) {
+                    $className = $modelRelatedItem->getClassName();
+                    $tableNameRelated = $this->convertClassNameToTable($className);
+                } else {
+                    /** @var TableRelated $modelRelatedItem */
+                    $tableNameRelated = $modelRelatedItem->getTableName();
+                }
+
                 $fetchType = $modelRelatedItem->getFetchType();
                 $updatingFields = $modelRelatedItem->getUpdatingFields();
-                $tableNameRelated = $this->convertClassNameToTable($className);
 
                 $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
             }

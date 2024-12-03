@@ -6,6 +6,7 @@ use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\Related\FetchType\ClosureFetch;
 use App\ESModule\Config\Related\FetchType\RelationFetch;
 use App\ESModule\Config\Related\ModelRelated;
+use App\ESModule\Config\Related\TableRelated;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\Application;
 use App\Models\User;
@@ -77,7 +78,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
     /**
      * @return array<ModelRelated>
      */
-    public function getModelRelated(): array
+    public function getRelatedSync(): array
     {
         return [
             new ModelRelated(
@@ -90,6 +91,13 @@ class ApplicationIndex implements IndexDefinerModelInterface
                 ['id'],
                 new ClosureFetch(function (Model $model, SyncRowDto $syncRowDto): array {
                     return [Application::find(1), Application::find(17)];
+                })
+            ),
+            new TableRelated(
+                'user_types',
+                ['id'],
+                new ClosureFetch(function (string $tableName, SyncRowDto $syncRowDto): array {
+                    return [Application::find(2)];
                 })
             ),
         ];
