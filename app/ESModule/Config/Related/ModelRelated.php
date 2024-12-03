@@ -2,12 +2,12 @@
 
 namespace App\ESModule\Config\Related;
 
-class SyncRelation
+class ModelRelated
 {
     public function __construct(
         private readonly string $className,
-        private readonly array $updatingFields,
-        private readonly mixed $detection, // TODO
+        private readonly ?array $updatingFields,
+        private readonly mixed $fetchType, // TODO
     ) {
     }
 
@@ -16,13 +16,13 @@ class SyncRelation
         return $this->className;
     }
 
-    public function getUpdatingFields(): array
+    public function getUpdatingFields(): ?array
     {
         return $this->updatingFields;
     }
 
-    public function getDetection(): mixed
+    public function getFetchType(): mixed
     {
-        return $this->detection;
+        return $this->fetchType;
     }
 }

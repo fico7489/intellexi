@@ -2,9 +2,8 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Config\Related\Type\ModelClosureType;
-use App\ESModule\Config\Related\Type\RelationType;
-use App\ESModule\Config\Related\Type\RootType;
+use App\ESModule\Config\Related\FetchType\ClosureFetch;
+use App\ESModule\Config\Related\FetchType\RelationFetch;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
@@ -36,19 +35,19 @@ class DocumentsItemCreator
                 foreach ($items2 as $item2) {
                     $className = $this->modelMapper->convertTableToClassName($tableName);
                     $index = $item2['index'];
-                    $detection = $item2['detection'];
+                    $fetchType = $item2['fetchType'];
                     $updatingFields = $item2['updatingFields'];
 
                     if ($tableName === $syncRowDto->getTable()) {
                         $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
-                        if ($detection instanceof RootType) {
+                        if (null === $fetchType) {
                             $models = [$model];
-                        } elseif ($detection instanceof RelationType) {
-                            $models = $model->{$detection->getRelation()};
+                        } elseif ($fetchType instanceof RelationFetch) {
+                            $models = $model->{$fetchType->getRelation()};
                             $models = $models instanceof Collection ? $models : [$models];
-                        } elseif ($detection instanceof ModelClosureType) {
-                            $models = $detection->getClosure()($model, $syncRowDto);
+                        } elseif ($fetchType instanceof ClosureFetch) {
+                            $models = $fetchType->getClosure()($model, $syncRowDto);
                         } else {
                             continue;
                         }

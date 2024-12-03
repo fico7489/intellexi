@@ -3,9 +3,9 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Related\SyncRelation;
-use App\ESModule\Config\Related\Type\ModelClosureType;
-use App\ESModule\Config\Related\Type\RelationType;
+use App\ESModule\Config\Related\FetchType\ClosureFetch;
+use App\ESModule\Config\Related\FetchType\RelationFetch;
+use App\ESModule\Config\Related\ModelRelated;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\Application;
 use App\Models\User;
@@ -75,20 +75,20 @@ class ApplicationIndex implements IndexDefinerModelInterface
     }
 
     /**
-     * @return array<SyncRelation>
+     * @return array<ModelRelated>
      */
     public function getSyncRelations(): array
     {
         return [
-            new SyncRelation(
+            new ModelRelated(
                 User::class,
                 ['id', 'first_name'],
-                new RelationType('applications')
+                new RelationFetch('applications')
             ),
-            new SyncRelation(
+            new ModelRelated(
                 User::class,
                 ['id'],
-                new ModelClosureType(function (Model $model, SyncRowDto $syncRowDto): array {
+                new ClosureFetch(function (Model $model, SyncRowDto $syncRowDto): array {
                     return [Application::find(1), Application::find(17)];
                 })
             ),
