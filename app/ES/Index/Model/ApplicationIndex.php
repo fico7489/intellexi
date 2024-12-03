@@ -4,8 +4,11 @@ namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\Related\SyncRelationDto;
+use App\ESModule\Config\Related\Type\ModelClosureType;
+use App\ESModule\Config\Related\Type\RelationType;
 use App\Models\Application;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 class ApplicationIndex implements IndexDefinerModelInterface
 {
@@ -76,10 +79,21 @@ class ApplicationIndex implements IndexDefinerModelInterface
     public function getSyncRelations(): array
     {
         return [
-            new SyncRelationDto(User::class, 'applications', [
-                'id',
-                'first_name',
-            ]),
+            new SyncRelationDto(
+                User::class,
+                [
+                    'id',
+                    'first_name',
+                ],
+                new RelationType('applications')
+            ),
+            new SyncRelationDto(
+                User::class,
+                ['id'],
+                new ModelClosureType(function (Model $model) : array {
+                    return [Application::find(1)];
+                })
+            )
         ];
     }
 }

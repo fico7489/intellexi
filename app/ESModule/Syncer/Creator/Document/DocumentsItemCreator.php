@@ -2,12 +2,16 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
+use App\ESModule\Config\Related\Type\ModelClosureType;
+use App\ESModule\Config\Related\Type\RelationType;
+use App\ESModule\Config\Related\Type\RootType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class DocumentsItemCreator
 {
@@ -32,26 +36,33 @@ class DocumentsItemCreator
                 foreach ($items2 as $item2) {
                     $className = $this->modelMapper->convertTableToClassName($tableName);
                     $index = $item2['index'];
-                    $relation = $item2['relation'];
+                    $detection = $item2['detection'];
                     $updatingFields = $item2['updatingFields'];
 
                     if ($tableName === $syncRowDto->getTable()) {
                         $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
-                        if ($relation) {
-                            // TODO by type, closure, relation or root
-                            $models = $model->{$relation};
-                        } else {
-                            $models = $model;
+                        if($detection instanceof RootType){
+                            $models = [$model];
+                        }elseif ($detection instanceof RelationType) {
+                            $models = $model->{$detection->getRelation()};
+                            $models = $models instanceof Collection ? $models : [$models];
+                        }elseif ($detection instanceof ModelClosureType) {
+                            $models = $detection->getClosure()($model);
+                        }else{
+                            continue;
                         }
 
-                        $models = $models instanceof Collection ? $models : [$models];
-
                         foreach ($models as $model) {
+                            if(!$model instanceof $className){
+                                //throw new \Exception('TODO wron className');
+                            }
+
                             $indexName = 'prefix_'.$index->getIndexName();
                             // TODO
 
                             // TODO
+
                             $identifier = $model->id;
 
                             $document = new DocumentDto(

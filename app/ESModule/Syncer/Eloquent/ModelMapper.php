@@ -5,6 +5,7 @@ namespace App\ESModule\Syncer\Eloquent;
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\Related\SyncRelationDto;
+use App\ESModule\Config\Related\Type\RootType;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -36,29 +37,28 @@ class ModelMapper
             $syncRelations = $indexDefiner->getSyncRelations();
             $indexName = $indexDefiner->getIndexName();
 
-            $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableName, $indexDefiner->getIndexName(), null, $indexDefiner->getUpdatingFields());
+            $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableName, $indexDefiner->getIndexName(), new RootType(), $indexDefiner->getUpdatingFields());
 
             foreach ($syncRelations as $syncRelationDto) {
                 /** @var SyncRelationDto $syncRelationDto */
                 $className = $syncRelationDto->getClassName();
-                $relation = $syncRelationDto->getRelation();
+                $detection = $syncRelationDto->getDetection();
                 $updatingFields = $syncRelationDto->getUpdatingFields();
-
                 $tableNameRelated = $this->convertClassNameToTable($className);
 
-                $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $relation, $updatingFields);
+                $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $detection, $updatingFields);
             }
         }
 
         return $databaseMapping;
     }
 
-    private function addMapping(array $databaseMapping, $databaseName, $tableNameRelated, $indexName, $relation, $updatingFields): array
+    private function addMapping(array $databaseMapping, $databaseName, $tableNameRelated, $indexName, $detection, $updatingFields): array
     {
         $databaseMapping[$databaseName][$tableNameRelated][] = [
             'index' => $this->detectIndexDefinerByName($indexName),
-            'relation' => $relation,
             'updatingFields' => $updatingFields,
+            'detection' => $detection,
         ];
 
         return $databaseMapping;

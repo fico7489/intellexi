@@ -6,8 +6,8 @@ class SyncRelationDto
 {
     public function __construct(
         private readonly string $className,
-        private readonly string $relation,
-        private readonly array $updatingFields,
+        private readonly array  $updatingFields,
+        private readonly mixed  $detection, //TODO
     ) {
     }
 
@@ -16,13 +16,13 @@ class SyncRelationDto
         return $this->className;
     }
 
-    public function getRelation(): string
-    {
-        return $this->relation;
-    }
-
     public function getUpdatingFields(): array
     {
         return $this->updatingFields;
+    }
+
+    public function getDetection(): mixed
+    {
+        return $this->detection;
     }
 }
