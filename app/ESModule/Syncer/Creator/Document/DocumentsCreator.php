@@ -1,15 +1,14 @@
 <?php
 
-namespace App\ESModule\Syncer;
+namespace App\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
-use App\ESModule\Syncer\Dto\DocumentDto;
-use App\ESModule\Syncer\SyncItemsFetcher\ItemsRelatedModelsFetcher;
+use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 
 class DocumentsCreator
 {
     public function __construct(
-        private readonly ItemsRelatedModelsFetcher $itemsRelatedModelsFetcher,
+        private readonly DocumentsItemCreator $documentsItemCreator,
     ) {
     }
 
@@ -23,7 +22,7 @@ class DocumentsCreator
         $documentsGrouped = [];
         foreach ($syncRowDtos as $syncRowDto) {
             /* @var SyncRowDto $syncRowDto */
-            $documents = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
+            $documents = $this->documentsItemCreator->fetch($syncRowDto);
 
             foreach ($documents as $document) {
                 $documentsGrouped[$document->getIndex()][] = $document;

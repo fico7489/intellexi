@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer;
+namespace App\ESModule\Syncer\SearchEngine;
 
-use App\ESModule\Syncer\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use GuzzleHttp\Client;
 
 class SearchEngineEsSyncer

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ESModule\Syncer\CdcConverter;
+namespace App\ESModule\Syncer\Creator\SyncRow;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
-use App\ESModule\Syncer\CdcConverter\Exception\GrouperException;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Creator\SyncRow\Exception\GrouperException;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 
 class SyncRowsCreator
@@ -15,6 +15,8 @@ class SyncRowsCreator
     }
 
     /**
+     * It converts CdcDtos to SyncRowDtos.
+     *
      * @param array<CdcDto> $cdcDtos
      *
      * @return array<SyncRowDto>

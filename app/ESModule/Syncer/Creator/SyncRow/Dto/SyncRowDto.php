@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\CdcConverter\Dto;
+namespace App\ESModule\Syncer\Creator\SyncRow\Dto;
 
 class SyncRowDto
 {

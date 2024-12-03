@@ -1,15 +1,15 @@
 <?php
 
-namespace App\ESModule\Syncer\SyncItemsFetcher;
+namespace App\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Syncer\CdcConverter\Dto\SyncRowDto;
-use App\ESModule\Syncer\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use Illuminate\Database\Eloquent\Collection;
 
-class ItemsRelatedModelsFetcher
+class DocumentsItemCreator
 {
     public function __construct(
         private readonly ModelMapper $modelMapper,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Dto;
+namespace App\ESModule\Syncer\Creator\Document\Dto;
 
 class DocumentDto
 {
