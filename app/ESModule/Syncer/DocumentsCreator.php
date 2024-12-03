@@ -21,10 +21,9 @@ class DocumentsCreator
     {
         $documents = [];
         foreach ($changedRowsGrouped as $table => $data) {
-            foreach ($data as $identifier => $changedRowGrouped) {
-                /* @var SyncRowDto $changedRowGrouped */
-                $items = [];
-                $items = $this->itemsRelatedModelsFetcher->fetch($items, $changedRowGrouped);
+            foreach ($data as $identifier => $syncRowDto) {
+                /* @var SyncRowDto $syncRowDto */
+                $items = $this->itemsRelatedModelsFetcher->fetch($syncRowDto);
 
                 foreach ($items as $indexName => $item) {
                     foreach ($item as $identifier => $data) {
@@ -32,7 +31,7 @@ class DocumentsCreator
                             $indexName,
                             $identifier,
                             $data,
-                            SyncRowDto::TYPE_DELETE === $changedRowGrouped->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
+                            SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? Document::TYPE_DELETE : Document::TYPE_UPSERT,
                         );
                     }
                 }

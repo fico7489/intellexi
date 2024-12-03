@@ -17,8 +17,10 @@ class ItemsRelatedModelsFetcher
     ) {
     }
 
-    public function fetch(array $items, SyncRowDto $syncRowDto): array
+    public function fetch(SyncRowDto $syncRowDto): array
     {
+        $items = [];
+
         $updatingMap = $this->modelMapper->fetchDatabaseMapping();
 
         foreach ($updatingMap as $databaseName => $data) {
