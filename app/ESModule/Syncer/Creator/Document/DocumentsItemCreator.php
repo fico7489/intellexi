@@ -14,7 +14,7 @@ use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class DocumentsItemCreator
 {
@@ -44,56 +44,69 @@ class DocumentsItemCreator
                     $type = $sync['type'];
 
                     if ($tableName === $syncRowDto->getTableName()) {
-                        $classNames = $this->modelMapper->fetchAllClassNames();
-
-                        $model = null;
-                        if (isset($classNames[$tableName])) {
-                            $className = $this->modelMapper->convertTableNameToClassName($tableName);
-                            $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
-                        }
-
-                        if ($type instanceof RootSync) {
-                            $models = [$model];
-                        } elseif ($type instanceof RelatedModelSync) {
-                            if ($type->getFetchType() instanceof ModelRelationFetchType) {
-                                $models = $model->{$type->getFetchType()->getRelation()};
-                                $models = $models instanceof Collection ? $models : [$models];
-                            } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
-                                $models = $type->getFetchType()->getClosure()($model, $syncRowDto);
-                            }
-                        } elseif ($type instanceof RelatedTableSync) {
-                            if ($type->getFetchType() instanceof TableClosureFetchType) {
-                                $models = $type->getFetchType()->getClosure()($syncRowDto);
-                            }
-                        } else {
-                            continue;
-                        }
-
-                        // TODO make updates unique by model->id
-
-                        foreach ($models as $model) {
-                            // if (!$model instanceof $className) {
-                            // throw new \Exception('TODO wrong className');
-                            // }
-
-                            // TODO prefix
-                            $indexName = 'prefix_'.$index->getIndexName();
-
-                            // TODO
-                            $identifierValue = $model->id;
-
-                            $document = new DocumentDto(
-                                $indexName,
-                                $identifierValue,
-                                $this->dataFetcher->fetch($index, $model),
-                                SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? DocumentDto::TYPE_DELETE : DocumentDto::TYPE_UPSERT,
-                            );
-
-                            $documents[] = $document;
-                        }
+                        $models = $this->fetchModels($syncRowDto, $tableName, $type);
+                        $documents = $this->createDocumentsFromModels($syncRowDto, $tableName, $index, $documents, $models);
                     }
                 }
             }
+        }
+
+        return $documents;
+    }
+
+    private function fetchModels(SyncRowDto $syncRowDto, string $tableName, $type): Collection
+    {
+        $models = collect();
+        $classNames = $this->modelMapper->fetchAllClassNames();
+
+        $model = null;
+        if (isset($classNames[$tableName])) {
+            $className = $this->modelMapper->convertTableNameToClassName($tableName);
+            $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+        }
+
+        if ($type instanceof RootSync) {
+            $models->push($model);
+        } elseif ($type instanceof RelatedModelSync) {
+            if ($type->getFetchType() instanceof ModelRelationFetchType) {
+                $models = $model->{$type->getFetchType()->getRelation()};
+            } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
+                $models = $type->getFetchType()->getClosure()($model, $syncRowDto);
+            }
+
+            $a = $models instanceof Collection ? $models : [$models];
+            $models->merge($a);
+        } elseif ($type instanceof RelatedTableSync) {
+            if ($type->getFetchType() instanceof TableClosureFetchType) {
+                $models = $type->getFetchType()->getClosure()($syncRowDto);
+                $models->merge($models instanceof Collection ? $models->toArray() : [$models]);
+            }
+        } else {
+            // TODO exception
+        }
+
+        return $models;
+    }
+
+    private function createDocumentsFromModels(SyncRowDto $syncRowDto, string $tableName, IndexDefinerModelInterface $index, array $documents, Collection $models): array
+    {
+        // TODO make updates unique by model->id
+        foreach ($models as $model) {
+            // TODO prefix
+            $indexName = 'prefix_'.$index->getIndexName();
+
+            $identifierValue = $this->modelMapper->detectIdentifierValue2($model);
+            $data = $this->dataFetcher->fetch($index, $model);
+            $type = SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? DocumentDto::TYPE_DELETE : DocumentDto::TYPE_UPSERT;
+
+            $document = new DocumentDto(
+                $indexName,
+                $identifierValue,
+                $data,
+                $type
+            );
+
+            $documents[] = $document;
         }
 
         return $documents;
