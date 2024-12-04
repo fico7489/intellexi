@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Config\RelatedSync\ModelFetchType\ModelClosureFetchType;
-use App\ESModule\Config\RelatedSync\ModelFetchType\ModelRelationFetchType;
+use App\ESModule\Config\Sync\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\Sync\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;

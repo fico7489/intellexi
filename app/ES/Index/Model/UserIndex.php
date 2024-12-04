@@ -3,8 +3,8 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\RelatedSync\TableFetchType\TableClosureFetchType;
-use App\ESModule\Config\RelatedSync\TableRelatedSync;
+use App\ESModule\Config\Sync\RelatedTableSync;
+use App\ESModule\Config\Sync\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\User;
 
@@ -50,10 +50,10 @@ class UserIndex implements IndexDefinerModelInterface
         ];
     }
 
-    public function getRelatedSync(): array
+    public function getSync(): array
     {
         return [
-            new TableRelatedSync(
+            new RelatedTableSync(
                 'role_user',
                 ['id'],
                 new TableClosureFetchType(function (SyncRowDto $syncRowDto): array {

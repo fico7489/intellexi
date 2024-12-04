@@ -1,10 +1,10 @@
 <?php
 
-namespace App\ESModule\Config\RelatedSync;
+namespace App\ESModule\Config\Sync;
 
-use App\ESModule\Config\RelatedSync\TableFetchType\TableClosureFetchType;
+use App\ESModule\Config\Sync\TableFetchType\TableClosureFetchType;
 
-class TableRelatedSync
+class RelatedTableSync
 {
     public function __construct(
         private readonly string $tableName,

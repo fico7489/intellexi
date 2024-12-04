@@ -47,7 +47,7 @@ class User2Index implements IndexDefinerModelInterface
         ];
     }
 
-    public function getRelatedSync(): array
+    public function getSync(): array
     {
         return [];
     }

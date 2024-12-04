@@ -1,11 +1,11 @@
 <?php
 
-namespace App\ESModule\Config\RelatedSync;
+namespace App\ESModule\Config\Sync;
 
-use App\ESModule\Config\RelatedSync\ModelFetchType\ModelClosureFetchType;
-use App\ESModule\Config\RelatedSync\ModelFetchType\ModelRelationFetchType;
+use App\ESModule\Config\Sync\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\Sync\ModelFetchType\ModelRelationFetchType;
 
-class ModelRelatedSync
+class RelatedModelSync
 {
     public function __construct(
         private readonly string $className,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Config\RelatedSync\TableFetchType;
+namespace App\ESModule\Config\Sync\TableFetchType;
 
 class TableClosureFetchType
 {
