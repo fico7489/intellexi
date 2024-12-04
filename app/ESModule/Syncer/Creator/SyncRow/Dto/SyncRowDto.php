@@ -8,13 +8,14 @@ class SyncRowDto
     final public const string TYPE_DELETE = 'delete';
 
     public function __construct(
-        private readonly string $databaseName,
-        private readonly string $tableName,
-        private readonly string $type,
-        private array $data,
-        private array $changedFields,
-        private readonly mixed $identifier,
-    ) {
+        private readonly string       $databaseName,
+        private readonly string       $tableName,
+        private readonly string       $type,
+        private array                 $data,
+        private array                 $changedFields,
+        private readonly string|array $identifierValue,
+    )
+    {
     }
 
     public function getDatabaseName(): string
@@ -42,9 +43,9 @@ class SyncRowDto
         return $this->changedFields;
     }
 
-    public function getIdentifier(): mixed
+    public function getIdentifierValue(): array|string
     {
-        return $this->identifier;
+        return $this->identifierValue;
     }
 
     public function setData(array $data): void

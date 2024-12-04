@@ -11,6 +11,6 @@ class EloquentAdapter
     {
         // MAKE sure that newest model is fetched
 
-        return $className::find($syncRowDto->getIdentifier());
+        return $className::find($syncRowDto->getIdentifierValue());
     }
 }

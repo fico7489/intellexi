@@ -78,7 +78,7 @@ class ConvertUpdateTest extends TestCase
         $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
         $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_UPSERT, $syncDbRow->getType());
-        $this->assertEquals(1, $syncDbRow->getIdentifier());
+        $this->assertEquals(1, $syncDbRow->getIdentifierValue());
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
 

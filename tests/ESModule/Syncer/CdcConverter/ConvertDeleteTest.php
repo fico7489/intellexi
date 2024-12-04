@@ -49,7 +49,7 @@ class ConvertDeleteTest extends TestCase
         $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
         $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
         $this->assertEquals(CdcDto::TYPE_DELETE, $syncDbRow->getType());
-        $this->assertEquals(1, $syncDbRow->getIdentifier());
+        $this->assertEquals(1, $syncDbRow->getIdentifierValue());
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
 
@@ -59,7 +59,7 @@ class ConvertDeleteTest extends TestCase
         $this->assertEquals($cdcDto2->getDatabaseName(), $syncDbRow2->getDatabaseName());
         $this->assertEquals($cdcDto2->getTableName(), $syncDbRow2->getTableName());
         $this->assertEquals(SyncRowDto::TYPE_DELETE, $syncDbRow2->getType());
-        $this->assertEquals(2, $syncDbRow2->getIdentifier());
+        $this->assertEquals(2, $syncDbRow2->getIdentifierValue());
         $this->assertEquals($cdcDto2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($cdcDto2->getData(), $syncDbRow2->getData());
     }

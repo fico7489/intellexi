@@ -61,11 +61,12 @@ class DocumentsItemCreator
                             // TODO prefix
                             $indexName = 'prefix_'.$index->getIndexName();
 
-                            $identifier = $model->id;
+                            //TODO
+                            $identifierValue = $model->id;
 
                             $document = new DocumentDto(
                                 $indexName,
-                                $identifier,
+                                $identifierValue,
                                 $this->dataFetcher->fetch($index, $model),
                                 SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? DocumentDto::TYPE_DELETE : DocumentDto::TYPE_UPSERT,
                             );

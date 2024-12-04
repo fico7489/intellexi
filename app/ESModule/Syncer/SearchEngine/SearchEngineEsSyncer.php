@@ -14,17 +14,17 @@ class SearchEngineEsSyncer
         }
     }
 
-    private function documentPrepare(string $indexName, int $identifier, array $data): array
+    private function documentPrepare(string $indexName, int $identifierValue, array $data): array
     {
         // TODO delete
 
-        $data = ['doc' => array_merge(['id' => $identifier], $data), 'doc_as_upsert' => true];
+        $data = ['doc' => array_merge(['id' => $identifierValue], $data), 'doc_as_upsert' => true];
 
         return [
             [
                 'update' => [
                     '_index' => $indexName,
-                    '_id' => $identifier,
+                    '_id' => $identifierValue,
                 ],
             ],
             $data,
