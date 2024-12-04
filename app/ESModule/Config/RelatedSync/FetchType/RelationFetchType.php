@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Config\Related\FetchType;
+namespace App\ESModule\Config\RelatedSync\FetchType;
 
-class RelationFetch
+class RelationFetchType
 {
     public function __construct(
         private readonly string $relation,

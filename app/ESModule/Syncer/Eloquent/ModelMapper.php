@@ -4,8 +4,8 @@ namespace App\ESModule\Syncer\Eloquent;
 
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Related\ModelRelated;
-use App\ESModule\Config\Related\TableRelated;
+use App\ESModule\Config\RelatedSync\ModelRelatedSync;
+use App\ESModule\Config\RelatedSync\TableRelatedSync;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -40,11 +40,11 @@ class ModelMapper
 
             $modelRelated = $indexDefiner->getRelatedSync();
             foreach ($modelRelated as $modelRelatedItem) {
-                if ($modelRelatedItem instanceof ModelRelated) {
+                if ($modelRelatedItem instanceof ModelRelatedSync) {
                     $className = $modelRelatedItem->getClassName();
                     $tableNameRelated = $this->convertClassNameToTable($className);
                 } else {
-                    /** @var TableRelated $modelRelatedItem */
+                    /** @var TableRelatedSync $modelRelatedItem */
                     $tableNameRelated = $modelRelatedItem->getTableName();
                 }
 

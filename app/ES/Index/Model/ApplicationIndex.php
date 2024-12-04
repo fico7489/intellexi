@@ -3,10 +3,10 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Related\FetchType\ClosureFetch;
-use App\ESModule\Config\Related\FetchType\RelationFetch;
-use App\ESModule\Config\Related\ModelRelated;
-use App\ESModule\Config\Related\TableRelated;
+use App\ESModule\Config\RelatedSync\FetchType\ClosureFetchType;
+use App\ESModule\Config\RelatedSync\FetchType\RelationFetchType;
+use App\ESModule\Config\RelatedSync\ModelRelatedSync;
+use App\ESModule\Config\RelatedSync\TableRelatedSync;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\Application;
 use App\Models\User;
@@ -76,27 +76,27 @@ class ApplicationIndex implements IndexDefinerModelInterface
     }
 
     /**
-     * @return array<ModelRelated>
+     * @return array<ModelRelatedSync|TableRelatedSync>
      */
     public function getRelatedSync(): array
     {
         return [
-            new ModelRelated(
+            new ModelRelatedSync(
                 User::class,
                 ['id', 'first_name'],
-                new RelationFetch('applications')
+                new RelationFetchType('applications')
             ),
-            new ModelRelated(
+            new ModelRelatedSync(
                 User::class,
                 ['id'],
-                new ClosureFetch(function (Model $model, SyncRowDto $syncRowDto): array {
+                new ClosureFetchType(function (Model $model, SyncRowDto $syncRowDto): array {
                     return [Application::find(1), Application::find(17)];
                 })
             ),
-            new TableRelated(
+            new TableRelatedSync(
                 'user_types',
                 ['id'],
-                new ClosureFetch(function (string $tableName, SyncRowDto $syncRowDto): array {
+                new ClosureFetchType(function (string $tableName, SyncRowDto $syncRowDto): array {
                     return [Application::find(2)];
                 })
             ),

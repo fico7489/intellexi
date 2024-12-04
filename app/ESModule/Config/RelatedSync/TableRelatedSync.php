@@ -1,13 +1,15 @@
 <?php
 
-namespace App\ESModule\Config\Related;
+namespace App\ESModule\Config\RelatedSync;
 
-class TableRelated
+use App\ESModule\Config\RelatedSync\FetchType\ClosureFetchType;
+
+class TableRelatedSync
 {
     public function __construct(
-        private readonly string $tableName,
-        private readonly ?array $updatingFields,
-        private readonly mixed $fetchType, // TODO
+        private readonly string           $tableName,
+        private readonly ?array           $updatingFields,
+        private readonly ClosureFetchType $fetchType,
     ) {
     }
 
