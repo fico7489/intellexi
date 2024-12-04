@@ -54,21 +54,21 @@ class ModelMapper
 
             $modelRelated = $indexDefiner->getSync();
             foreach ($modelRelated as $modelRelatedItem) {
+                if ($modelRelatedItem instanceof RootSync) {
+                    /** @var RootSync $modelRelatedItem */
+                    $tableNameRelated = $tableName;
+                    $updatingFields = $modelRelatedItem->getUpdatingFields();
+                    $fetchType = null;
+
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
+                }
+
                 if ($modelRelatedItem instanceof RelatedModelSync) {
                     /** @var RelatedModelSync $modelRelatedItem */
                     $className = $modelRelatedItem->getClassName();
                     $tableNameRelated = $this->convertClassNameToTable($className);
                     $fetchType = $modelRelatedItem->getFetchType();
                     $updatingFields = $modelRelatedItem->getUpdatingFields();
-
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
-                }
-
-                if ($modelRelatedItem instanceof RootSync) {
-                    /** @var RootSync $modelRelatedItem */
-                    $tableNameRelated = $tableName;
-                    $updatingFields = $modelRelatedItem->getUpdatingFields();
-                    $fetchType = null;
 
                     $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
                 }
