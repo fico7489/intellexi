@@ -33,8 +33,7 @@ class SyncRowsCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
-            if (!$this->modelMapper->syncForDatabaseAndTableName($databaseName, $tableName)) {
-                // TODO we should check if that table is in ES
+            if (!$this->modelMapper->isSyncDatabaseNameAndTableName($databaseName, $tableName)) {
                 continue;
             }
 
@@ -52,7 +51,7 @@ class SyncRowsCreator
                 if (!isset($syncRowDtosGrouped[$tableName][$identifierValue])) {
                     $syncRowDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncRowDto::TYPE_UPSERT, $identifierValue);
                 } else {
-                    /** @var CdcDto $syncRowDto */
+                    /** @var SyncRowDto $syncRowDto */
                     $syncRowDto = $syncRowDtosGrouped[$tableName][$identifierValue];
 
                     if (SyncRowDto::TYPE_DELETE === $syncRowDto->getType()) {

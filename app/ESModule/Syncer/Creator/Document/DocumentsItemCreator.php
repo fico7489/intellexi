@@ -39,7 +39,7 @@ class DocumentsItemCreator
                     if ($tableName === $syncRowDto->getTableName()) {
                         $classNames = $this->modelMapper->fetchAllClassNames();
 
-                        if (isset($classNames[$tableName])){
+                        if (isset($classNames[$tableName])) {
                             $className = $this->modelMapper->convertTableNameToClassName($tableName);
                             $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
 
@@ -53,16 +53,16 @@ class DocumentsItemCreator
                             } else {
                                 continue;
                             }
-                        }else{
+                        } else {
                             $models = $fetchType->getClosure()($tableName, $syncRowDto);
                         }
 
                         // TODO make updates unique by model->id
 
                         foreach ($models as $model) {
-                            //if (!$model instanceof $className) {
-                                // throw new \Exception('TODO wrong className');
-                            //}
+                            // if (!$model instanceof $className) {
+                            // throw new \Exception('TODO wrong className');
+                            // }
 
                             // TODO prefix
                             $indexName = 'prefix_'.$index->getIndexName();

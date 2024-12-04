@@ -19,11 +19,25 @@ class ModelMapper
     ) {
     }
 
-    public function syncForDatabaseAndTableName($databaseName, $tableName): bool
+    public function isSyncDatabaseNameAndTableName($databaseName, $tableName): bool
+    {
+        $syncTableNames = $this->getSyncTableNames();
+
+        return isset($syncTableNames[$databaseName][$tableName]);
+    }
+
+    public function getSyncTableNames(): array
     {
         $databaseMapping = $this->fetchDatabaseMapping();
 
-        return isset($databaseMapping[$databaseName][$tableName]);
+        $syncTableNames = [];
+        foreach ($databaseMapping as $databaseName => $data) {
+            foreach ($data as $tableName => $items) {
+                $syncTableNames[$databaseName][$tableName] = true;
+            }
+        }
+
+        return $syncTableNames;
     }
 
     public function fetchDatabaseMapping(): array
@@ -125,9 +139,9 @@ class ModelMapper
             }
         })->toArray();
 
-        $tablePrimaryKeysMapping =  [];
+        $tablePrimaryKeysMapping = [];
         foreach ($tablesNames as $tablesName) {
-            $primaryKeyObjects = (DB::connection()->select("SHOW KEYS FROM ".$tablesName." WHERE Key_name = 'PRIMARY'"));
+            $primaryKeyObjects = DB::connection()->select('SHOW KEYS FROM '.$tablesName." WHERE Key_name = 'PRIMARY'");
 
             $primaryKeys = [];
             foreach ($primaryKeyObjects as $primaryKeyObject) {
@@ -188,6 +202,7 @@ class ModelMapper
         }
 
         $identifierName = $identifierName[0];
+
         return $data[$identifierName];
     }
 }
