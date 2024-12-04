@@ -4,6 +4,7 @@ namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\Sync\RelatedTableSync;
+use App\ESModule\Config\Sync\RootSync;
 use App\ESModule\Config\Sync\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\User;
@@ -43,17 +44,13 @@ class UserIndex implements IndexDefinerModelInterface
         ];
     }
 
-    public function getUpdatingFields(): array
-    {
-        return [
-            'id',
-        ];
-    }
-
     public function getSync(): array
     {
         return [
-            new RelatedTableSync(
+            new RootSync(
+                ['id', 'first_name']
+            ),
+            /*new RelatedTableSync(
                 'role_user',
                 ['id'],
                 new TableClosureFetchType(function (SyncRowDto $syncRowDto): array {
@@ -61,7 +58,7 @@ class UserIndex implements IndexDefinerModelInterface
 
                     return [];
                 })
-            ),
+            ),*/
         ];
     }
 }

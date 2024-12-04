@@ -14,7 +14,5 @@ interface IndexDefinerModelInterface
 
     public function getData(array $data, mixed $model): array;
 
-    public function getUpdatingFields(): array;
-
     public function getSync(): array;
 }

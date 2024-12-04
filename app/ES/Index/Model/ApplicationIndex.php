@@ -7,6 +7,7 @@ use App\ESModule\Config\Sync\ModelFetchType\ModelClosureFetchType;
 use App\ESModule\Config\Sync\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Config\Sync\RelatedModelSync;
 use App\ESModule\Config\Sync\RelatedTableSync;
+use App\ESModule\Config\Sync\RootSync;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\Application;
 use App\Models\User;
@@ -37,20 +38,15 @@ class ApplicationIndex implements IndexDefinerModelInterface
         ];
     }
 
-    public function getUpdatingFields(): array
-    {
-        return [
-            'id',
-            'club',
-        ];
-    }
-
     /**
      * @return array<RelatedModelSync|RelatedTableSync>
      */
     public function getSync(): array
     {
         return [
+            new RootSync(
+                ['id', 'club']
+            ),
             new RelatedModelSync(
                 User::class,
                 ['id', 'first_name'],
