@@ -64,19 +64,19 @@ class ModelMapper
 
                 if ($syncItem instanceof RelatedModelSync) {
                     $className = $syncItem->getClassName();
-                    $tableNameRelated = $this->convertClassNameToTable($className);
+                    $tableName = $this->convertClassNameToTable($className);
                     $fetchType = $syncItem->getFetchType();
                     $updatingFields = $syncItem->getUpdatingFields();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableNameRelated, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields);
                 }
 
                 if ($syncItem instanceof RelatedTableSync) {
-                    $tableNameRelated = $syncItem->getTableName();
+                    $tableName = $syncItem->getTableName();
                     $updatingFields = $syncItem->getUpdatingFields();
                     $fetchType = $syncItem->getFetchType();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableNameRelated, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields);
                 }
             }
         }
