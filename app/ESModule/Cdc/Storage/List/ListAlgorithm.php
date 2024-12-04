@@ -17,17 +17,17 @@ readonly class ListAlgorithm
     public function run()
     {
         while (true) {
+            $cdcPayloads = null;
             try {
                 $cdcPayloads = $this->storage->popFromList($this->limit);
-
-                if (null !== $cdcPayloads) {
-                    $this->processor->processCdcPayloads($cdcPayloads);
-                }
-
-                sleep($this->sleep);
             } catch (\Exception $e) {
                 // TODO
             }
+            if (null !== $cdcPayloads) {
+                $this->processor->processCdcPayloads($cdcPayloads);
+            }
+
+            sleep($this->sleep);
         }
     }
 }
