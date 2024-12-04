@@ -47,9 +47,9 @@ class ApplicationIndex implements IndexDefinerModelInterface
             new RootSync(
                 ['id', 'club']
             ),
-            new RelatedModelSync(
+            /*new RelatedModelSync(
                 User::class,
-                ['id', 'first_name'],
+                ['id', 'last_name'],
                 new ModelRelationFetchType('applications')
             ),
             new RelatedModelSync(
@@ -58,7 +58,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
                 new ModelClosureFetchType(function (Model $model, SyncRowDto $syncRowDto): array {
                     return [Application::find(1), Application::find(17)];
                 })
-            ),
+            ),*/
         ];
     }
 

@@ -50,15 +50,15 @@ class UserIndex implements IndexDefinerModelInterface
             new RootSync(
                 ['id', 'first_name']
             ),
-            /*new RelatedTableSync(
+            new RelatedTableSync(
                 'role_user',
-                ['id'],
+                ['id', 'role_id'],
                 new TableClosureFetchType(function (SyncRowDto $syncRowDto): array {
                     dump($syncRowDto);
 
                     return [];
                 })
-            ),*/
+            ),
         ];
     }
 }

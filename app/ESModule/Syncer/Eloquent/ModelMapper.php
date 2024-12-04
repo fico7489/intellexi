@@ -5,6 +5,7 @@ namespace App\ESModule\Syncer\Eloquent;
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\Sync\RelatedModelSync;
+use App\ESModule\Config\Sync\RelatedTableSync;
 use App\ESModule\Config\Sync\RootSync;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
@@ -54,6 +55,7 @@ class ModelMapper
             $modelRelated = $indexDefiner->getSync();
             foreach ($modelRelated as $modelRelatedItem) {
                 if ($modelRelatedItem instanceof RelatedModelSync) {
+                    /** @var RelatedModelSync $modelRelatedItem */
                     $className = $modelRelatedItem->getClassName();
                     $tableNameRelated = $this->convertClassNameToTable($className);
                     $fetchType = $modelRelatedItem->getFetchType();
@@ -65,6 +67,13 @@ class ModelMapper
                     $tableNameRelated = $tableName;
                     $updatingFields = $modelRelatedItem->getUpdatingFields();
                     $fetchType = null;
+                }
+
+                if ($modelRelatedItem instanceof RelatedTableSync) {
+                    /** @var RelatedTableSync $modelRelatedItem */
+                    $tableNameRelated = $modelRelatedItem->getTableName();
+                    $updatingFields = $modelRelatedItem->getUpdatingFields();
+                    $fetchType = $modelRelatedItem->getFetchType();
                 }
 
                 $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
