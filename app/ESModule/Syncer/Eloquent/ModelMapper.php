@@ -8,6 +8,7 @@ use App\ESModule\Config\RelatedSync\ModelRelatedSync;
 use App\ESModule\Config\RelatedSync\TableRelatedSync;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class ModelMapper
@@ -116,6 +117,29 @@ class ModelMapper
         return $mapping;
     }
 
+    public function fetchTablePrimaryKeysMapping(): array
+    {
+        $tablesNames = collect(DB::connection()->select('show tables'))->map(function ($val) {
+            foreach ($val as $key => $tbl) {
+                return $tbl;
+            }
+        })->toArray();
+
+        $tablePrimaryKeysMapping =  [];
+        foreach ($tablesNames as $tablesName) {
+            $primaryKeyObjects = (DB::connection()->select("SHOW KEYS FROM ".$tablesName." WHERE Key_name = 'PRIMARY'"));
+
+            $primaryKeys = [];
+            foreach ($primaryKeyObjects as $primaryKeyObject) {
+                $primaryKeys[] = $primaryKeyObject->Column_name;
+            }
+
+            $tablePrimaryKeysMapping[$tablesName] = $primaryKeys;
+        }
+
+        return $tablePrimaryKeysMapping;
+    }
+
     public function convertTableNameToClassName($tableName): string
     {
         $mapping = $this->fetchAllClassNames();
@@ -150,9 +174,11 @@ class ModelMapper
 
     public function detectIdentifierValue(string $tableName, array $data): string|array
     {
-        $identifierName = $this->detectIdentifierName($tableName);
+        $mapping = $this->fetchTablePrimaryKeysMapping();
 
-        if (is_array($identifierName)) {
+        $identifierName = $mapping[$tableName];
+
+        if (count($identifierName) > 1) {
             $identifierValue = [];
             foreach ($identifierName as $identifierNameItem) {
                 $identifierValue[] = $data[$identifierNameItem];
@@ -161,6 +187,7 @@ class ModelMapper
             return $identifierValue;
         }
 
+        $identifierName = $identifierName[0];
         return $data[$identifierName];
     }
 }

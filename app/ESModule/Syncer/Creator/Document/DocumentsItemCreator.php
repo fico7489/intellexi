@@ -32,31 +32,37 @@ class DocumentsItemCreator
         foreach ($updatingMap as $databaseName => $data) {
             foreach ($data as $tableName => $items2) {
                 foreach ($items2 as $item2) {
-                    $className = $this->modelMapper->convertTableNameToClassName($tableName);
                     $index = $item2['index'];
                     $fetchType = $item2['fetchType'];
                     $updatingFields = $item2['updatingFields'];
 
                     if ($tableName === $syncRowDto->getTableName()) {
-                        $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+                        $classNames = $this->modelMapper->fetchAllClassNames();
 
-                        if (null === $fetchType) {
-                            $models = [$model];
-                        } elseif ($fetchType instanceof RelationFetchType) {
-                            $models = $model->{$fetchType->getRelation()};
-                            $models = $models instanceof Collection ? $models : [$models];
-                        } elseif ($fetchType instanceof ClosureFetchType) {
-                            $models = $fetchType->getClosure()($model, $syncRowDto);
-                        } else {
-                            continue;
+                        if (isset($classNames[$tableName])){
+                            $className = $this->modelMapper->convertTableNameToClassName($tableName);
+                            $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+
+                            if (null === $fetchType) {
+                                $models = [$model];
+                            } elseif ($fetchType instanceof RelationFetchType) {
+                                $models = $model->{$fetchType->getRelation()};
+                                $models = $models instanceof Collection ? $models : [$models];
+                            } elseif ($fetchType instanceof ClosureFetchType) {
+                                $models = $fetchType->getClosure()($model, $syncRowDto);
+                            } else {
+                                continue;
+                            }
+                        }else{
+                            $models = $fetchType->getClosure()($tableName, $syncRowDto);
                         }
 
                         // TODO make updates unique by model->id
 
                         foreach ($models as $model) {
-                            if (!$model instanceof $className) {
-                                // throw new \Exception('TODO wron className');
-                            }
+                            //if (!$model instanceof $className) {
+                                // throw new \Exception('TODO wrong className');
+                            //}
 
                             // TODO prefix
                             $indexName = 'prefix_'.$index->getIndexName();

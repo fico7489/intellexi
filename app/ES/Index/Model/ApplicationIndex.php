@@ -93,13 +93,6 @@ class ApplicationIndex implements IndexDefinerModelInterface
                     return [Application::find(1), Application::find(17)];
                 })
             ),
-            new TableRelatedSync(
-                'user_types',
-                ['id'],
-                new ClosureFetchType(function (string $tableName, SyncRowDto $syncRowDto): array {
-                    return [Application::find(2)];
-                })
-            ),
         ];
     }
 }

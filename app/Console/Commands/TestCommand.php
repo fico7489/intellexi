@@ -15,7 +15,7 @@ class TestCommand extends Command
 
         /** @var ModelMapper $modelMapper */
         $modelMapper = app(ModelMapper::class);
-        $data = $modelMapper->fetchDatabaseMapping();
+        $data = $modelMapper->fetchAllClassNames();
 
         dump($data);
 
