@@ -48,8 +48,8 @@ class ModelMapper
         $indexDefiners = $this->configFetcher->fetchIndexes();
         foreach ($indexDefiners as $indexDefiner) {
             $className = $indexDefiner->getClassName();
-            $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $tableName = $this->convertClassNameToTable($className);
+            $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $indexName = $indexDefiner->getIndexName();
 
             $modelRelated = $indexDefiner->getSync();
@@ -60,6 +60,8 @@ class ModelMapper
                     $tableNameRelated = $this->convertClassNameToTable($className);
                     $fetchType = $modelRelatedItem->getFetchType();
                     $updatingFields = $modelRelatedItem->getUpdatingFields();
+
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
                 }
 
                 if ($modelRelatedItem instanceof RootSync) {
@@ -67,6 +69,8 @@ class ModelMapper
                     $tableNameRelated = $tableName;
                     $updatingFields = $modelRelatedItem->getUpdatingFields();
                     $fetchType = null;
+
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
                 }
 
                 if ($modelRelatedItem instanceof RelatedTableSync) {
@@ -74,9 +78,9 @@ class ModelMapper
                     $tableNameRelated = $modelRelatedItem->getTableName();
                     $updatingFields = $modelRelatedItem->getUpdatingFields();
                     $fetchType = $modelRelatedItem->getFetchType();
-                }
 
-                $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
+                }
             }
         }
 
