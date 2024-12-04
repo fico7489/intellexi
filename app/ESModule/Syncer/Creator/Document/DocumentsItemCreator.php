@@ -61,7 +61,7 @@ class DocumentsItemCreator
                             // TODO prefix
                             $indexName = 'prefix_'.$index->getIndexName();
 
-                            //TODO
+                            // TODO
                             $identifierValue = $model->id;
 
                             $document = new DocumentDto(

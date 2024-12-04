@@ -8,8 +8,8 @@ use App\ESModule\Config\RelatedSync\FetchType\RelationFetchType;
 class ModelRelatedSync
 {
     public function __construct(
-        private readonly string                             $className,
-        private readonly ?array                             $updatingFields,
+        private readonly string $className,
+        private readonly ?array $updatingFields,
         private readonly RelationFetchType|ClosureFetchType $fetchType,
     ) {
     }

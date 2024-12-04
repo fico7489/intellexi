@@ -6,7 +6,6 @@ use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\RelatedSync\ModelRelatedSync;
 use App\ESModule\Config\RelatedSync\TableRelatedSync;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -144,7 +143,7 @@ class ModelMapper
         $className = $this->convertTableNameToClassName($tableName);
 
         /** @var Model $model */
-        $model = (new $className);
+        $model = (new $className());
 
         return $model->getKeyName();
     }
@@ -153,9 +152,9 @@ class ModelMapper
     {
         $identifierName = $this->detectIdentifierName($tableName);
 
-        if(is_array($identifierName)){
+        if (is_array($identifierName)) {
             $identifierValue = [];
-            foreach ($identifierName as $identifierNameItem){
+            foreach ($identifierName as $identifierNameItem) {
                 $identifierValue[] = $data[$identifierNameItem];
             }
 

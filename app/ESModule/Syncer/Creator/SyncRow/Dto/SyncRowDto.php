@@ -8,14 +8,13 @@ class SyncRowDto
     final public const string TYPE_DELETE = 'delete';
 
     public function __construct(
-        private readonly string       $databaseName,
-        private readonly string       $tableName,
-        private readonly string       $type,
-        private array                 $data,
-        private array                 $changedFields,
+        private readonly string $databaseName,
+        private readonly string $tableName,
+        private readonly string $type,
+        private array $data,
+        private array $changedFields,
         private readonly string|array $identifierValue,
-    )
-    {
+    ) {
     }
 
     public function getDatabaseName(): string

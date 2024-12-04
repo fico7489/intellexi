@@ -7,8 +7,8 @@ use App\ESModule\Config\RelatedSync\FetchType\ClosureFetchType;
 class TableRelatedSync
 {
     public function __construct(
-        private readonly string           $tableName,
-        private readonly ?array           $updatingFields,
+        private readonly string $tableName,
+        private readonly ?array $updatingFields,
         private readonly ClosureFetchType $fetchType,
     ) {
     }
