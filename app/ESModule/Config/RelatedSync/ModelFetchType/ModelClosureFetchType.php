@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Config\RelatedSync\FetchType;
+namespace App\ESModule\Config\RelatedSync\ModelFetchType;
 
-class ClosureFetchType
+class ModelClosureFetchType
 {
     public function __construct(
         private readonly \Closure $closure,

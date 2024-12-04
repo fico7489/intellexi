@@ -3,8 +3,8 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\RelatedSync\FetchType\ClosureFetchType;
-use App\ESModule\Config\RelatedSync\FetchType\RelationFetchType;
+use App\ESModule\Config\RelatedSync\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\RelatedSync\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Config\RelatedSync\ModelRelatedSync;
 use App\ESModule\Config\RelatedSync\TableRelatedSync;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
@@ -84,12 +84,12 @@ class ApplicationIndex implements IndexDefinerModelInterface
             new ModelRelatedSync(
                 User::class,
                 ['id', 'first_name'],
-                new RelationFetchType('applications')
+                new ModelRelationFetchType('applications')
             ),
             new ModelRelatedSync(
                 User::class,
                 ['id'],
-                new ClosureFetchType(function (Model $model, SyncRowDto $syncRowDto): array {
+                new ModelClosureFetchType(function (Model $model, SyncRowDto $syncRowDto): array {
                     return [Application::find(1), Application::find(17)];
                 })
             ),

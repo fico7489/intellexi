@@ -2,14 +2,14 @@
 
 namespace App\ESModule\Config\RelatedSync;
 
-use App\ESModule\Config\RelatedSync\FetchType\ClosureFetchType;
+use App\ESModule\Config\RelatedSync\TableFetchType\TableClosureFetchType;
 
 class TableRelatedSync
 {
     public function __construct(
         private readonly string $tableName,
         private readonly ?array $updatingFields,
-        private readonly ClosureFetchType $fetchType,
+        private readonly TableClosureFetchType $fetchType,
     ) {
     }
 

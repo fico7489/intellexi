@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Config\RelatedSync\FetchType\ClosureFetchType;
-use App\ESModule\Config\RelatedSync\FetchType\RelationFetchType;
+use App\ESModule\Config\RelatedSync\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\RelatedSync\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
@@ -45,10 +45,10 @@ class DocumentsItemCreator
 
                             if (null === $fetchType) {
                                 $models = [$model];
-                            } elseif ($fetchType instanceof RelationFetchType) {
+                            } elseif ($fetchType instanceof ModelRelationFetchType) {
                                 $models = $model->{$fetchType->getRelation()};
                                 $models = $models instanceof Collection ? $models : [$models];
-                            } elseif ($fetchType instanceof ClosureFetchType) {
+                            } elseif ($fetchType instanceof ModelClosureFetchType) {
                                 $models = $fetchType->getClosure()($model, $syncRowDto);
                             } else {
                                 continue;
