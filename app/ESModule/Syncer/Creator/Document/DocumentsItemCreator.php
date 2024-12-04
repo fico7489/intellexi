@@ -44,8 +44,8 @@ class DocumentsItemCreator
                     $type = $sync['type'];
 
                     if ($tableName === $syncRowDto->getTableName()) {
-                        $models = $this->fetchModels($syncRowDto, $tableName, $type);
-                        $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $models);
+                        $modelsRelated = $this->fetchModelsRelated($syncRowDto, $tableName, $type);
+                        $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $modelsRelated);
                     }
                 }
             }
@@ -54,7 +54,7 @@ class DocumentsItemCreator
         return $documents;
     }
 
-    private function fetchModels(SyncRowDto $syncRowDto, string $tableName, $type): Collection
+    private function fetchModelsRelated(SyncRowDto $syncRowDto, string $tableName, $type): Collection
     {
         $models = collect();
         $classNames = $this->modelMapper->fetchAllClassNames();
