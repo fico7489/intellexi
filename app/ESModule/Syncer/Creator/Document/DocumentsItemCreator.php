@@ -54,7 +54,7 @@ class DocumentsItemCreator
                                 continue;
                             }
                         } else {
-                            $models = $fetchType->getClosure()($tableName, $syncRowDto);
+                            $models = $fetchType->getClosure()($syncRowDto);
                         }
 
                         // TODO make updates unique by model->id

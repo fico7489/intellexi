@@ -56,7 +56,7 @@ class UserIndex implements IndexDefinerModelInterface
             new TableRelatedSync(
                 'role_user',
                 ['id'],
-                new TableClosureFetchType(function (string $tableName, SyncRowDto $syncRowDto): array {
+                new TableClosureFetchType(function (SyncRowDto $syncRowDto): array {
                     dump($syncRowDto);
 
                     return [];

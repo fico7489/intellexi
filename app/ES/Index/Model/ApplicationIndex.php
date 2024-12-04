@@ -29,36 +29,6 @@ class ApplicationIndex implements IndexDefinerModelInterface
         return Application::class;
     }
 
-    public function getMapping(array $mapping): array
-    {
-        // TODO resolve
-        return [];
-
-        return [
-            'id' => ['type' => 'integer'],
-            'club' => ['type' => 'integer'],
-        ];
-    }
-
-    public function getSettings(array $settings): array
-    {
-        // TODO resolve
-        return [];
-
-        return [
-            'settings' => [
-                'mapping' => [
-                    'total_fields' => [
-                        'limit' => 1001,
-                    ],
-                    'nested_fields' => [
-                        'limit' => 301,
-                    ],
-                ],
-            ],
-        ];
-    }
-
     public function getData(array $data, mixed $model): array
     {
         return [
@@ -93,6 +63,36 @@ class ApplicationIndex implements IndexDefinerModelInterface
                     return [Application::find(1), Application::find(17)];
                 })
             ),
+        ];
+    }
+
+    public function getMapping(array $mapping): array
+    {
+        // TODO resolve
+        return [];
+
+        return [
+            'id' => ['type' => 'integer'],
+            'club' => ['type' => 'integer'],
+        ];
+    }
+
+    public function getSettings(array $settings): array
+    {
+        // TODO resolve
+        return [];
+
+        return [
+            'settings' => [
+                'mapping' => [
+                    'total_fields' => [
+                        'limit' => 1001,
+                    ],
+                    'nested_fields' => [
+                        'limit' => 301,
+                    ],
+                ],
+            ],
         ];
     }
 }
