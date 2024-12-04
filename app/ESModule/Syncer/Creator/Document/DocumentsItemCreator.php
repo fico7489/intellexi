@@ -46,13 +46,13 @@ class DocumentsItemCreator
                     if ($tableName === $syncRowDto->getTableName()) {
                         $classNames = $this->modelMapper->fetchAllClassNames();
 
-                        $model = null;
+                        $modelRoot = null;
                         if (isset($classNames[$tableName])) {
                             $className = $this->modelMapper->convertTableNameToClassName($tableName);
-                            $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+                            $modelRoot = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
                         }
 
-                        $modelsRelated = $this->fetchModelsRelated($syncRowDto, $model, $tableName, $type);
+                        $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
                         $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $modelsRelated);
                     }
                 }
@@ -62,17 +62,17 @@ class DocumentsItemCreator
         return $documents;
     }
 
-    private function fetchModelsRelated(SyncRowDto $syncRowDto, $model, string $tableName, $type): Collection
+    private function fetchModelsRelated(SyncRowDto $syncRowDto, $modelRoot, string $tableName, $type): Collection
     {
         $models = collect();
 
         if ($type instanceof RootSync) {
-            $models->push($model);
+            $models->push($modelRoot);
         } elseif ($type instanceof RelatedModelSync) {
             if ($type->getFetchType() instanceof ModelRelationFetchType) {
-                $models = $model->{$type->getFetchType()->getRelation()};
+                $models = $modelRoot->{$type->getFetchType()->getRelation()};
             } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
-                $models = $type->getFetchType()->getClosure()($model, $syncRowDto);
+                $models = $type->getFetchType()->getClosure()($modelRoot, $syncRowDto);
             }
 
             $a = $models instanceof Collection ? $models : [$models];
