@@ -48,18 +48,18 @@ class ModelMapper
         $indexDefiners = $this->configFetcher->fetchIndexes();
         foreach ($indexDefiners as $indexDefiner) {
             $className = $indexDefiner->getClassName();
-            $tableName = $this->convertClassNameToTable($className);
+
             $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $indexName = $indexDefiner->getIndexName();
 
             $sync = $indexDefiner->getSync();
             foreach ($sync as $syncItem) {
                 if ($syncItem instanceof RootSync) {
-                    $tableNameRelated = $tableName;
+                    $tableName = $this->convertClassNameToTable($className);
                     $updatingFields = $syncItem->getUpdatingFields();
                     $fetchType = null;
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields);
                 }
 
                 if ($syncItem instanceof RelatedModelSync) {
@@ -68,7 +68,7 @@ class ModelMapper
                     $fetchType = $syncItem->getFetchType();
                     $updatingFields = $syncItem->getUpdatingFields();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableNameRelated, $fetchType, $updatingFields);
                 }
 
                 if ($syncItem instanceof RelatedTableSync) {
@@ -76,7 +76,7 @@ class ModelMapper
                     $updatingFields = $syncItem->getUpdatingFields();
                     $fetchType = $syncItem->getFetchType();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableNameRelated, $fetchType, $updatingFields);
                 }
             }
         }
@@ -84,9 +84,9 @@ class ModelMapper
         return $databaseMapping;
     }
 
-    private function addMapping(array $databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields): array
+    private function addMapping(array $databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields): array
     {
-        $databaseMapping[$databaseName][$tableNameRelated][] = [
+        $databaseMapping[$databaseName][$tableName][] = [
             'index' => $this->detectIndexDefinerByName($indexName),
             'updatingFields' => $updatingFields,
             'fetchType' => $fetchType,
