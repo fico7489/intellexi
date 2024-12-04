@@ -44,7 +44,15 @@ class DocumentsItemCreator
                     $type = $sync['type'];
 
                     if ($tableName === $syncRowDto->getTableName()) {
-                        $modelsRelated = $this->fetchModelsRelated($syncRowDto, $tableName, $type);
+                        $classNames = $this->modelMapper->fetchAllClassNames();
+
+                        $model = null;
+                        if (isset($classNames[$tableName])) {
+                            $className = $this->modelMapper->convertTableNameToClassName($tableName);
+                            $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+                        }
+
+                        $modelsRelated = $this->fetchModelsRelated($syncRowDto, $model, $tableName, $type);
                         $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $modelsRelated);
                     }
                 }
@@ -54,16 +62,9 @@ class DocumentsItemCreator
         return $documents;
     }
 
-    private function fetchModelsRelated(SyncRowDto $syncRowDto, string $tableName, $type): Collection
+    private function fetchModelsRelated(SyncRowDto $syncRowDto, $model, string $tableName, $type): Collection
     {
         $models = collect();
-        $classNames = $this->modelMapper->fetchAllClassNames();
-
-        $model = null;
-        if (isset($classNames[$tableName])) {
-            $className = $this->modelMapper->convertTableNameToClassName($tableName);
-            $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
-        }
 
         if ($type instanceof RootSync) {
             $models->push($model);
