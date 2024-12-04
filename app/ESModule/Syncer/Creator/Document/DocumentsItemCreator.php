@@ -45,7 +45,7 @@ class DocumentsItemCreator
 
                     if ($tableName === $syncRowDto->getTableName()) {
                         $models = $this->fetchModels($syncRowDto, $tableName, $type);
-                        $documents = $this->createDocumentsFromModels($syncRowDto, $tableName, $index, $documents, $models);
+                        $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $models);
                     }
                 }
             }
@@ -88,7 +88,7 @@ class DocumentsItemCreator
         return $models;
     }
 
-    private function createDocumentsFromModels(SyncRowDto $syncRowDto, string $tableName, IndexDefinerModelInterface $index, array $documents, Collection $models): array
+    private function createDocumentsFromModels(SyncRowDto $syncRowDto, IndexDefinerModelInterface $index, array $documents, Collection $models): array
     {
         // TODO make updates unique by model->id
         foreach ($models as $model) {

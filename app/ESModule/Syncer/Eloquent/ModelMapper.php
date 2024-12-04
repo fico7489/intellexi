@@ -212,7 +212,7 @@ class ModelMapper
 
     public function detectIdentifierValue2(Model $model): mixed
     {
-        //TODO
+        // TODO
         return $model->id;
     }
 }
