@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Config\Sync\ModelFetchType;
+namespace App\ESModule\Config\SyncType\ModelFetchType;
 
 class ModelRelationFetchType
 {

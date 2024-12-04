@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Config\Sync;
+namespace App\ESModule\Config\SyncType;
 
-use App\ESModule\Config\Sync\TableFetchType\TableClosureFetchType;
+use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 
 class RelatedTableSync
 {

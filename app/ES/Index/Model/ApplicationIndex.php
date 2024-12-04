@@ -3,11 +3,11 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Sync\ModelFetchType\ModelClosureFetchType;
-use App\ESModule\Config\Sync\ModelFetchType\ModelRelationFetchType;
-use App\ESModule\Config\Sync\RelatedModelSync;
-use App\ESModule\Config\Sync\RelatedTableSync;
-use App\ESModule\Config\Sync\RootSync;
+use App\ESModule\Config\SyncType\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
+use App\ESModule\Config\SyncType\RelatedModelSync;
+use App\ESModule\Config\SyncType\RelatedTableSync;
+use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\Models\Application;
 use App\Models\User;

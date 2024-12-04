@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Config\Sync;
+namespace App\ESModule\Config\SyncType;
 
 class RootSync
 {

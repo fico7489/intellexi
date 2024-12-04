@@ -1,9 +1,9 @@
 <?php
 
-namespace App\ESModule\Config\Sync;
+namespace App\ESModule\Config\SyncType;
 
-use App\ESModule\Config\Sync\ModelFetchType\ModelClosureFetchType;
-use App\ESModule\Config\Sync\ModelFetchType\ModelRelationFetchType;
+use App\ESModule\Config\SyncType\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
 
 class RelatedModelSync
 {

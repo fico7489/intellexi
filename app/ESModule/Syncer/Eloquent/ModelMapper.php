@@ -4,9 +4,9 @@ namespace App\ESModule\Syncer\Eloquent;
 
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\Sync\RelatedModelSync;
-use App\ESModule\Config\Sync\RelatedTableSync;
-use App\ESModule\Config\Sync\RootSync;
+use App\ESModule\Config\SyncType\RelatedModelSync;
+use App\ESModule\Config\SyncType\RelatedTableSync;
+use App\ESModule\Config\SyncType\RootSync;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -53,30 +53,24 @@ class ModelMapper
             $indexName = $indexDefiner->getIndexName();
 
             $sync = $indexDefiner->getSync();
-            foreach ($sync as $syncItem) {
-                if ($syncItem instanceof RootSync) {
+            foreach ($sync as $syncType) {
+                if ($syncType instanceof RootSync) {
                     $tableName = $this->convertClassNameToTable($className);
-                    $updatingFields = $syncItem->getUpdatingFields();
-                    $fetchType = null;
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $syncType);
                 }
 
-                if ($syncItem instanceof RelatedModelSync) {
-                    $className = $syncItem->getClassName();
+                if ($syncType instanceof RelatedModelSync) {
+                    $className = $syncType->getClassName();
                     $tableName = $this->convertClassNameToTable($className);
-                    $fetchType = $syncItem->getFetchType();
-                    $updatingFields = $syncItem->getUpdatingFields();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $syncType);
                 }
 
-                if ($syncItem instanceof RelatedTableSync) {
-                    $tableName = $syncItem->getTableName();
-                    $updatingFields = $syncItem->getUpdatingFields();
-                    $fetchType = $syncItem->getFetchType();
+                if ($syncType instanceof RelatedTableSync) {
+                    $tableName = $syncType->getTableName();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields);
+                    $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $indexName, $tableName, $syncType);
                 }
             }
         }
@@ -84,12 +78,11 @@ class ModelMapper
         return $databaseMapping;
     }
 
-    private function addMapping(array $databaseMapping, $databaseName, $indexName, $tableName, $fetchType, $updatingFields): array
+    private function addMapping(array $databaseMapping, $databaseName, $indexName, $tableName, $syncType): array
     {
         $databaseMapping[$databaseName][$tableName][] = [
             'index' => $this->detectIndexDefinerByName($indexName),
-            'updatingFields' => $updatingFields,
-            'fetchType' => $fetchType,
+            'type' => $syncType,
         ];
 
         return $databaseMapping;

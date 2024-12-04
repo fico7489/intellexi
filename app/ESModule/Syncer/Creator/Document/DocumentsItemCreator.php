@@ -2,8 +2,13 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Config\Sync\ModelFetchType\ModelClosureFetchType;
-use App\ESModule\Config\Sync\ModelFetchType\ModelRelationFetchType;
+use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\SyncType\ModelFetchType\ModelClosureFetchType;
+use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
+use App\ESModule\Config\SyncType\RelatedModelSync;
+use App\ESModule\Config\SyncType\RelatedTableSync;
+use App\ESModule\Config\SyncType\RootSync;
+use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
@@ -29,32 +34,39 @@ class DocumentsItemCreator
 
         $updatingMap = $this->modelMapper->fetchDatabaseMapping();
 
-        foreach ($updatingMap as $databaseName => $data) {
-            foreach ($data as $tableName => $items2) {
-                foreach ($items2 as $item2) {
-                    $index = $item2['index'];
-                    $fetchType = $item2['fetchType'];
-                    $updatingFields = $item2['updatingFields'];
+        foreach ($updatingMap as $databaseName => $databaseData) {
+            foreach ($databaseData as $tableName => $tableData) {
+                foreach ($tableData as $sync) {
+                    /** @var IndexDefinerModelInterface $index */
+                    $index = $sync['index'];
+
+                    /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
+                    $type = $sync['type'];
 
                     if ($tableName === $syncRowDto->getTableName()) {
                         $classNames = $this->modelMapper->fetchAllClassNames();
 
+                        $model = null;
                         if (isset($classNames[$tableName])) {
                             $className = $this->modelMapper->convertTableNameToClassName($tableName);
                             $model = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+                        }
 
-                            if (null === $fetchType) {
-                                $models = [$model];
-                            } elseif ($fetchType instanceof ModelRelationFetchType) {
-                                $models = $model->{$fetchType->getRelation()};
+                        if ($type instanceof RootSync) {
+                            $models = [$model];
+                        } elseif ($type instanceof RelatedModelSync) {
+                            if ($type->getFetchType() instanceof ModelRelationFetchType) {
+                                $models = $model->{$type->getFetchType()->getRelation()};
                                 $models = $models instanceof Collection ? $models : [$models];
-                            } elseif ($fetchType instanceof ModelClosureFetchType) {
-                                $models = $fetchType->getClosure()($model, $syncRowDto);
-                            } else {
-                                continue;
+                            } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
+                                $models = $type->getFetchType()->getClosure()($model, $syncRowDto);
+                            }
+                        } elseif ($type instanceof RelatedTableSync) {
+                            if ($type->getFetchType() instanceof TableClosureFetchType) {
+                                $models = $type->getFetchType()->getClosure()($syncRowDto);
                             }
                         } else {
-                            $models = $fetchType->getClosure()($syncRowDto);
+                            continue;
                         }
 
                         // TODO make updates unique by model->id
