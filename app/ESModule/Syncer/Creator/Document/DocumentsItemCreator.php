@@ -47,7 +47,7 @@ class DocumentsItemCreator
                     if ($tableName === $syncRowDto->getTableName()) {
                         $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
                         $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
-                        $documents = $this->createDocumentsForModelsRelated($syncRowDto, $index, $documents, $modelsRelated);
+                        $documents = $this->createDocumentsForModelsRelated($syncRowDto, $index, $documents, $modelsRelated, $modelRoot);
                     }
                 }
             }
@@ -71,32 +71,32 @@ class DocumentsItemCreator
 
     private function fetchModelsRelated(SyncRowDto $syncRowDto, $modelRoot, string $tableName, $type): Collection
     {
-        $models = collect();
+        $modelsRelated = collect();
 
         if ($type instanceof RootSync) {
-            $models->push($modelRoot);
+            $modelsRelated->push($modelRoot);
         } elseif ($type instanceof RelatedModelSync) {
             if ($type->getFetchType() instanceof ModelRelationFetchType) {
-                $models = $modelRoot->{$type->getFetchType()->getRelation()};
+                $modelsRelated = $modelRoot->{$type->getFetchType()->getRelation()};
             } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
-                $models = $type->getFetchType()->getClosure()($modelRoot, $syncRowDto);
+                $modelsRelated = $type->getFetchType()->getClosure()($modelRoot, $syncRowDto);
             }
 
-            $a = $models instanceof Collection ? $models : [$models];
-            $models->merge($a);
+            $a = $modelsRelated instanceof Collection ? $modelsRelated : [$modelsRelated];
+            $modelsRelated->merge($a);
         } elseif ($type instanceof RelatedTableSync) {
             if ($type->getFetchType() instanceof TableClosureFetchType) {
-                $models = $type->getFetchType()->getClosure()($syncRowDto);
-                $models->merge($models instanceof Collection ? $models->toArray() : [$models]);
+                $a = $modelsRelated instanceof Collection ? $modelsRelated : [$modelsRelated];
+                $modelsRelated->merge($a);
             }
         } else {
             // TODO exception
         }
 
-        return $models;
+        return $modelsRelated;
     }
 
-    private function createDocumentsForModelsRelated(SyncRowDto $syncRowDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated): array
+    private function createDocumentsForModelsRelated(SyncRowDto $syncRowDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated, $modelRoot): array
     {
         // TODO make updates unique by model->id
         foreach ($modelsRelated as $modelRelated) {
@@ -104,7 +104,11 @@ class DocumentsItemCreator
             $indexName = 'prefix_'.$index->getIndexName();
             $identifierValue = $this->modelMapper->detectIdentifierValue2($modelRelated);
             $data = $this->dataFetcher->fetch($index, $modelRelated);
+
             $type = DocumentDto::TYPE_UPSERT;
+            if ($modelRelated === $modelRoot) {
+                $type = $syncRowDto->getType();
+            }
 
             $documents[] = new DocumentDto($indexName, $identifierValue, $data, $type);
         }
