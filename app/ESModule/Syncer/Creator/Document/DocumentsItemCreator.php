@@ -14,6 +14,7 @@ use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class DocumentsItemCreator
@@ -44,14 +45,7 @@ class DocumentsItemCreator
                     $type = $sync['type'];
 
                     if ($tableName === $syncRowDto->getTableName()) {
-                        $classNames = $this->modelMapper->fetchAllClassNames();
-
-                        $modelRoot = null;
-                        if (isset($classNames[$tableName])) {
-                            $className = $this->modelMapper->convertTableNameToClassName($tableName);
-                            $modelRoot = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
-                        }
-
+                        $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
                         $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
                         $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $modelsRelated);
                     }
@@ -60,6 +54,19 @@ class DocumentsItemCreator
         }
 
         return $documents;
+    }
+
+    private function fetchModelRoot(SyncRowDto $syncRowDto, string $tableName): ?Model
+    {
+        $classNames = $this->modelMapper->fetchAllClassNames();
+
+        $modelRoot = null;
+        if (isset($classNames[$tableName])) {
+            $className = $this->modelMapper->convertTableNameToClassName($tableName);
+            $modelRoot = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+        }
+
+        return $modelRoot;
     }
 
     private function fetchModelsRelated(SyncRowDto $syncRowDto, $modelRoot, string $tableName, $type): Collection
