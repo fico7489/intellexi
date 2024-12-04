@@ -47,6 +47,7 @@ class DocumentsItemCreator
                     if ($tableName === $syncRowDto->getTableName()) {
                         $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
                         $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
+                        dump(2222, $modelsRelated);
                         $documents = $this->createDocumentsForModelsRelated($syncRowDto, $index, $documents, $modelsRelated, $modelRoot);
                     }
                 }
@@ -83,13 +84,14 @@ class DocumentsItemCreator
             }
 
             $a = $modelsRelated instanceof Collection ? $modelsRelated : [$modelsRelated];
-            $modelsRelated->merge($a);
+            $modelsRelated = $modelsRelated->merge($a);
         } elseif ($type instanceof RelatedTableSync) {
             if ($type->getFetchType() instanceof TableClosureFetchType) {
-                $a = $modelsRelated instanceof Collection ? $modelsRelated : [$modelsRelated];
-                $modelsRelated->merge($a);
+                $modelsRelatedItem = $type->getFetchType()->getClosure()($syncRowDto);
+                $modelsRelated = $modelsRelated->merge($modelsRelatedItem);
             }
         } else {
+            dd($type);
             // TODO exception
         }
 

@@ -54,9 +54,9 @@ class UserIndex implements IndexDefinerModelInterface
                 'role_user',
                 ['id', 'role_id'],
                 new TableClosureFetchType(function (SyncRowDto $syncRowDto): array {
-                    dump($syncRowDto);
-
-                    return [];
+                    return [
+                        User::find(2),
+                    ];
                 })
             ),
         ];
