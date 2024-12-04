@@ -52,32 +52,29 @@ class ModelMapper
             $databaseName = $this->fetchDatabaseNameFromClassName($className);
             $indexName = $indexDefiner->getIndexName();
 
-            $modelRelated = $indexDefiner->getSync();
-            foreach ($modelRelated as $modelRelatedItem) {
-                if ($modelRelatedItem instanceof RootSync) {
-                    /** @var RootSync $modelRelatedItem */
+            $sync = $indexDefiner->getSync();
+            foreach ($sync as $syncItem) {
+                if ($syncItem instanceof RootSync) {
                     $tableNameRelated = $tableName;
-                    $updatingFields = $modelRelatedItem->getUpdatingFields();
+                    $updatingFields = $syncItem->getUpdatingFields();
                     $fetchType = null;
 
                     $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
                 }
 
-                if ($modelRelatedItem instanceof RelatedModelSync) {
-                    /** @var RelatedModelSync $modelRelatedItem */
-                    $className = $modelRelatedItem->getClassName();
+                if ($syncItem instanceof RelatedModelSync) {
+                    $className = $syncItem->getClassName();
                     $tableNameRelated = $this->convertClassNameToTable($className);
-                    $fetchType = $modelRelatedItem->getFetchType();
-                    $updatingFields = $modelRelatedItem->getUpdatingFields();
+                    $fetchType = $syncItem->getFetchType();
+                    $updatingFields = $syncItem->getUpdatingFields();
 
                     $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
                 }
 
-                if ($modelRelatedItem instanceof RelatedTableSync) {
-                    /** @var RelatedTableSync $modelRelatedItem */
-                    $tableNameRelated = $modelRelatedItem->getTableName();
-                    $updatingFields = $modelRelatedItem->getUpdatingFields();
-                    $fetchType = $modelRelatedItem->getFetchType();
+                if ($syncItem instanceof RelatedTableSync) {
+                    $tableNameRelated = $syncItem->getTableName();
+                    $updatingFields = $syncItem->getUpdatingFields();
+                    $fetchType = $syncItem->getFetchType();
 
                     $databaseMapping = $this->addMapping($databaseMapping, $databaseName, $tableNameRelated, $indexName, $fetchType, $updatingFields);
                 }
