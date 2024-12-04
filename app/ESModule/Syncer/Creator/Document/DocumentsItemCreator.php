@@ -47,7 +47,7 @@ class DocumentsItemCreator
                     if ($tableName === $syncRowDto->getTableName()) {
                         $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
                         $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
-                        $documents = $this->createDocumentsFromModels($syncRowDto, $index, $documents, $modelsRelated);
+                        $documents = $this->createDocumentsForModelsRelated($syncRowDto, $index, $documents, $modelsRelated);
                     }
                 }
             }
@@ -96,25 +96,17 @@ class DocumentsItemCreator
         return $models;
     }
 
-    private function createDocumentsFromModels(SyncRowDto $syncRowDto, IndexDefinerModelInterface $index, array $documents, Collection $models): array
+    private function createDocumentsForModelsRelated(SyncRowDto $syncRowDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated): array
     {
         // TODO make updates unique by model->id
-        foreach ($models as $model) {
+        foreach ($modelsRelated as $modelRelated) {
             // TODO prefix
             $indexName = 'prefix_'.$index->getIndexName();
+            $identifierValue = $this->modelMapper->detectIdentifierValue2($modelRelated);
+            $data = $this->dataFetcher->fetch($index, $modelRelated);
+            $type = DocumentDto::TYPE_UPSERT;
 
-            $identifierValue = $this->modelMapper->detectIdentifierValue2($model);
-            $data = $this->dataFetcher->fetch($index, $model);
-            $type = SyncRowDto::TYPE_DELETE === $syncRowDto->getType() ? DocumentDto::TYPE_DELETE : DocumentDto::TYPE_UPSERT;
-
-            $document = new DocumentDto(
-                $indexName,
-                $identifierValue,
-                $data,
-                $type
-            );
-
-            $documents[] = $document;
+            $documents[] = new DocumentDto($indexName, $identifierValue, $data, $type);
         }
 
         return $documents;
