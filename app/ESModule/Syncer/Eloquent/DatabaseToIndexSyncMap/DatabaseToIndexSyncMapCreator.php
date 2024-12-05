@@ -16,7 +16,7 @@ class DatabaseToIndexSyncMapCreator
     ) {
     }
 
-    public function fetchDatabaseToIndexSyncMap(): array
+    public function create(): array
     {
         $databaseMapping = [];
 
@@ -65,7 +65,7 @@ class DatabaseToIndexSyncMapCreator
 
     public function getSyncTableNames(): array
     {
-        $databaseToIndexSyncMap = $this->fetchDatabaseToIndexSyncMap();
+        $databaseToIndexSyncMap = $this->create();
 
         $syncTableNames = [];
         foreach ($databaseToIndexSyncMap as $databaseName => $data) {

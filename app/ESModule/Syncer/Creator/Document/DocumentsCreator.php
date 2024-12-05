@@ -54,7 +54,7 @@ class DocumentsCreator
     {
         $documents = [];
 
-        $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->fetchDatabaseToIndexSyncMap();
+        $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->create();
 
         foreach ($databaseToIndexSyncMap as $databaseName => $databaseData) {
             foreach ($databaseData as $tableName => $tableData) {

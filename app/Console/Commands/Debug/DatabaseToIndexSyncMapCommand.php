@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Debug;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\SyncType\RelatedModelSync;
@@ -19,7 +19,7 @@ class DatabaseToIndexSyncMapCommand extends Command
 
         /** @var DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator */
         $databaseToIndexSyncMapCreator = app(DatabaseToIndexSyncMapCreator::class);
-        $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->fetchDatabaseToIndexSyncMap();
+        $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->create();
 
         $databaseToIndexSyncMapThin = [];
         foreach ($databaseToIndexSyncMap as $databaseName => $databaseData) {
