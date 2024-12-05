@@ -2,9 +2,6 @@
 
 namespace App\ESModule\Syncer\Mapper\SyncMapper;
 
-use App\ESModule\Config\SyncType\RelatedModelSync;
-use App\ESModule\Config\SyncType\RelatedTableSync;
-use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
@@ -22,11 +19,11 @@ class SyncMapper
 
         $indexDefiners = $this->indexMapper->fetchClassNamesIndex();
         foreach ($indexDefiners as $className => $indexDefiner) {
-            //TODO [], syncMap([])
+            // TODO [], syncMap([])
             $syncMap = $indexDefiner->syncMap([]);
             foreach ($syncMap as $classNameSyncMap => $changedFields) {
                 $tableName = $classNameSyncMap;
-                if($this->modelMapper->isClassNameModel($classNameSyncMap)) {
+                if ($this->modelMapper->isClassNameModel($classNameSyncMap)) {
                     $tableName = $this->modelMapper->convertClassNameToTableName($classNameSyncMap);
                 }
 

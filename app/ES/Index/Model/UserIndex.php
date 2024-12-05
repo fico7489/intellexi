@@ -3,11 +3,6 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\SyncType\RelatedTableSync;
-use App\ESModule\Config\SyncType\RootSync;
-use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
-use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
-use App\Models\Application;
 use App\Models\User;
 
 class UserIndex implements IndexDefinerModelInterface
@@ -50,7 +45,7 @@ class UserIndex implements IndexDefinerModelInterface
         return array_merge($syncMap, [
             User::class => [
                 'id',
-                'first_name'
+                'first_name',
             ],
         ]);
     }

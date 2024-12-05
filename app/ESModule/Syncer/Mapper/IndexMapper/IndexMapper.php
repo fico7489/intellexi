@@ -28,17 +28,17 @@ class IndexMapper
         return $classNamesIndex;
     }
 
-    public  function fetchIndexByIndexName(string $indexName): IndexDefinerModelInterface
+    public function fetchIndexByIndexName(string $indexName): IndexDefinerModelInterface
     {
         $classNamesIndex = $this->fetchClassNamesIndex();
 
         $indexDefiners = $this->configFetcher->fetchIndexes();
         foreach ($indexDefiners as $indexDefiner) {
-            if($indexDefiner->getIndexName() === $indexName) {
+            if ($indexDefiner->getIndexName() === $indexName) {
                 return $indexDefiner;
             }
         }
 
-        //TODO
+        // TODO
     }
 }

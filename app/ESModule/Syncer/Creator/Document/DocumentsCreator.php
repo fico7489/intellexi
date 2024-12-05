@@ -3,21 +3,13 @@
 namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Config\SyncType\ModelFetchType\ModelClosureFetchType;
-use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
-use App\ESModule\Config\SyncType\RelatedModelSync;
-use App\ESModule\Config\SyncType\RelatedTableSync;
-use App\ESModule\Config\SyncType\RootSync;
-use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
-use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 class DocumentsCreator
 {
@@ -25,7 +17,7 @@ class DocumentsCreator
         private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
         private readonly SyncMapper $syncMapper,
-        private readonly IndexMapper  $indexMapper,
+        private readonly IndexMapper $indexMapper,
     ) {
     }
 
@@ -89,11 +81,11 @@ class DocumentsCreator
     {
         $className = $this->modelMapper->convertTableNameToClassName($tableName);
 
-        if($index->getClassName() === $className) {
+        if ($index->getClassName() === $className) {
             return [$modelRoot];
         }
 
-        if( ! isset($index->syncModels([])[$className])){
+        if (!isset($index->syncModels([])[$className])) {
             return [];
         }
 
