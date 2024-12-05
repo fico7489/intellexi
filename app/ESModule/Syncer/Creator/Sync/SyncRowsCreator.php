@@ -35,7 +35,7 @@ class SyncRowsCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
-            if (!$this->databaseToIndexSyncMapCreator->isSyncDatabaseNameAndTableName($databaseName, $tableName)) {
+            if (!$this->databaseToIndexSyncMapCreator->isTableNameForSync($tableName)) {
                 // TODO check $databaseToIndexSyncMap
                 continue;
             }

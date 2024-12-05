@@ -70,7 +70,7 @@ class SyncMapper
         return $syncTableNames;
     }
 
-    public function isSyncDatabaseNameAndTableName($databaseName, $tableName): bool
+    public function isTableNameForSync($tableName): bool
     {
         $syncTableNames = $this->getSyncTableNames();
 
