@@ -9,9 +9,9 @@ use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use Illuminate\Console\Command;
 
-class DebugUpdatingMapCommand extends Command
+class DatabaseIndexSyncCommand extends Command
 {
-    protected $signature = 'es:debug:updating-map';
+    protected $signature = 'es:debug:database-index-sync';
 
     public function handle(): void
     {
@@ -19,10 +19,10 @@ class DebugUpdatingMapCommand extends Command
 
         /** @var ModelMapper $modelMapper */
         $modelMapper = app(ModelMapper::class);
-        $updatingMap = $modelMapper->fetchDatabaseMapping();
+        $databaseIndexSync = $modelMapper->fetchDatabaseIndexSync();
 
-        $updatingMapThin = [];
-        foreach ($updatingMap as $databaseName => $databaseData) {
+        $databaseIndexSyncThin = [];
+        foreach ($databaseIndexSync as $databaseName => $databaseData) {
             foreach ($databaseData as $tableName => $tableData) {
                 foreach ($tableData as $sync) {
                     /** @var IndexDefinerModelInterface $index */
@@ -31,7 +31,7 @@ class DebugUpdatingMapCommand extends Command
                     /** @var RootSync|RelatedTableSync|RelatedModelSync $syncType */
                     $syncType = $sync['type'];
 
-                    $updatingMapThin[$databaseName][$tableName][] = [
+                    $databaseIndexSyncThin[$databaseName][$tableName][] = [
                         'index' => $index->getIndexName(),
                         'type' => $syncType::class,
                     ];
@@ -39,8 +39,7 @@ class DebugUpdatingMapCommand extends Command
             }
         }
 
-        // dump($updatingMap);
-        dump($updatingMapThin);
+        dump($databaseIndexSyncThin);
 
         dump((floor(microtime(true) * 1000) - $milliseconds).' ms');
     }

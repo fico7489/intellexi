@@ -33,9 +33,9 @@ class DocumentsItemCreator
     {
         $documents = [];
 
-        $updatingMap = $this->modelMapper->fetchDatabaseMapping();
+        $databaseIndexSync = $this->modelMapper->fetchDatabaseIndexSync();
 
-        foreach ($updatingMap as $databaseName => $databaseData) {
+        foreach ($databaseIndexSync as $databaseName => $databaseData) {
             foreach ($databaseData as $tableName => $tableData) {
                 foreach ($tableData as $sync) {
                     /** @var IndexDefinerModelInterface $index */
