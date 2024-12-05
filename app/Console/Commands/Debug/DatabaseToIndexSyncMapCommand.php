@@ -22,20 +22,18 @@ class DatabaseToIndexSyncMapCommand extends Command
         $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->create();
 
         $databaseToIndexSyncMapThin = [];
-        foreach ($databaseToIndexSyncMap as $databaseName => $databaseData) {
-            foreach ($databaseData as $tableName => $tableData) {
-                foreach ($tableData as $sync) {
-                    /** @var IndexDefinerModelInterface $index */
-                    $index = $sync['index'];
+        foreach ($databaseToIndexSyncMap as $tableName => $tableData) {
+            foreach ($tableData as $sync) {
+                /** @var IndexDefinerModelInterface $index */
+                $index = $sync['index'];
 
-                    /** @var RootSync|RelatedTableSync|RelatedModelSync $syncType */
-                    $syncType = $sync['type'];
+                /** @var RootSync|RelatedTableSync|RelatedModelSync $syncType */
+                $syncType = $sync['type'];
 
-                    $databaseToIndexSyncMapThin[$databaseName][$tableName][] = [
-                        'index' => $index->getIndexName(),
-                        'type' => $syncType::class,
-                    ];
-                }
+                $databaseToIndexSyncMapThin[$tableName][] = [
+                    'index' => $index->getIndexName(),
+                    'type' => $syncType::class,
+                ];
             }
         }
 

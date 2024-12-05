@@ -56,22 +56,20 @@ class DocumentsCreator
 
         $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->create();
 
-        foreach ($databaseToIndexSyncMap as $databaseName => $databaseData) {
-            foreach ($databaseData as $tableName => $tableData) {
-                foreach ($tableData as $sync) {
-                    /** @var IndexDefinerModelInterface $index */
-                    $index = $sync['index'];
+        foreach ($databaseToIndexSyncMap as $tableName => $tableData) {
+            foreach ($tableData as $sync) {
+                /** @var IndexDefinerModelInterface $index */
+                $index = $sync['index'];
 
-                    /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
-                    $type = $sync['type'];
+                /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
+                $type = $sync['type'];
 
-                    // sync is matched by changed table $syncDto and table from $databaseToIndexSyncMap
-                    if ($tableName === $syncDto->getTableName()) {
-                        $modelRoot = $this->fetchModelRoot($syncDto, $tableName);
-                        $modelsRelated = $this->fetchModelsRelated($syncDto, $modelRoot, $tableName, $type);
-                        dump(2222, $modelsRelated);
-                        $documents = $this->createDocumentsForModelsRelated($syncDto, $index, $documents, $modelsRelated, $modelRoot);
-                    }
+                // sync is matched by changed table $syncDto and table from $databaseToIndexSyncMap
+                if ($tableName === $syncDto->getTableName()) {
+                    $modelRoot = $this->fetchModelRoot($syncDto, $tableName);
+                    $modelsRelated = $this->fetchModelsRelated($syncDto, $modelRoot, $tableName, $type);
+                    dump(2222, $modelsRelated);
+                    $documents = $this->createDocumentsForModelsRelated($syncDto, $index, $documents, $modelsRelated, $modelRoot);
                 }
             }
         }

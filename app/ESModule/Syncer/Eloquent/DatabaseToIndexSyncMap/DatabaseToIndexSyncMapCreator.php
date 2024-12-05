@@ -12,8 +12,9 @@ class DatabaseToIndexSyncMapCreator
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
-        private readonly ModelMapper $modelMapper,
-    ) {
+        private readonly ModelMapper   $modelMapper,
+    )
+    {
     }
 
     public function create(): array
@@ -55,7 +56,7 @@ class DatabaseToIndexSyncMapCreator
 
     private function addMapping(array $databaseMapping, $databaseName, $indexName, $tableName, $syncType): array
     {
-        $databaseMapping[$databaseName][$tableName][] = [
+        $databaseMapping[$tableName][] = [
             'index' => $this->modelMapper->detectIndexDefinerByName($indexName),
             'type' => $syncType,
         ];
@@ -68,10 +69,8 @@ class DatabaseToIndexSyncMapCreator
         $databaseToIndexSyncMap = $this->create();
 
         $syncTableNames = [];
-        foreach ($databaseToIndexSyncMap as $databaseName => $data) {
-            foreach ($data as $tableName => $items) {
-                $syncTableNames[$databaseName][$tableName] = true;
-            }
+        foreach ($databaseToIndexSyncMap as $tableName => $items) {
+            $syncTableNames[$tableName] = true;
         }
 
         return $syncTableNames;
@@ -81,6 +80,6 @@ class DatabaseToIndexSyncMapCreator
     {
         $syncTableNames = $this->getSyncTableNames();
 
-        return isset($syncTableNames[$databaseName][$tableName]);
+        return isset($syncTableNames[$tableName]);
     }
 }
