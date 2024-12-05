@@ -27,20 +27,20 @@ class SyncMapper
                 if ($syncType instanceof RootSync) {
                     $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
-                    $syncMapping = $this->addMapping($syncMapping, $indexDefiner, $tableName, $syncType);
+                    $syncMapping = $this->addSyncMappingItem($syncMapping, $indexDefiner, $tableName, $syncType);
                 }
 
                 if ($syncType instanceof RelatedModelSync) {
                     $className = $syncType->getClassName();
                     $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
-                    $syncMapping = $this->addMapping($syncMapping, $indexDefiner, $tableName, $syncType);
+                    $syncMapping = $this->addSyncMappingItem($syncMapping, $indexDefiner, $tableName, $syncType);
                 }
 
                 if ($syncType instanceof RelatedTableSync) {
                     $tableName = $syncType->getTableName();
 
-                    $syncMapping = $this->addMapping($syncMapping, $indexDefiner, $tableName, $syncType);
+                    $syncMapping = $this->addSyncMappingItem($syncMapping, $indexDefiner, $tableName, $syncType);
                 }
             }
         }
@@ -48,32 +48,53 @@ class SyncMapper
         return $syncMapping;
     }
 
-    private function addMapping(array $databaseMapping, $indexDefiner, $tableName, $syncType): array
+    private function addSyncMappingItem(array $syncMapping, $indexDefiner, $tableName, $syncType): array
     {
-        $databaseMapping[$tableName][] = [
+        $syncMapping[$tableName][] = [
             'index' => $indexDefiner,
             'type' => $syncType,
         ];
 
-        return $databaseMapping;
+        return $syncMapping;
     }
 
-    public function getSyncTableNames(): array
+    public function getTableNamesSync(): array
     {
-        $databaseToIndexSyncMap = $this->create();
+        $syncMapping = $this->create();
 
-        $syncTableNames = [];
-        foreach ($databaseToIndexSyncMap as $tableName => $items) {
-            $syncTableNames[$tableName] = true;
+        $tableNamesSync = [];
+        foreach ($syncMapping as $tableName => $items) {
+            $tableNamesSync[$tableName] = true;
         }
 
-        return $syncTableNames;
+        return $tableNamesSync;
     }
 
     public function isTableNameForSync($tableName): bool
     {
-        $syncTableNames = $this->getSyncTableNames();
+        $tableNamesSync = $this->getTableNamesSync();
 
-        return isset($syncTableNames[$tableName]);
+        return isset($tableNamesSync[$tableName]);
+    }
+
+    public function getTableNamesIndex(): array
+    {
+        $classNamesIndex = $this->indexMapper->fetchClassNamesIndex();
+
+        $tableNamesIndex = [];
+        foreach ($classNamesIndex as $className => $indexDefiner) {
+            $tableName = $this->modelMapper->convertClassNameToTableName($className);
+
+            $tableNamesIndex[] = $tableName;
+        }
+
+        return $tableNamesIndex;
+    }
+
+    public function isTableNameIndex($tableName): bool
+    {
+        $tableNamesIndex = $this->getTableNamesIndex();
+
+        return isset($tableNamesIndex[$tableName]);
     }
 }
