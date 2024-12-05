@@ -24,7 +24,7 @@ class TestCase extends \Tests\TestCase
 
         $this->mock(DatabaseMapper::class, function (MockInterface $mock) {
             $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn([
-                'test-table' => 'id'
+                'test-table' => 'id',
             ]);
         })->makePartial();
     }
@@ -41,10 +41,9 @@ class TestCase extends \Tests\TestCase
         string $database = 'test-database',
         string $table = 'test-table',
         string $type = CdcDto::TYPE_UPDATE,
-        array  $data = ['id' => 1, 'name' => 'test2'],
-        array  $changedFields = ['name'],
-    ): CdcDto
-    {
+        array $data = ['id' => 1, 'name' => 'test2'],
+        array $changedFields = ['name'],
+    ): CdcDto {
         $changedDbRow = new CdcDto(
             $database,
             $table,

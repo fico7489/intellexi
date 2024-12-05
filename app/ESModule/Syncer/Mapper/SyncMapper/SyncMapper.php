@@ -50,7 +50,7 @@ class SyncMapper
 
     public function isDatabaseNameForSync($tableName): bool
     {
-        //TODO
+        // TODO
         return true;
     }
 

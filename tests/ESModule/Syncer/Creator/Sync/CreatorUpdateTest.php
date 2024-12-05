@@ -5,7 +5,6 @@ namespace Tests\ESModule\Syncer\Creator\Sync;
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
-use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
 
 class CreatorUpdateTest extends TestCase
 {
@@ -31,7 +30,7 @@ class CreatorUpdateTest extends TestCase
         $data = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2'];
         $data2 = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2-2'];
 
-        $cdcDto = $this->createCdcDto( data: $data, changedFields: ['name2']);
+        $cdcDto = $this->createCdcDto(data: $data, changedFields: ['name2']);
         $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
         $cdcDtos = [$cdcDto, $cdcDto2];
 

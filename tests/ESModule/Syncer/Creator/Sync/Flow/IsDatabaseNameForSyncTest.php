@@ -2,7 +2,6 @@
 
 namespace Tests\ESModule\Syncer\Creator\Sync\Flow;
 
-use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\Sync\TestCase;

@@ -98,7 +98,7 @@ class SyncItemCreator
     {
         $changedFields = $cdcDto->getChangedFields();
 
-        if($type === CdcDto::TYPE_DELETE) {
+        if (CdcDto::TYPE_DELETE === $type) {
             $changedFields = [];
         }
 

@@ -5,7 +5,6 @@ namespace Tests\ESModule\Syncer\Creator\Sync;
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
-use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
 
 class CreatorInsertTest extends TestCase
 {
