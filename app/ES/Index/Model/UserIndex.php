@@ -50,7 +50,7 @@ class UserIndex implements IndexDefinerModelInterface
             new RootSync(
                 ['id', 'first_name']
             ),
-            new RelatedTableSync(
+            /*new RelatedTableSync(
                 'role_user',
                 ['id', 'role_id'],
                 new TableClosureFetchType(function (SyncDto $syncDto): array {
@@ -58,7 +58,7 @@ class UserIndex implements IndexDefinerModelInterface
                         User::find(2),
                     ];
                 })
-            ),
+            ),*/
         ];
     }
 }

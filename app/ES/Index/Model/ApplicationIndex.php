@@ -8,6 +8,7 @@ use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Config\SyncType\RelatedModelSync;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
+use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\Models\Application;
 use App\Models\User;
@@ -38,6 +39,16 @@ class ApplicationIndex implements IndexDefinerModelInterface
         ];
     }
 
+    public function syncMapModel(): array
+    {
+        return [
+            Application::class => [
+                'id',
+                'club',
+            ],
+        ];
+    }
+
     /**
      * @return array<RelatedModelSync|RelatedTableSync>
      */
@@ -51,6 +62,15 @@ class ApplicationIndex implements IndexDefinerModelInterface
                 User::class,
                 ['id', 'last_name'],
                 new ModelRelationFetchType('applications')
+            ),
+            new RelatedTableSync(
+                'role_user',
+                ['id', 'role_id'],
+                new TableClosureFetchType(function (SyncDto $syncDto): array {
+                    return [
+                        Application::find(2),
+                    ];
+                })
             ),
             /*new RelatedModelSync(
                 User::class,
