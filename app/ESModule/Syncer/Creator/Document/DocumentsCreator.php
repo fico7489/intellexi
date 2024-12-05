@@ -11,6 +11,7 @@ use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
@@ -23,6 +24,7 @@ class DocumentsCreator
         private readonly ModelMapper $modelMapper,
         private readonly EloquentAdapter $eloquentAdapter,
         private readonly DataFetcher $dataFetcher,
+        private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
     ) {
     }
 
@@ -52,7 +54,7 @@ class DocumentsCreator
     {
         $documents = [];
 
-        $databaseToIndexSyncMap = $this->modelMapper->fetchDatabaseToIndexSyncMap();
+        $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->fetchDatabaseToIndexSyncMap();
 
         foreach ($databaseToIndexSyncMap as $databaseName => $databaseData) {
             foreach ($databaseData as $tableName => $tableData) {

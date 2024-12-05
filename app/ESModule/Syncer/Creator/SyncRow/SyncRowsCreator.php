@@ -5,12 +5,14 @@ namespace App\ESModule\Syncer\Creator\SyncRow;
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
 use App\ESModule\Syncer\Creator\SyncRow\Exception\GrouperException;
+use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 
 class SyncRowsCreator
 {
     public function __construct(
         private readonly ModelMapper $modelMapper,
+        private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
     ) {
     }
 
@@ -33,7 +35,8 @@ class SyncRowsCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
-            if (!$this->modelMapper->isSyncDatabaseNameAndTableName($databaseName, $tableName)) {
+            if (!$this->databaseToIndexSyncMapCreator->isSyncDatabaseNameAndTableName($databaseName, $tableName)) {
+                // TODO check $databaseToIndexSyncMap
                 continue;
             }
 
