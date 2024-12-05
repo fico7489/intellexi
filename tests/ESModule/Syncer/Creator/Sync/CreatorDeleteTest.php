@@ -16,8 +16,6 @@ class CreatorDeleteTest extends TestCase
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDtos = [$cdcDto];
 
-        $this->mockIdentifier(1);
-
         $data = $this->createService()->create($cdcDtos);
 
         $this->assertEquals(1, count($data));
@@ -35,9 +33,6 @@ class CreatorDeleteTest extends TestCase
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 1], changedFields: ['test']);
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 2], changedFields: ['test2']);
         $cdcDtos = [$cdcDto, $cdcDto2];
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(2);
 
         $data = $this->createService()->create($cdcDtos);
 
@@ -60,13 +55,10 @@ class CreatorDeleteTest extends TestCase
 
     public function testDeleteAndUpsertExists()
     {
-        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: ['id' => 15]);
-        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 16]);
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: ['id' => 1]);
+        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 1]);
 
         $cdcDtos = [$cdcDto, $cdcDto2];
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(1);
 
         $data = $this->createService()->create($cdcDtos);
 
@@ -84,9 +76,6 @@ class CreatorDeleteTest extends TestCase
     {
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(1);
 
         $cdcDtos = [$cdcDto, $cdcDto2];
 

@@ -14,8 +14,6 @@ class CreatorInsertTest extends TestCase
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_INSERT);
         $cdcDtos = [$cdcDto];
 
-        $this->mockIdentifier(1);
-
         $data = $this->createService()->create($cdcDtos);
 
         $this->assertEquals(1, count($data));
@@ -30,12 +28,9 @@ class CreatorInsertTest extends TestCase
 
     public function testInsertBasic2()
     {
-        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_INSERT, data: ['id' => 3], changedFields: ['test']);
-        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_INSERT, data: ['id' => 4], changedFields: ['test2']);
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_INSERT, data: ['id' => 1], changedFields: ['test']);
+        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_INSERT, data: ['id' => 2], changedFields: ['test2']);
         $cdcDtos = [$cdcDto, $cdcDto2];
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(2);
 
         $data = $this->createService()->create($cdcDtos);
 
@@ -62,9 +57,6 @@ class CreatorInsertTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_INSERT);
 
         $cdcDtos = [$cdcDto, $cdcDto2];
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(1);
 
         $this->expectException(GrouperException::class);
         $this->expectExceptionMessage('Grouper: insert detected after insert, delete or update');

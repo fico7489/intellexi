@@ -21,7 +21,14 @@ class TestCase extends \Tests\TestCase
 
         $this->mock(SyncMapper::class, function ($mock) {
             $mock->allows('isTableNameForSync')->andReturn(true);
+
         });
+
+        $this->mock(DatabaseMapper::class, function ($mock) {
+            $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn([
+                'test-table' => 'id'
+            ]);
+        })->makePartial();
     }
 
     protected function createService(): SyncItemCreator
@@ -30,16 +37,6 @@ class TestCase extends \Tests\TestCase
         $syncItemCreator = app(SyncItemCreator::class);
 
         return $syncItemCreator;
-    }
-
-    protected function mockIdentifier($identifierValue): void
-    {
-        if(!$this->mock){
-            $this->mock = \Mockery::mock(DatabaseMapper::class);
-            app()->instance(DatabaseMapper::class, $this->mock);
-        }
-
-        $this->mock->shouldReceive('detectIdentifierValue')->andReturn($identifierValue)->once();
     }
 
     protected function createCdcDto(

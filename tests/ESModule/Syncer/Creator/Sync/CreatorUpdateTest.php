@@ -14,8 +14,6 @@ class CreatorUpdateTest extends TestCase
         $cdcDto = $this->createCdcDto();
         $cdcDtos = [$cdcDto];
 
-        $this->mockIdentifier(1);
-
         $data = $this->createService()->create($cdcDtos);
 
         $this->assertEquals(1, count($data));
@@ -31,10 +29,7 @@ class CreatorUpdateTest extends TestCase
     public function testUpdateTwoSameRowDifferentData()
     {
         $data = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2'];
-        $data2 = ['id' => 2, 'name' => 'test-2', 'name2' => 'test2-2'];
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(1);
+        $data2 = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2-2'];
 
         $cdcDto = $this->createCdcDto( data: $data, changedFields: ['name2']);
         $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
@@ -61,9 +56,6 @@ class CreatorUpdateTest extends TestCase
         $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(2);
-
         $data = $this->createService()->create($cdcDtos);
 
         $this->assertEquals(2, count($data));
@@ -88,9 +80,6 @@ class CreatorUpdateTest extends TestCase
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE);
         $cdcDtos = [$cdcDto, $cdcDto2];
-
-        $this->mockIdentifier(1);
-        $this->mockIdentifier(1);
 
         $this->expectException(GrouperException::class);
         $this->expectExceptionMessage('Grouper: update detected after delete');
