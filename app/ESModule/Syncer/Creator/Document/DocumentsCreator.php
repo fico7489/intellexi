@@ -24,7 +24,6 @@ class DocumentsCreator
     public function __construct(
         private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
-        private readonly DatabaseMapper $databaseMapper,
         private readonly SyncMapper $syncMapper,
         private readonly IndexMapper  $indexMapper,
     ) {
@@ -89,6 +88,10 @@ class DocumentsCreator
     private function fetchModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, $modelRoot, string $tableName): array
     {
         $className = $this->modelMapper->convertTableNameToClassName($tableName);
+
+        if($index->getClassName() === $className) {
+            return [$modelRoot];
+        }
 
         if( ! isset($index->syncModels([])[$className])){
             return [];
