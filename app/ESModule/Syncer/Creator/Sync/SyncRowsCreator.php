@@ -36,10 +36,7 @@ class SyncRowsCreator
             $changedFields = $cdcDto->getChangedFields();
 
             if (!$this->syncMapper->isTableNameForSync($tableName)) {
-                dump('1111, table not for sync...');
                 continue;
-            } else {
-                dump('2222, table for sync...');
             }
 
             // detect identifier
