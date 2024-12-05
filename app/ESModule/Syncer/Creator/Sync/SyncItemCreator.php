@@ -27,7 +27,7 @@ class SyncItemCreator
      */
     public function create(array $cdcDtos): array
     {
-        $syncDtos = [];
+        $syncDtosGrouped = [];
         foreach ($cdcDtos as $cdcDto) {
             $databaseName = $cdcDto->getDatabaseName();
             $tableName = $cdcDto->getTableName();
@@ -35,10 +35,12 @@ class SyncItemCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
+            // don't do sync if database is not supported
             if (!$this->syncMapper->isDatabaseNameForSync($databaseName)) {
                 continue;
             }
 
+            // don't do sync if tableName is not is for sync
             if (!$this->syncMapper->isTableNameForSync($tableName)) {
                 continue;
             }
@@ -46,23 +48,31 @@ class SyncItemCreator
             // detect identifier
             $identifierValue = $this->databaseMapper->detectIdentifierValue($tableName, $data);
 
+            // we will group each cdcDto inside array with table->identifier keys, so that we remove duplicated and detect any problems
             if (CdcDto::TYPE_DELETE === $type) {
-                if (isset($syncDtos[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $syncDtos[$tableName][$identifierValue]->getType()) {
+                if (isset($syncDtosGrouped[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $syncDtosGrouped[$tableName][$identifierValue]->getType()) {
+                    // it is not possible to receive two cdc for deleting a row
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
-                $syncDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_DELETE, $identifierValue);
+                $syncDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_DELETE, $identifierValue);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
-                if (!isset($syncDtos[$tableName][$identifierValue])) {
-                    $syncDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
+                if (!isset($syncDtosGrouped[$tableName][$identifierValue])) {
+                    // item is not set
+                    $syncDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
                 } else {
+                    // item is already set
+
                     /** @var SyncDto $syncDto */
-                    $syncDto = $syncDtos[$tableName][$identifierValue];
+                    $syncDto = $syncDtosGrouped[$tableName][$identifierValue];
 
                     if (SyncDto::TYPE_DELETE === $syncDto->getType()) {
+                        // it is not possible to receive update after row is already deleted
                         throw new GrouperException('Grouper: update detected after delete');
                     }
 
+                    // if we already have item stored as insert or update we will merge it with new item
+                    // we will merge changed fields and use data of newer cdcDto
                     if (SyncDto::TYPE_UPSERT === $syncDto->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncDto->getChangedFields(),
@@ -72,26 +82,28 @@ class SyncItemCreator
                         $syncDto->setChangedFields($changedFields);
                         $syncDto->setData($cdcDto->getData());
 
-                        $syncDtos[$tableName][$identifierValue] = $syncDto;
+                        $syncDtosGrouped[$tableName][$identifierValue] = $syncDto;
                     }
                 }
             } elseif (CdcDto::TYPE_INSERT === $type) {
-                if (isset($syncDtos[$tableName][$identifierValue])) {
+                if (isset($syncDtosGrouped[$tableName][$identifierValue])) {
+                    // row could not be inserted more times
                     throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $syncDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
+                $syncDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
             }
         }
 
-        $syncDtos2 = [];
-        foreach ($syncDtos as $tableName => $data) {
+        // we will now put all DTOs to array
+        $syncDtos = [];
+        foreach ($syncDtosGrouped as $tableName => $data) {
             foreach ($data as $identifierValue => $syncDto) {
-                $syncDtos2[] = $syncDto;
+                $syncDtos[] = $syncDto;
             }
         }
 
-        return $syncDtos2;
+        return $syncDtos;
     }
 
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncDto
