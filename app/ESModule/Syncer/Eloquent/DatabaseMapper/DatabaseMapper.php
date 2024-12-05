@@ -25,12 +25,9 @@ class DatabaseMapper
         foreach ($tableNames as $tableName) {
             $primaryKeyObjects = DB::connection()->select('SHOW KEYS FROM '.$tableName." WHERE Key_name = 'PRIMARY'");
 
-            $primaryKeys = [];
-            foreach ($primaryKeyObjects as $primaryKeyObject) {
-                $primaryKeys[] = $primaryKeyObject->Column_name;
-            }
+            $primaryKey = $primaryKeyObjects[0]->Column_name;
 
-            $tablePrimaryKeysMapping[$tableName] = $primaryKeys;
+            $tablePrimaryKeysMapping[$tableName] = $primaryKey;
         }
 
         return $tablePrimaryKeysMapping;

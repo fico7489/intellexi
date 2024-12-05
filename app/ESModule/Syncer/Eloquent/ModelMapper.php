@@ -102,18 +102,9 @@ class ModelMapper
 
         $identifierName = $mapping[$tableName];
 
-        if (count($identifierName) > 1) {
-            $identifierValue = [];
-            foreach ($identifierName as $identifierNameItem) {
-                $identifierValue[] = $data[$identifierNameItem];
-            }
+        $identifierValue = $data[$identifierName];
 
-            return $identifierValue;
-        }
-
-        $identifierName = $identifierName[0];
-
-        return $data[$identifierName];
+        return $identifierValue;
     }
 
     public function detectIdentifierValue2(Model $model): mixed
