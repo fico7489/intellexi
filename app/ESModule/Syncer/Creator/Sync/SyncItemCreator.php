@@ -8,7 +8,7 @@ use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
 use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
-class SyncRowsCreator
+class SyncItemCreator
 {
     public function __construct(
         private readonly DatabaseMapper $databaseMapper,
@@ -42,7 +42,6 @@ class SyncRowsCreator
             // detect identifier
             $identifierValue = $this->databaseMapper->detectIdentifierValue($tableName, $data);
 
-            $type = $cdcDto->getType();
             if (CdcDto::TYPE_DELETE === $type) {
                 if (isset($syncDtos[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $syncDtos[$tableName][$identifierValue]->getType()) {
                     throw new GrouperException('Grouper: delete already deleted');
@@ -93,11 +92,17 @@ class SyncRowsCreator
 
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncDto
     {
+        $changedFields = $cdcDto->getChangedFields();
+
+        if($type === CdcDto::TYPE_DELETE) {
+            $changedFields = [];
+        }
+
         return new SyncDto(
             $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),
-            $cdcDto->getChangedFields(),
+            $changedFields,
             $identifierValue,
         );
     }

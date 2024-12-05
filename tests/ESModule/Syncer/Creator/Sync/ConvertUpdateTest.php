@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\ESModule\Syncer\CdcConverter;
+namespace Tests\ESModule\Syncer\Creator\Sync;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
-use App\ESModule\Syncer\Creator\Sync\SyncRowsCreator;
+use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
 
 class ConvertUpdateTest extends TestCase
 {
@@ -63,12 +63,12 @@ class ConvertUpdateTest extends TestCase
         $cdcDto2 = $this->createCdcDto(changedFields: ['name'], data: $data2);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(SyncRowsCreator::class, function ($mock) {
+        $this->mock(SyncItemCreator::class, function ($mock) {
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
             $mock->shouldReceive('detectIdentifier')->andReturn(2)->once();
         })->makePartial();
 
-        $data = app(SyncRowsCreator::class)->convert($cdcDtos);
+        $data = app(SyncItemCreator::class)->convert($cdcDtos);
 
         $this->assertEquals(2, count($data['test-table']));
 
@@ -99,13 +99,13 @@ class ConvertUpdateTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(SyncRowsCreator::class, function ($mock) {
+        $this->mock(SyncItemCreator::class, function ($mock) {
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
             $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
         })->makePartial();
 
         try {
-            $data = app(SyncRowsCreator::class)->convert($cdcDtos);
+            $data = app(SyncItemCreator::class)->convert($cdcDtos);
         } catch (GrouperException $e) {
             $this->assertEquals('Grouper: update detected after delete', $e->getMessage());
         }
