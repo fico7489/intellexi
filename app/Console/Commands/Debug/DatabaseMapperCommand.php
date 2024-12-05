@@ -23,6 +23,9 @@ class DatabaseMapperCommand extends Command
         $tableNamesToPrimaryKeysMapping = $databaseMapper->fetchTableNamesToPrimaryKeysMapping();
         dump($tableNamesToPrimaryKeysMapping);
 
+        $tableNamesWithColumnsMapping = $databaseMapper->fetchTableNamesWithColumnsMapping();
+        dump($tableNamesWithColumnsMapping);
+
         dump((floor(microtime(true) * 1000) - $milliseconds).' ms');
     }
 }

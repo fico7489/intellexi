@@ -6,7 +6,7 @@ use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
 use App\Models\User;
 
 class UserIndex implements IndexDefinerModelInterface
@@ -53,7 +53,7 @@ class UserIndex implements IndexDefinerModelInterface
             new RelatedTableSync(
                 'role_user',
                 ['id', 'role_id'],
-                new TableClosureFetchType(function (SyncRowDto $syncRowDto): array {
+                new TableClosureFetchType(function (SyncDto $syncDto): array {
                     return [
                         User::find(2),
                     ];

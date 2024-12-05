@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\SyncRow\Exception\GrouperException;
 use App\ESModule\Syncer\Creator\SyncRow\SyncRowsCreator;
 
@@ -43,7 +43,7 @@ class ConvertDeleteTest extends TestCase
 
         $this->assertEquals(2, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var SyncDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
@@ -53,12 +53,12 @@ class ConvertDeleteTest extends TestCase
         $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
 
-        /** @var SyncRowDto $syncDbRow2 */
+        /** @var SyncDto $syncDbRow2 */
         $syncDbRow2 = $data['test-table'][2];
 
         $this->assertEquals($cdcDto2->getDatabaseName(), $syncDbRow2->getDatabaseName());
         $this->assertEquals($cdcDto2->getTableName(), $syncDbRow2->getTableName());
-        $this->assertEquals(SyncRowDto::TYPE_DELETE, $syncDbRow2->getType());
+        $this->assertEquals(SyncDto::TYPE_DELETE, $syncDbRow2->getType());
         $this->assertEquals(2, $syncDbRow2->getIdentifierValue());
         $this->assertEquals($cdcDto2->getChangedFields(), $syncDbRow2->getChangedFields());
         $this->assertEquals($cdcDto2->getData(), $syncDbRow2->getData());
@@ -75,7 +75,7 @@ class ConvertDeleteTest extends TestCase
 
         $this->assertEquals(1, count($data['test-table']));
 
-        /** @var SyncRowDto $syncDbRow */
+        /** @var SyncDto $syncDbRow */
         $syncDbRow = $data['test-table'][1];
 
         $this->assertEquals($changedDbRow2->getDatabaseName(), $syncDbRow->getDatabaseName());

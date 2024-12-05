@@ -10,7 +10,7 @@ use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
 use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
 use App\ESModule\Syncer\Eloquent\EloquentAdapter;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
@@ -29,15 +29,15 @@ class DocumentsCreator
     }
 
     /**
-     * @param array<SyncRowDto> $syncRowDtos
+     * @param array<SyncDto> $syncDtos
      *
      * @return array<DocumentDto>
      */
-    public function create(array $syncRowDtos): array
+    public function create(array $syncDtos): array
     {
         $documentsGrouped = [];
-        foreach ($syncRowDtos as $syncRowDto) {
-            $documents = $this->createForItem($syncRowDto);
+        foreach ($syncDtos as $syncDto) {
+            $documents = $this->createForItem($syncDto);
 
             foreach ($documents as $document) {
                 $documentsGrouped[$document->getIndex()][] = $document;
@@ -50,7 +50,7 @@ class DocumentsCreator
     /**
      * @return array<DocumentDto>
      */
-    public function createForItem(SyncRowDto $syncRowDto): array
+    public function createForItem(SyncDto $syncDto): array
     {
         $documents = [];
 
@@ -65,12 +65,12 @@ class DocumentsCreator
                     /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
                     $type = $sync['type'];
 
-                    // sync is matched by changed table $syncRowDto and table from $databaseToIndexSyncMap
-                    if ($tableName === $syncRowDto->getTableName()) {
-                        $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
-                        $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
+                    // sync is matched by changed table $syncDto and table from $databaseToIndexSyncMap
+                    if ($tableName === $syncDto->getTableName()) {
+                        $modelRoot = $this->fetchModelRoot($syncDto, $tableName);
+                        $modelsRelated = $this->fetchModelsRelated($syncDto, $modelRoot, $tableName, $type);
                         dump(2222, $modelsRelated);
-                        $documents = $this->createDocumentsForModelsRelated($syncRowDto, $index, $documents, $modelsRelated, $modelRoot);
+                        $documents = $this->createDocumentsForModelsRelated($syncDto, $index, $documents, $modelsRelated, $modelRoot);
                     }
                 }
             }
@@ -79,20 +79,20 @@ class DocumentsCreator
         return $documents;
     }
 
-    private function fetchModelRoot(SyncRowDto $syncRowDto, string $tableName): ?Model
+    private function fetchModelRoot(SyncDto $syncDto, string $tableName): ?Model
     {
         $classNames = $this->modelMapper->fetchAllClassNames();
 
         $modelRoot = null;
         if (isset($classNames[$tableName])) {
             $className = $this->modelMapper->convertTableNameToClassName($tableName);
-            $modelRoot = $this->eloquentAdapter->fetchModel($className, $syncRowDto);
+            $modelRoot = $this->eloquentAdapter->fetchModel($className, $syncDto);
         }
 
         return $modelRoot;
     }
 
-    private function fetchModelsRelated(SyncRowDto $syncRowDto, $modelRoot, string $tableName, $type): Collection
+    private function fetchModelsRelated(SyncDto $syncDto, $modelRoot, string $tableName, $type): Collection
     {
         $modelsRelated = collect();
 
@@ -102,14 +102,14 @@ class DocumentsCreator
             if ($type->getFetchType() instanceof ModelRelationFetchType) {
                 $modelsRelated = $modelRoot->{$type->getFetchType()->getRelation()};
             } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
-                $modelsRelated = $type->getFetchType()->getClosure()($modelRoot, $syncRowDto);
+                $modelsRelated = $type->getFetchType()->getClosure()($modelRoot, $syncDto);
             }
 
             $a = $modelsRelated instanceof Collection ? $modelsRelated : [$modelsRelated];
             $modelsRelated = $modelsRelated->merge($a);
         } elseif ($type instanceof RelatedTableSync) {
             if ($type->getFetchType() instanceof TableClosureFetchType) {
-                $modelsRelatedItem = $type->getFetchType()->getClosure()($syncRowDto);
+                $modelsRelatedItem = $type->getFetchType()->getClosure()($syncDto);
                 $modelsRelated = $modelsRelated->merge($modelsRelatedItem);
             }
         } else {
@@ -120,7 +120,7 @@ class DocumentsCreator
         return $modelsRelated;
     }
 
-    private function createDocumentsForModelsRelated(SyncRowDto $syncRowDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated, $modelRoot): array
+    private function createDocumentsForModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated, $modelRoot): array
     {
         // TODO make updates unique by model->id
         foreach ($modelsRelated as $modelRelated) {
@@ -131,7 +131,7 @@ class DocumentsCreator
 
             $type = DocumentDto::TYPE_UPSERT;
             if ($modelRelated === $modelRoot) {
-                $type = $syncRowDto->getType();
+                $type = $syncDto->getType();
             }
 
             $documents[] = new DocumentDto($indexName, $identifierValue, $data, $type);

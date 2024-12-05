@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Creator\SyncRow\Dto;
 
-class SyncRowDto
+class SyncDto
 {
     final public const string TYPE_UPSERT = 'upsert';
     final public const string TYPE_DELETE = 'delete';

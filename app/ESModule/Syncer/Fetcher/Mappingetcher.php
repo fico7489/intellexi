@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Fetcher;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
 use Illuminate\Database\Eloquent\Model;
 
 class Mappingetcher
@@ -11,7 +11,7 @@ class Mappingetcher
     public function fetch(
         IndexDefinerModelInterface $index,
         Model $model,
-        SyncRowDto $syncRowDto,
+        SyncDto $syncDto,
     ) {
         $mapping = [];
 

@@ -8,7 +8,7 @@ use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Config\SyncType\RelatedModelSync;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncRowDto;
+use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
 use App\Models\Application;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -55,7 +55,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
             /*new RelatedModelSync(
                 User::class,
                 ['id'],
-                new ModelClosureFetchType(function (Model $model, SyncRowDto $syncRowDto): array {
+                new ModelClosureFetchType(function (Model $model, SyncDto $syncDto): array {
                     return [Application::find(1), Application::find(17)];
                 })
             ),*/
