@@ -21,8 +21,7 @@ class TestCase extends \Tests\TestCase
 
         $this->mock(SyncMapper::class, function ($mock) {
             $mock->allows('isTableNameForSync')->andReturn(true);
-
-        });
+        })->makePartial();
 
         $this->mock(DatabaseMapper::class, function ($mock) {
             $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn([

@@ -35,6 +35,10 @@ class SyncItemCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
+            if (!$this->syncMapper->isDatabaseNameForSync($databaseName)) {
+                continue;
+            }
+
             if (!$this->syncMapper->isTableNameForSync($tableName)) {
                 continue;
             }
