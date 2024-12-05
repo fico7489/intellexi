@@ -6,7 +6,7 @@ use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\SyncType\RelatedModelSync;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
-use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
+use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Illuminate\Console\Command;
 
 class DatabaseToIndexSyncMapCommand extends Command
@@ -17,8 +17,8 @@ class DatabaseToIndexSyncMapCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        /** @var DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator */
-        $databaseToIndexSyncMapCreator = app(DatabaseToIndexSyncMapCreator::class);
+        /** @var SyncMapper $databaseToIndexSyncMapCreator */
+        $databaseToIndexSyncMapCreator = app(SyncMapper::class);
         $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->create();
 
         $databaseToIndexSyncMapThin = [];

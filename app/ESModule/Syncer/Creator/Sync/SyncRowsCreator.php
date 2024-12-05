@@ -5,14 +5,14 @@ namespace App\ESModule\Syncer\Creator\Sync;
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
-use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
 use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
+use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
 class SyncRowsCreator
 {
     public function __construct(
         private readonly DatabaseMapper $databaseMapper,
-        private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
+        private readonly SyncMapper $databaseToIndexSyncMapCreator,
     ) {
     }
 

@@ -11,10 +11,10 @@ use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
-use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
+use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -24,7 +24,7 @@ class DocumentsCreator
         private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
         private readonly DatabaseMapper $databaseMapper,
-        private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
+        private readonly SyncMapper $databaseToIndexSyncMapCreator,
     ) {
     }
 
