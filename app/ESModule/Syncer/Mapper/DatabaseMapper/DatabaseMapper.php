@@ -54,4 +54,15 @@ class DatabaseMapper
 
         return $tableNamesWithColumnsMapping;
     }
+
+    public function detectIdentifierValue(string $tableName, array $data): string|array
+    {
+        $mapping = $this->fetchTableNamesToPrimaryKeysMapping();
+
+        $identifierName = $mapping[$tableName];
+
+        $identifierValue = $data[$identifierName];
+
+        return $identifierValue;
+    }
 }

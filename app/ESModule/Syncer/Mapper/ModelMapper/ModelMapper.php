@@ -3,18 +3,12 @@
 namespace App\ESModule\Syncer\Mapper\ModelMapper;
 
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
-use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 class ModelMapper
 {
-    public function __construct(
-        private readonly DatabaseMapper $databaseMapper,
-    ) {
-    }
-
     public function fetchAllClassNames(): array
     {
         $models = collect(File::allFiles(app_path()))
@@ -61,17 +55,6 @@ class ModelMapper
         $mapping = $this->fetchAllClassNames();
 
         return array_flip($mapping)[$className];
-    }
-
-    public function detectIdentifierValue(string $tableName, array $data): string|array
-    {
-        $mapping = $this->databaseMapper->fetchTableNamesToPrimaryKeysMapping();
-
-        $identifierName = $mapping[$tableName];
-
-        $identifierValue = $data[$identifierName];
-
-        return $identifierValue;
     }
 
     public function detectIdentifierValue2(Model $model): mixed

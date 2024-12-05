@@ -6,12 +6,12 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
 use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
+use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 
 class SyncRowsCreator
 {
     public function __construct(
-        private readonly ModelMapper $modelMapper,
+        private readonly DatabaseMapper $databaseMapper,
         private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
     ) {
     }
@@ -27,7 +27,7 @@ class SyncRowsCreator
      */
     public function create(array $cdcDtos): array
     {
-        $syncDtosGrouped = [];
+        $syncDtos = [];
         foreach ($cdcDtos as $cdcDto) {
             $databaseName = $cdcDto->getDatabaseName();
             $tableName = $cdcDto->getTableName();
@@ -41,21 +41,21 @@ class SyncRowsCreator
             }
 
             // detect identifier
-            $identifierValue = $this->modelMapper->detectIdentifierValue($tableName, $data);
+            $identifierValue = $this->databaseMapper->detectIdentifierValue($tableName, $data);
 
             $type = $cdcDto->getType();
             if (CdcDto::TYPE_DELETE === $type) {
-                if (isset($syncDtosGrouped[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $syncDtosGrouped[$tableName][$identifierValue]->getType()) {
+                if (isset($syncDtos[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $syncDtos[$tableName][$identifierValue]->getType()) {
                     throw new GrouperException('Grouper: delete already deleted');
                 }
 
-                $syncDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_DELETE, $identifierValue);
+                $syncDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_DELETE, $identifierValue);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
-                if (!isset($syncDtosGrouped[$tableName][$identifierValue])) {
-                    $syncDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
+                if (!isset($syncDtos[$tableName][$identifierValue])) {
+                    $syncDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
                 } else {
                     /** @var SyncDto $syncDto */
-                    $syncDto = $syncDtosGrouped[$tableName][$identifierValue];
+                    $syncDto = $syncDtos[$tableName][$identifierValue];
 
                     if (SyncDto::TYPE_DELETE === $syncDto->getType()) {
                         throw new GrouperException('Grouper: update detected after delete');
@@ -70,26 +70,26 @@ class SyncRowsCreator
                         $syncDto->setChangedFields($changedFields);
                         $syncDto->setData($cdcDto->getData());
 
-                        $syncDtosGrouped[$tableName][$identifierValue] = $syncDto;
+                        $syncDtos[$tableName][$identifierValue] = $syncDto;
                     }
                 }
             } elseif (CdcDto::TYPE_INSERT === $type) {
-                if (isset($syncDtosGrouped[$tableName][$identifierValue])) {
+                if (isset($syncDtos[$tableName][$identifierValue])) {
                     throw new GrouperException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $syncDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
+                $syncDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncDto::TYPE_UPSERT, $identifierValue);
             }
         }
 
-        $syncDtos = [];
-        foreach ($syncDtosGrouped as $tableName => $data) {
+        $syncDtos2 = [];
+        foreach ($syncDtos as $tableName => $data) {
             foreach ($data as $identifierValue => $syncDto) {
-                $syncDtos[] = $syncDto;
+                $syncDtos2[] = $syncDto;
             }
         }
 
-        return $syncDtos;
+        return $syncDtos2;
     }
 
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncDto
