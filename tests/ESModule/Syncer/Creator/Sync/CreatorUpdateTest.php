@@ -7,51 +7,49 @@ use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
 use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
 
-class ConvertUpdateTest extends TestCase
+class CreatorUpdateTest extends TestCase
 {
     public function testUpdateBasic()
     {
         $cdcDto = $this->createCdcDto();
         $cdcDtos = [$cdcDto];
 
-        $data = $this->cdcConverter->create($cdcDtos);
+        $this->mockIdentifier(1);
 
-        $this->assertEquals(1, count($data['test-table']));
+        $data = $this->createService()->create($cdcDtos);
 
-        /** @var SyncDto $syncDbRow */
-        $syncDbRow = $data['test-table'][1];
+        $this->assertEquals(1, count($data));
 
-        $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
-        $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
-        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDbRow->getType());
-        $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
-        $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
+        $syncDto = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
+        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDto->getType());
+        $this->assertEquals($cdcDto->getChangedFields(), $syncDto->getChangedFields());
+        $this->assertEquals($cdcDto->getData(), $syncDto->getData());
+        $this->assertEquals(1, $syncDto->getIdentifierValue());
     }
 
     public function testUpdateTwoSameRowDifferentData()
     {
         $data = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2'];
-        $data2 = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2-2'];
+        $data2 = ['id' => 2, 'name' => 'test-2', 'name2' => 'test2-2'];
 
-        $changedDbRow = $this->createCdcDto(changedFields: ['name'], data: $data);
-        $changedDbRow2 = $this->createCdcDto(changedFields: ['name2'], data: $data2);
-        $changedDbRows = [$changedDbRow, $changedDbRow2];
+        $this->mockIdentifier(1);
+        $this->mockIdentifier(1);
 
-        $data = $this->cdcConverter->create($changedDbRows);
+        $cdcDto = $this->createCdcDto( data: $data, changedFields: ['name2']);
+        $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
+        $cdcDtos = [$cdcDto, $cdcDto2];
+
+        $data = $this->createService()->create($cdcDtos);
 
         $this->assertEquals(1, count($data));
 
-        /* @var SyncDto $syncDbRow */
-        $this->assertEquals(1, count($data['test-table']));
-
-        /** @var SyncDto $syncDbRow */
-        $syncDbRow = $data['test-table'][1];
-
-        $this->assertEquals($changedDbRow->getDatabaseName(), $syncDbRow->getDatabaseName());
-        $this->assertEquals($changedDbRow->getTableName(), $syncDbRow->getTableName());
-        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDbRow->getType());
-        $this->assertEquals(['name', 'name2'], $syncDbRow->getChangedFields());
-        $this->assertEquals($changedDbRow2->getData(), $syncDbRow->getData());
+        $syncDto = $data[0];
+        $this->assertEquals($cdcDto2->getTableName(), $syncDto->getTableName());
+        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDto->getType());
+        $this->assertEquals(['name2', 'name3'], $syncDto->getChangedFields());
+        $this->assertEquals($cdcDto2->getData(), $syncDto->getData());
+        $this->assertEquals(1, $syncDto->getIdentifierValue());
     }
 
     public function testUpdateTwoDifferentRow()
@@ -59,38 +57,30 @@ class ConvertUpdateTest extends TestCase
         $data = ['id' => 1, 'name' => 'test', 'name2' => 'test'];
         $data2 = ['id' => 2, 'name' => 'test2', 'name2' => 'test2'];
 
-        $cdcDto = $this->createCdcDto(changedFields: ['name'], data: $data);
-        $cdcDto2 = $this->createCdcDto(changedFields: ['name'], data: $data2);
+        $cdcDto = $this->createCdcDto(data: $data, changedFields: ['name2']);
+        $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(SyncItemCreator::class, function ($mock) {
-            $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
-            $mock->shouldReceive('detectIdentifier')->andReturn(2)->once();
-        })->makePartial();
+        $this->mockIdentifier(1);
+        $this->mockIdentifier(2);
 
-        $data = app(SyncItemCreator::class)->convert($cdcDtos);
+        $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(2, count($data['test-table']));
+        $this->assertEquals(2, count($data));
 
-        /** @var SyncDto $syncDbRow */
-        $syncDbRow = $data['test-table'][1];
+        $syncDto = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
+        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDto->getType());
+        $this->assertEquals(1, $syncDto->getIdentifierValue());
+        $this->assertEquals($cdcDto->getChangedFields(), $syncDto->getChangedFields());
+        $this->assertEquals($cdcDto->getData(), $syncDto->getData());
 
-        $this->assertEquals($cdcDto->getDatabaseName(), $syncDbRow->getDatabaseName());
-        $this->assertEquals($cdcDto->getTableName(), $syncDbRow->getTableName());
-        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDbRow->getType());
-        $this->assertEquals(1, $syncDbRow->getIdentifierValue());
-        $this->assertEquals($cdcDto->getChangedFields(), $syncDbRow->getChangedFields());
-        $this->assertEquals($cdcDto->getData(), $syncDbRow->getData());
-
-        /** @var SyncDto $syncDbRow */
-        $syncDbRow2 = $data['test-table'][2];
-
-        $this->assertEquals($cdcDto2->getDatabaseName(), $syncDbRow2->getDatabase());
-        $this->assertEquals($cdcDto2->getTableName(), $syncDbRow2->getTable());
-        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDbRow2->getType());
-        $this->assertEquals(2, $syncDbRow2->getIdentifier());
-        $this->assertEquals($cdcDto2->getChangedFields(), $syncDbRow2->getChangedFields());
-        $this->assertEquals($cdcDto2->getData(), $syncDbRow2->getData());
+        $syncDto2 = $data[1];
+        $this->assertEquals($cdcDto2->getTableName(), $syncDto2->getTableName());
+        $this->assertEquals(SyncDto::TYPE_UPSERT, $syncDto2->getType());
+        $this->assertEquals(2, $syncDto2->getIdentifierValue());
+        $this->assertEquals($cdcDto2->getChangedFields(), $syncDto2->getChangedFields());
+        $this->assertEquals($cdcDto2->getData(), $syncDto2->getData());
     }
 
     public function testUpdateExceptionAfterDelete()
@@ -99,15 +89,11 @@ class ConvertUpdateTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->mock(SyncItemCreator::class, function ($mock) {
-            $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
-            $mock->shouldReceive('detectIdentifier')->andReturn(1)->once();
-        })->makePartial();
+        $this->mockIdentifier(1);
+        $this->mockIdentifier(1);
 
-        try {
-            $data = app(SyncItemCreator::class)->convert($cdcDtos);
-        } catch (GrouperException $e) {
-            $this->assertEquals('Grouper: update detected after delete', $e->getMessage());
-        }
+        $this->expectException(GrouperException::class);
+        $this->expectExceptionMessage('Grouper: update detected after delete');
+        $this->createService()->create($cdcDtos);
     }
 }
