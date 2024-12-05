@@ -22,32 +22,30 @@ class ProcessorTest extends TestCase
         $cdcDtos = [$cdcDto];
 
         $this->mock(ConverterInterface::class, function (MockInterface $mock) use ($payloads, $cdcDtos) {
-            $mock->shouldReceive('convertCdcPayloadsToCdcDtos')
+            $mock->expects('convertCdcPayloadsToCdcDtos')
                 ->withArgs(function ($payloadsActual) use ($payloads) {
                     $this->assertEquals($payloads, $payloadsActual);
 
                     return true;
                 })
                 ->once()
-                ->andReturn($cdcDtos);
+                ->andReturns($cdcDtos);
         });
 
         $this->mock(EventDispatcherInterface::class, function (MockInterface $mock) use ($cdcDtos, $payloads) {
-            $mock->shouldReceive('dispatch')
+            $mock->expects('dispatch')
                 ->withArgs(function (CdcPayloadsEvent $event) use ($payloads) {
                     $this->assertEquals($payloads, $event->getCdcPayloads());
 
                     return true;
-                })
-                ->once();
+                })->once();
 
-            $mock->shouldReceive('dispatch')
+            $mock->expects('dispatch')
                 ->withArgs(function (CdcDtosEvent $event) use ($cdcDtos) {
                     $this->assertEquals($cdcDtos, $event->getCdcDtos());
 
                     return true;
-                })
-                ->once();
+                })->once();
         });
 
         app(Processor::class)->processCdcPayloads($payloads);

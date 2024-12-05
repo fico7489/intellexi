@@ -16,16 +16,10 @@ class IsDatabaseNameForSyncTest extends TestCase
 
         $this->mock(SyncMapper::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(true);
-            $mock->shouldReceive('isTableNameForSync')->once();
+            $mock->expects('isTableNameForSync')->once();
         })->makePartial();
 
-        $this->mock(DatabaseMapper::class, function (MockInterface $mock) {
-            $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn([
-                'test-table' => 'id'
-            ]);
-        })->makePartial();
-
-        $data = $this->createService()->create($cdcDtos);
+        $this->createService()->create($cdcDtos);
     }
 
     public function testIsNotForSync()
@@ -35,9 +29,9 @@ class IsDatabaseNameForSyncTest extends TestCase
 
         $this->mock(SyncMapper::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(false);
-            $mock->shouldReceive('isTableNameForSync')->never();
+            $mock->allows('isTableNameForSync')->never();
         })->makePartial();
 
-        $data = $this->createService()->create($cdcDtos);
+        $this->createService()->create($cdcDtos);
     }
 }
