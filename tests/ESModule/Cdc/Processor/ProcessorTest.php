@@ -7,6 +7,7 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Event\CdcDtosEvent;
 use App\ESModule\Cdc\Event\CdcPayloadsEvent;
 use App\ESModule\Cdc\Processor\Processor;
+use Mockery\MockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tests\TestCase;
 
@@ -20,7 +21,7 @@ class ProcessorTest extends TestCase
         $cdcDto = new CdcDto('test', 'test', 'test', [], [], []);
         $cdcDtos = [$cdcDto];
 
-        $this->mock(ConverterInterface::class, function ($mock) use ($payloads, $cdcDtos) {
+        $this->mock(ConverterInterface::class, function (MockInterface $mock) use ($payloads, $cdcDtos) {
             $mock->shouldReceive('convertCdcPayloadsToCdcDtos')
                 ->withArgs(function ($payloadsActual) use ($payloads) {
                     $this->assertEquals($payloads, $payloadsActual);
@@ -31,7 +32,7 @@ class ProcessorTest extends TestCase
                 ->andReturn($cdcDtos);
         });
 
-        $this->mock(EventDispatcherInterface::class, function ($mock) use ($cdcDtos, $payloads) {
+        $this->mock(EventDispatcherInterface::class, function (MockInterface $mock) use ($cdcDtos, $payloads) {
             $mock->shouldReceive('dispatch')
                 ->withArgs(function (CdcPayloadsEvent $event) use ($payloads) {
                     $this->assertEquals($payloads, $event->getCdcPayloads());
