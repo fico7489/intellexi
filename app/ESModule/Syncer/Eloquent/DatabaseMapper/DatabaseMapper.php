@@ -50,6 +50,8 @@ class DatabaseMapper
             }
         }
 
+        //TODO convert
+
         return $tableNamesWithColumnsMapping;
     }
 }

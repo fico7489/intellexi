@@ -71,7 +71,7 @@ class ModelMapper
         return $mapping[$tableName];
     }
 
-    public function convertClassNameToTable($className): string
+    public function convertClassNameToTableName($className): string
     {
         $mapping = $this->fetchAllClassNames();
 

@@ -28,14 +28,14 @@ class DatabaseToIndexSyncMapCreator
             $sync = $indexDefiner->getSync();
             foreach ($sync as $syncType) {
                 if ($syncType instanceof RootSync) {
-                    $tableName = $this->modelMapper->convertClassNameToTable($className);
+                    $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
                     $databaseMapping = $this->addMapping($databaseMapping, $indexName, $tableName, $syncType);
                 }
 
                 if ($syncType instanceof RelatedModelSync) {
                     $className = $syncType->getClassName();
-                    $tableName = $this->modelMapper->convertClassNameToTable($className);
+                    $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
                     $databaseMapping = $this->addMapping($databaseMapping, $indexName, $tableName, $syncType);
                 }
