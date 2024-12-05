@@ -13,6 +13,7 @@ use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
+use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -22,6 +23,7 @@ class DocumentsCreator
     public function __construct(
         private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
+        private readonly DatabaseMapper $databaseMapper,
         private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
     ) {
     }
@@ -66,8 +68,7 @@ class DocumentsCreator
                 if ($tableName === $syncDto->getTableName()) {
                     $modelRoot = $this->fetchModelRoot($syncDto, $tableName);
                     $modelsRelated = $this->fetchModelsRelated($syncDto, $modelRoot, $tableName, $type);
-                    dump(2222, $modelsRelated);
-                    $documents = $this->createDocumentsForModelsRelated($syncDto, $index, $documents, $modelsRelated, $modelRoot);
+                    $documents = $this->createDocumentsForModelsRelated($syncDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
                 }
             }
         }
@@ -116,13 +117,17 @@ class DocumentsCreator
         return $modelsRelated;
     }
 
-    private function createDocumentsForModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated, $modelRoot): array
+    private function createDocumentsForModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated, $modelRoot, $tableName): array
     {
         // TODO make updates unique by model->id
         foreach ($modelsRelated as $modelRelated) {
+            /** @var Model $modelRelated */
+
             // TODO prefix
             $indexName = 'prefix_'.$index->getIndexName();
-            $identifierValue = $this->modelMapper->detectIdentifierValue2($modelRelated);
+
+            $identifierName = $modelRelated->getKeyName();
+            $identifierValue = $modelRelated->{$identifierName};
             $data = $this->dataFetcher->fetch($index, $modelRelated);
 
             $type = DocumentDto::TYPE_UPSERT;

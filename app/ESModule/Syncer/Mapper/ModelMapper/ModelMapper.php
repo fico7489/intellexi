@@ -57,12 +57,6 @@ class ModelMapper
         return array_flip($mapping)[$className];
     }
 
-    public function detectIdentifierValue2(Model $model): mixed
-    {
-        // TODO
-        return $model->id;
-    }
-
     public function fetchModel(string $className, SyncDto $syncDto): ?Model
     {
         // MAKE sure that newest model is fetched
