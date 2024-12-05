@@ -85,13 +85,13 @@ class SyncMapper
         foreach ($classNamesIndex as $className => $indexDefiner) {
             $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
-            $tableNamesIndex[] = $tableName;
+            $tableNamesIndex[$tableName] = true;
         }
 
         return $tableNamesIndex;
     }
 
-    public function isTableNameIndex($tableName): bool
+    public function isTableNameForIndex($tableName): bool
     {
         $tableNamesIndex = $this->getTableNamesIndex();
 

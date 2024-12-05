@@ -12,7 +12,7 @@ class SyncRowsCreator
 {
     public function __construct(
         private readonly DatabaseMapper $databaseMapper,
-        private readonly SyncMapper $databaseToIndexSyncMapCreator,
+        private readonly SyncMapper $syncMapper,
     ) {
     }
 
@@ -35,9 +35,11 @@ class SyncRowsCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
-            if (!$this->databaseToIndexSyncMapCreator->isTableNameForSync($tableName)) {
-                // TODO check $databaseToIndexSyncMap
+            if (!$this->syncMapper->isTableNameForSync($tableName)) {
+                dump('1111, table not for sync...');
                 continue;
+            } else {
+                dump('2222, table for sync...');
             }
 
             // detect identifier

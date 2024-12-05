@@ -24,7 +24,7 @@ class DocumentsCreator
         private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
         private readonly DatabaseMapper $databaseMapper,
-        private readonly SyncMapper $databaseToIndexSyncMapCreator,
+        private readonly SyncMapper $syncMapper,
     ) {
     }
 
@@ -54,7 +54,7 @@ class DocumentsCreator
     {
         $documents = [];
 
-        $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->create();
+        $databaseToIndexSyncMap = $this->syncMapper->create();
 
         foreach ($databaseToIndexSyncMap as $tableName => $tableData) {
             foreach ($tableData as $sync) {
@@ -78,6 +78,12 @@ class DocumentsCreator
 
     private function fetchModelRoot(SyncDto $syncDto, string $tableName): ?Model
     {
+        if (!$this->syncMapper->isTableNameForIndex($tableName)) {
+            dump('3333, table not for index...');
+        } else {
+            dump('4444, table for index...');
+        }
+
         $classNames = $this->modelMapper->fetchAllClassNames();
 
         $modelRoot = null;
