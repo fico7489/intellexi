@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\Debug;
 
-use App\ESModule\Syncer\Eloquent\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Eloquent\IndexMapper\IndexMapper;
 use Illuminate\Console\Command;
 

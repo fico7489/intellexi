@@ -2,53 +2,26 @@
 
 namespace App\ESModule\Syncer\Eloquent\IndexMapper;
 
-use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
-use App\ESModule\Syncer\Eloquent\ModelMapper;
+use App\ESModule\Config\ConfigFetcher;
 
 class IndexMapper
 {
     public function __construct(
-        private readonly DatabaseToIndexSyncMapCreator $databaseToIndexSyncMapCreator,
-        private readonly ModelMapper $modelMapper
+        private readonly ConfigFetcher $configFetcher,
     )
     {
     }
 
     public function fetchClassNamesIndex(): array
     {
-        $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->create();
+        $indexDefiners = $this->configFetcher->fetchIndexes();
 
         $classNamesIndex = [];
-        foreach ($databaseToIndexSyncMap as $tableName => $tableData) {
-            foreach ($tableData as $sync) {
-                dump(111);
-                /** @var IndexDefinerModelInterface $index */
-                $index = $sync['index'];
 
-                $className = $index->getClassName();
-                $classNamesIndex[$className] = $index;
-            }
+        foreach ($indexDefiners as $indexDefiner) {
+            $classNamesIndex[$indexDefiner->getClassName()] = $indexDefiner;
         }
 
         return $classNamesIndex;
     }
-
-    /*public function fetchTableNamesIndex(): array
-    {
-        $databaseToIndexSyncMap = $this->databaseToIndexSyncMapCreator->create();
-
-        $classNamesIndex = [];
-        foreach ($databaseToIndexSyncMap as $tableName => $tableData) {
-            foreach ($tableData as $sync) {
-                $index = $sync['index'];
-
-                $className = $index->getClassName();
-                $tableName = $tableData-$this->modelMapper->convertClassNameToTableName($className);
-                $classNamesIndex[$index->getClassName()] = $index;
-            }
-        }
-
-        return $classNamesIndex;
-    }*/
 }

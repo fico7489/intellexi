@@ -6,12 +6,13 @@ use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\SyncType\RelatedModelSync;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
+use App\ESModule\Syncer\Eloquent\IndexMapper\IndexMapper;
 use App\ESModule\Syncer\Eloquent\ModelMapper;
 
 class DatabaseToIndexSyncMapCreator
 {
     public function __construct(
-        private readonly ConfigFetcher $configFetcher,
+        private readonly IndexMapper $indexMapper,
         private readonly ModelMapper $modelMapper,
     ) {
     }
@@ -20,30 +21,27 @@ class DatabaseToIndexSyncMapCreator
     {
         $databaseMapping = [];
 
-        $indexDefiners = $this->configFetcher->fetchIndexes();
-        foreach ($indexDefiners as $indexDefiner) {
-            $className = $indexDefiner->getClassName();
-            $indexName = $indexDefiner->getIndexName();
-
+        $indexDefiners = $this->indexMapper->fetchClassNamesIndex();
+        foreach ($indexDefiners as $className => $indexDefiner) {
             $sync = $indexDefiner->getSync();
             foreach ($sync as $syncType) {
                 if ($syncType instanceof RootSync) {
                     $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $indexName, $tableName, $syncType);
+                    $databaseMapping = $this->addMapping($databaseMapping, $indexDefiner, $tableName, $syncType);
                 }
 
                 if ($syncType instanceof RelatedModelSync) {
                     $className = $syncType->getClassName();
                     $tableName = $this->modelMapper->convertClassNameToTableName($className);
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $indexName, $tableName, $syncType);
+                    $databaseMapping = $this->addMapping($databaseMapping, $indexDefiner, $tableName, $syncType);
                 }
 
                 if ($syncType instanceof RelatedTableSync) {
                     $tableName = $syncType->getTableName();
 
-                    $databaseMapping = $this->addMapping($databaseMapping, $indexName, $tableName, $syncType);
+                    $databaseMapping = $this->addMapping($databaseMapping, $indexDefiner, $tableName, $syncType);
                 }
             }
         }
@@ -51,10 +49,10 @@ class DatabaseToIndexSyncMapCreator
         return $databaseMapping;
     }
 
-    private function addMapping(array $databaseMapping, $indexName, $tableName, $syncType): array
+    private function addMapping(array $databaseMapping, $indexDefiner, $tableName, $syncType): array
     {
         $databaseMapping[$tableName][] = [
-            'index' => $this->modelMapper->detectIndexDefinerByName($indexName),
+            'index' => $indexDefiner,
             'type' => $syncType,
         ];
 
