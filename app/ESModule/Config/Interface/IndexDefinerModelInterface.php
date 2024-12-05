@@ -14,5 +14,7 @@ interface IndexDefinerModelInterface
 
     public function getData(array $data, mixed $model): array;
 
-    public function getSync(): array;
+    public function syncMap($syncMap): array;
+
+    public function syncModels($syncModels): array;
 }

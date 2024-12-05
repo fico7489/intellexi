@@ -7,6 +7,7 @@ use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
+use App\Models\Application;
 use App\Models\User;
 
 class UserIndex implements IndexDefinerModelInterface
@@ -44,21 +45,18 @@ class UserIndex implements IndexDefinerModelInterface
         ];
     }
 
-    public function getSync(): array
+    public function syncMap($syncMap): array
     {
-        return [
-            new RootSync(
-                ['id', 'first_name']
-            ),
-            /*new RelatedTableSync(
-                'role_user',
-                ['id', 'role_id'],
-                new TableClosureFetchType(function (SyncDto $syncDto): array {
-                    return [
-                        User::find(2),
-                    ];
-                })
-            ),*/
-        ];
+        return array_merge($syncMap, [
+            User::class => [
+                'id',
+                'first_name'
+            ],
+        ]);
+    }
+
+    public function syncModels($syncModels): array
+    {
+        return [];
     }
 }

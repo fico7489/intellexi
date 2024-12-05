@@ -40,7 +40,11 @@ class User2Index implements IndexDefinerModelInterface
         ];
     }
 
-    public function getSync(): array
+    public function syncMap($syncMap): array{
+        return [];
+    }
+
+    public function syncModels($syncModels): array
     {
         return [];
     }

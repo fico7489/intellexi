@@ -22,38 +22,19 @@ class SyncMapper
 
         $indexDefiners = $this->indexMapper->fetchClassNamesIndex();
         foreach ($indexDefiners as $className => $indexDefiner) {
-            $sync = $indexDefiner->getSync();
-            foreach ($sync as $syncType) {
-                if ($syncType instanceof RootSync) {
-                    $tableName = $this->modelMapper->convertClassNameToTableName($className);
-
-                    $syncMapping = $this->addSyncMappingItem($syncMapping, $indexDefiner, $tableName, $syncType);
+            //TODO [], syncMap([])
+            $syncMap = $indexDefiner->syncMap([]);
+            foreach ($syncMap as $classNameSyncMap => $changedFields) {
+                $tableName = $classNameSyncMap;
+                if($this->modelMapper->isClassNameModel($classNameSyncMap)) {
+                    $tableName = $this->modelMapper->convertClassNameToTableName($classNameSyncMap);
                 }
 
-                if ($syncType instanceof RelatedModelSync) {
-                    $className = $syncType->getClassName();
-                    $tableName = $this->modelMapper->convertClassNameToTableName($className);
+                $indexName = $indexDefiner->getIndexName();
 
-                    $syncMapping = $this->addSyncMappingItem($syncMapping, $indexDefiner, $tableName, $syncType);
-                }
-
-                if ($syncType instanceof RelatedTableSync) {
-                    $tableName = $syncType->getTableName();
-
-                    $syncMapping = $this->addSyncMappingItem($syncMapping, $indexDefiner, $tableName, $syncType);
-                }
+                $syncMapping[$tableName][$indexName] = $changedFields;
             }
         }
-
-        return $syncMapping;
-    }
-
-    private function addSyncMappingItem(array $syncMapping, $indexDefiner, $tableName, $syncType): array
-    {
-        $syncMapping[$tableName][] = [
-            'index' => $indexDefiner,
-            'type' => $syncType,
-        ];
 
         return $syncMapping;
     }

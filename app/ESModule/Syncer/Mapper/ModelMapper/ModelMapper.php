@@ -57,6 +57,13 @@ class ModelMapper
         return array_flip($mapping)[$className];
     }
 
+    public function isClassNameModel($className): string
+    {
+        $mapping = $this->fetchAllClassNames();
+
+        return isset(array_flip($mapping)[$className]);
+    }
+
     public function fetchModel(string $className, SyncDto $syncDto): ?Model
     {
         // MAKE sure that newest model is fetched

@@ -13,6 +13,7 @@ use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
+use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,7 @@ class DocumentsCreator
         private readonly DataFetcher $dataFetcher,
         private readonly DatabaseMapper $databaseMapper,
         private readonly SyncMapper $syncMapper,
+        private readonly IndexMapper  $indexMapper,
     ) {
     }
 
@@ -54,20 +56,16 @@ class DocumentsCreator
     {
         $documents = [];
 
-        $databaseToIndexSyncMap = $this->syncMapper->create();
+        $syncMapping = $this->syncMapper->create();
 
-        foreach ($databaseToIndexSyncMap as $tableName => $tableData) {
-            foreach ($tableData as $sync) {
-                /** @var IndexDefinerModelInterface $index */
-                $index = $sync['index'];
-
-                /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
-                $type = $sync['type'];
-
-                // sync is matched by changed table $syncDto and table from $databaseToIndexSyncMap
+        foreach ($syncMapping as $tableName => $indexData) {
+            foreach ($indexData as $indexName => $changedFields) {
+                // sync is matched by changed table $syncDto and table from $syncMapping
                 if ($tableName === $syncDto->getTableName()) {
+                    $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+
                     $modelRoot = $this->fetchModelRoot($syncDto, $tableName);
-                    $modelsRelated = $this->fetchModelsRelated($syncDto, $modelRoot, $tableName, $type);
+                    $modelsRelated = $this->fetchModelsRelated($syncDto, $index, $modelRoot, $tableName);
                     $documents = $this->createDocumentsForModelsRelated($syncDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
                 }
             }
@@ -88,35 +86,18 @@ class DocumentsCreator
         return $modelRoot;
     }
 
-    private function fetchModelsRelated(SyncDto $syncDto, $modelRoot, string $tableName, $type): Collection
+    private function fetchModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, $modelRoot, string $tableName): array
     {
-        $modelsRelated = collect();
+        $className = $this->modelMapper->convertTableNameToClassName($tableName);
 
-        if ($type instanceof RootSync) {
-            $modelsRelated->push($modelRoot);
-        } elseif ($type instanceof RelatedModelSync) {
-            if ($type->getFetchType() instanceof ModelRelationFetchType) {
-                $modelsRelated = $modelRoot->{$type->getFetchType()->getRelation()};
-            } elseif ($type->getFetchType() instanceof ModelClosureFetchType) {
-                $modelsRelated = $type->getFetchType()->getClosure()($modelRoot, $syncDto);
-            }
-
-            $a = $modelsRelated instanceof Collection ? $modelsRelated : [$modelsRelated];
-            $modelsRelated = $modelsRelated->merge($a);
-        } elseif ($type instanceof RelatedTableSync) {
-            if ($type->getFetchType() instanceof TableClosureFetchType) {
-                $modelsRelatedItem = $type->getFetchType()->getClosure()($syncDto);
-                $modelsRelated = $modelsRelated->merge($modelsRelatedItem);
-            }
-        } else {
-            dd($type);
-            // TODO exception
+        if( ! isset($index->syncModels([])[$className])){
+            return [];
         }
 
-        return $modelsRelated;
+        return $index->syncModels([])[$className]($syncDto, $modelRoot, []);
     }
 
-    private function createDocumentsForModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, array $documents, Collection $modelsRelated, $modelRoot, $tableName): array
+    private function createDocumentsForModelsRelated(SyncDto $syncDto, IndexDefinerModelInterface $index, array $documents, array $modelsRelated, $modelRoot, $tableName): array
     {
         // TODO make updates unique by model->id
         foreach ($modelsRelated as $modelRelated) {

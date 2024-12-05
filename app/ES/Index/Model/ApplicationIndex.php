@@ -12,6 +12,7 @@ use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\Models\Application;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class ApplicationIndex implements IndexDefinerModelInterface
@@ -39,13 +40,36 @@ class ApplicationIndex implements IndexDefinerModelInterface
         ];
     }
 
-    public function syncMapModel(): array
+    //TODO
+    public function syncMap($syncMap): array
     {
-        return [
+        return array_merge($syncMap, [
             Application::class => [
                 'id',
                 'club',
             ],
+            User::class => [
+                'id',
+                'last_name'
+            ],
+            'role_user' => [
+                'id',
+                'role_id'
+            ],
+        ]);
+    }
+
+    public function syncModels($syncModels): array
+    {
+        return [
+            User::class => function(SyncDto $syncDto, User $model, array $relatedModels) {
+                return array_merge($relatedModels, $model->applications->all());
+            },
+            'role_user' => function(SyncDto $syncDto, $model, array $relatedModels) {
+                $user = User::find($syncDto->getData()['user_id']);
+
+                return array_merge($relatedModels, [$user]);
+            },
         ];
     }
 
