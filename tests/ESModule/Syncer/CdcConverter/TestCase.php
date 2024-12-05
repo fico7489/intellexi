@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\CdcConverter;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\Creator\SyncRow\SyncRowsCreator;
+use App\ESModule\Syncer\Creator\Sync\SyncRowsCreator;
 
 class TestCase extends \Tests\TestCase
 {

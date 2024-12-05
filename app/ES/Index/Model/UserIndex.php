@@ -6,7 +6,7 @@ use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
 use App\ESModule\Config\SyncType\TableFetchType\TableClosureFetchType;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\Models\User;
 
 class UserIndex implements IndexDefinerModelInterface

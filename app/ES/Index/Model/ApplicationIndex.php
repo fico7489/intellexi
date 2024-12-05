@@ -8,7 +8,7 @@ use App\ESModule\Config\SyncType\ModelFetchType\ModelRelationFetchType;
 use App\ESModule\Config\SyncType\RelatedModelSync;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\Models\Application;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;

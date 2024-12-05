@@ -4,7 +4,7 @@ namespace App\ESModule\Syncer;
 
 use App\ESModule\Cdc\Event\CdcDtosEvent;
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
-use App\ESModule\Syncer\Creator\SyncRow\SyncRowsCreator;
+use App\ESModule\Syncer\Creator\Sync\SyncRowsCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineEsSyncer;
 
 class Syncer

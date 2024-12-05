@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Eloquent;
 
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use Illuminate\Database\Eloquent\Model;
 
 class EloquentAdapter

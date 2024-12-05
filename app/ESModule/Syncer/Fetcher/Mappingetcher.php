@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Fetcher;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Creator\SyncRow\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use Illuminate\Database\Eloquent\Model;
 
 class Mappingetcher
