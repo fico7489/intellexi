@@ -78,14 +78,6 @@ class ModelMapper
         return array_flip($mapping)[$className];
     }
 
-    public function fetchDatabaseNameFromClassName($className): string
-    {
-        /** @var Model $model */
-        $model = (new $className());
-
-        return $model->getConnection()->getDatabaseName();
-    }
-
     public function detectIdentifierName(string $tableName): string|array
     {
         $className = $this->convertTableNameToClassName($tableName);

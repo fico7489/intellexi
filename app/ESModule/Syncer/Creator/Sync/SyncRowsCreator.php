@@ -95,7 +95,6 @@ class SyncRowsCreator
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncDto
     {
         return new SyncDto(
-            $cdcDto->getDatabaseName(),
             $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),
