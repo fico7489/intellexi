@@ -52,9 +52,9 @@ class DocumentsCreator
     {
         $documents = [];
 
-        $databaseIndexSync = $this->modelMapper->fetchDatabaseIndexSync();
+        $databaseToIndexSyncMap = $this->modelMapper->fetchDatabaseToIndexSyncMap();
 
-        foreach ($databaseIndexSync as $databaseName => $databaseData) {
+        foreach ($databaseToIndexSyncMap as $databaseName => $databaseData) {
             foreach ($databaseData as $tableName => $tableData) {
                 foreach ($tableData as $sync) {
                     /** @var IndexDefinerModelInterface $index */
@@ -63,6 +63,7 @@ class DocumentsCreator
                     /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
                     $type = $sync['type'];
 
+                    // sync is matched by changed table in database and table from databaseToIndexSyncMap
                     if ($tableName === $syncRowDto->getTableName()) {
                         $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
                         $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);

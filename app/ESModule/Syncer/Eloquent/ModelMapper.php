@@ -29,10 +29,10 @@ class ModelMapper
 
     public function getSyncTableNames(): array
     {
-        $databaseMapping = $this->fetchDatabaseIndexSync();
+        $databaseToIndexSyncMap = $this->fetchDatabaseToIndexSyncMap();
 
         $syncTableNames = [];
-        foreach ($databaseMapping as $databaseName => $data) {
+        foreach ($databaseToIndexSyncMap as $databaseName => $data) {
             foreach ($data as $tableName => $items) {
                 $syncTableNames[$databaseName][$tableName] = true;
             }
@@ -41,7 +41,7 @@ class ModelMapper
         return $syncTableNames;
     }
 
-    public function fetchDatabaseIndexSync(): array
+    public function fetchDatabaseToIndexSyncMap(): array
     {
         $databaseMapping = [];
 
