@@ -79,18 +79,11 @@ class DocumentsCreator
     private function fetchModelRoot(SyncDto $syncDto, string $tableName): ?Model
     {
         if (!$this->syncMapper->isTableNameForIndex($tableName)) {
-            dump('3333, table not for index...');
-        } else {
-            dump('4444, table for index...');
+            return null;
         }
 
-        $classNames = $this->modelMapper->fetchAllClassNames();
-
-        $modelRoot = null;
-        if (isset($classNames[$tableName])) {
-            $className = $this->modelMapper->convertTableNameToClassName($tableName);
-            $modelRoot = $this->modelMapper->fetchModel($className, $syncDto);
-        }
+        $className = $this->modelMapper->convertTableNameToClassName($tableName);
+        $modelRoot = $this->modelMapper->fetchModel($className, $syncDto);
 
         return $modelRoot;
     }
