@@ -78,16 +78,6 @@ class ModelMapper
         return array_flip($mapping)[$className];
     }
 
-    public function detectIdentifierName(string $tableName): string|array
-    {
-        $className = $this->convertTableNameToClassName($tableName);
-
-        /** @var Model $model */
-        $model = (new $className());
-
-        return $model->getKeyName();
-    }
-
     public function detectIdentifierValue(string $tableName, array $data): string|array
     {
         $mapping = $this->databaseMapper->fetchTableNamesToPrimaryKeysMapping();
