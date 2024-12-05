@@ -63,7 +63,7 @@ class DocumentsCreator
                     /** @var RootSync|RelatedTableSync|RelatedModelSync $type */
                     $type = $sync['type'];
 
-                    // sync is matched by changed table in database and table from databaseToIndexSyncMap
+                    // sync is matched by changed table $syncRowDto and table from $databaseToIndexSyncMap
                     if ($tableName === $syncRowDto->getTableName()) {
                         $modelRoot = $this->fetchModelRoot($syncRowDto, $tableName);
                         $modelsRelated = $this->fetchModelsRelated($syncRowDto, $modelRoot, $tableName, $type);
