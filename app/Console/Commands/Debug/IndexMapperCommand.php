@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Debug;
 
-use App\ESModule\Syncer\Eloquent\IndexMapper\IndexMapper;
+use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
 use Illuminate\Console\Command;
 
 class IndexMapperCommand extends Command

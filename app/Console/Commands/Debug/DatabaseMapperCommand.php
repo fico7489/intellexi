@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Debug;
 
-use App\ESModule\Syncer\Eloquent\DatabaseMapper\DatabaseMapper;
+use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use Illuminate\Console\Command;
 
 class DatabaseMapperCommand extends Command

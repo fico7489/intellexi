@@ -2,12 +2,11 @@
 
 namespace App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap;
 
-use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\SyncType\RelatedModelSync;
 use App\ESModule\Config\SyncType\RelatedTableSync;
 use App\ESModule\Config\SyncType\RootSync;
-use App\ESModule\Syncer\Eloquent\IndexMapper\IndexMapper;
-use App\ESModule\Syncer\Eloquent\ModelMapper;
+use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
+use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class DatabaseToIndexSyncMapCreator
 {

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\ESModule\Syncer\Eloquent;
+namespace App\ESModule\Syncer\Mapper\ModelMapper;
 
-use App\ESModule\Config\ConfigFetcher;
-use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Eloquent\DatabaseMapper\DatabaseMapper;
+use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
+use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -12,22 +11,8 @@ use Illuminate\Support\Facades\File;
 class ModelMapper
 {
     public function __construct(
-        private readonly ConfigFetcher $configFetcher,
         private readonly DatabaseMapper $databaseMapper,
     ) {
-    }
-
-    public function detectIndexDefinerByName(string $indexName): ?IndexDefinerModelInterface
-    {
-        $indexDefiners = $this->configFetcher->fetchIndexes();
-
-        foreach ($indexDefiners as $indexDefiner) {
-            if ($indexDefiner->getIndexName() === $indexName) {
-                return $indexDefiner;
-            }
-        }
-
-        return null;
     }
 
     public function fetchAllClassNames(): array
@@ -93,5 +78,12 @@ class ModelMapper
     {
         // TODO
         return $model->id;
+    }
+
+    public function fetchModel(string $className, SyncDto $syncDto): ?Model
+    {
+        // MAKE sure that newest model is fetched
+
+        return $className::find($syncDto->getIdentifierValue());
     }
 }

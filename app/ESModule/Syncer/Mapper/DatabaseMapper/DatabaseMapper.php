@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Eloquent\DatabaseMapper;
+namespace App\ESModule\Syncer\Mapper\DatabaseMapper;
 
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +50,7 @@ class DatabaseMapper
             }
         }
 
-        //TODO convert
+        // TODO convert
 
         return $tableNamesWithColumnsMapping;
     }

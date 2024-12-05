@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Eloquent\IndexMapper;
+namespace App\ESModule\Syncer\Mapper\IndexMapper;
 
 use App\ESModule\Config\ConfigFetcher;
 
@@ -8,8 +8,7 @@ class IndexMapper
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
-    )
-    {
+    ) {
     }
 
     public function fetchClassNamesIndex(): array

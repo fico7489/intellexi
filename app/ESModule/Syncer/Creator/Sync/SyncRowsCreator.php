@@ -6,7 +6,7 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\Exception\GrouperException;
 use App\ESModule\Syncer\Eloquent\DatabaseToIndexSyncMap\DatabaseToIndexSyncMapCreator;
-use App\ESModule\Syncer\Eloquent\ModelMapper;
+use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class SyncRowsCreator
 {
