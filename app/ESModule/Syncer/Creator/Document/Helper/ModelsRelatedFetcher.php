@@ -21,23 +21,19 @@ class ModelsRelatedFetcher
         $tableName = $syncItemDto->getTableName();
         $syncModels = $index->syncModels([]);
 
+        $modelsRelated = [];
         if ($this->modelMapper->isTableNameModel($tableName)) {
             $className = $this->modelMapper->convertTableNameToClassName($tableName);
 
-            if ($index->getClassName() === $className) {
-                // root model
-                return [$modelRoot];
-            }
-
             if (isset($syncModels[$className])) {
-                return $syncModels[$className]($modelRoot, $syncItemDto, []);
+                $modelsRelated = $syncModels[$className]($modelRoot, $syncItemDto, $modelsRelated);
             }
         }
 
         if (isset($syncModels[$tableName])) {
-            return $syncModels[$tableName]($modelRoot, $syncItemDto, []);
+            $modelsRelated = $syncModels[$tableName]($modelRoot, $syncItemDto, $modelsRelated);
         }
 
-        return [];
+        return $modelsRelated;
     }
 }

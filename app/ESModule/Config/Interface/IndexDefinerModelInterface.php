@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Config\Interface;
 
-interface IndexDefinerModelInterface
+interface IndexDefinerModelInterface extends IndexSyncInterface
 {
     public function getIndexName(): string;
 
@@ -13,8 +13,4 @@ interface IndexDefinerModelInterface
     public function getSettings(array $settings): array;
 
     public function getData(array $data, mixed $model): array;
-
-    public function syncMap($syncMap): array;
-
-    public function syncModels($syncModels): array;
 }

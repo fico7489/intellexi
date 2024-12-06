@@ -54,6 +54,9 @@ class ApplicationIndex implements IndexDefinerModelInterface
     public function syncModels($syncModels): array
     {
         return [
+            Application::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
+                return array_merge($relatedModels, [$model]);
+            },
             User::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
                 return array_merge($relatedModels, $model->applications->all());
             },
