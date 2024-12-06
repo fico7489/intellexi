@@ -3,6 +3,7 @@
 namespace App\ESModule\Syncer\Creator\Document\Helper;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
@@ -16,11 +17,12 @@ class ModelsRelatedFetcher
     /**
      * @return array<object>
      */
-    public function fetch(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, ?object $modelRoot): array
+    public function fetch(SyncItemDto $syncItemDto, IndexSyncInterface $index, ?object $modelRoot): array
     {
         $tableName = $syncItemDto->getTableName();
         $syncModels = $index->syncModels([]);
 
+        //TODO decorators before
         $modelsRelated = [];
         if ($this->modelMapper->isTableNameModel($tableName)) {
             $className = $this->modelMapper->convertTableNameToClassName($tableName);
@@ -33,6 +35,8 @@ class ModelsRelatedFetcher
         if (isset($syncModels[$tableName])) {
             $modelsRelated = $syncModels[$tableName]($modelRoot, $syncItemDto, $modelsRelated);
         }
+
+        //TODO decorators after
 
         return $modelsRelated;
     }
