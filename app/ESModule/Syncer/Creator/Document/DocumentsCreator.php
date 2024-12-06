@@ -16,7 +16,7 @@ class DocumentsCreator
         private readonly SyncMapper $syncMapper,
         private readonly IndexMapper $indexMapper,
         private readonly ShouldSyncDetector $shouldSyncDetector,
-        private readonly DocumentCreator $syncItemDocumentCreator,
+        private readonly DocumentCreator $documentCreator,
         private readonly DocumentsGrouper $documentsGrouper,
     ) {
     }
@@ -28,6 +28,13 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
+        $documents = $this->createDocuments($syncItemDtos);
+
+        return $this->groupDocuments($documents);
+    }
+
+    public function createDocuments(array $syncItemDtos): array
+    {
         $syncMapping = $this->syncMapper->create();
 
         $documents = [];
@@ -38,16 +45,20 @@ class DocumentsCreator
                     if ($tableName === $syncItemDto->getTableName()
                         && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
                     ) {
-                        // TODO add $index to updating map
                         $index = $this->indexMapper->fetchIndexByIndexName($indexName);
 
-                        $documentsNew = $this->syncItemDocumentCreator->create($syncItemDto, $index);
+                        $documentsNew = $this->documentCreator->create($syncItemDto, $index);
                         $documents = array_merge($documents, $documentsNew);
                     }
                 }
             }
         }
 
+        return $documents;
+    }
+
+    public function groupDocuments(array $documents): array
+    {
         return $this->documentsGrouper->group($documents);
     }
 }

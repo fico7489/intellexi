@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\Sync\Helper;
+namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use Mockery\MockInterface;
-use Tests\ESModule\Syncer\Creator\Sync\TestCase;
+use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
 class ModelsRelatedFetcherTest extends TestCase
 {

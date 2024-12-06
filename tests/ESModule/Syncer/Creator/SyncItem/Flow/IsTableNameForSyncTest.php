@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\Sync\Flow;
+namespace Tests\ESModule\Syncer\Creator\SyncItem\Flow;
 
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Mockery\MockInterface;
-use Tests\ESModule\Syncer\Creator\Sync\TestCase;
+use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
 class IsTableNameForSyncTest extends TestCase
 {

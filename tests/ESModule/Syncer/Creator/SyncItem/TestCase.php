@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\Sync;
+namespace Tests\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
