@@ -2,8 +2,16 @@
 
 namespace App\ESModule\Syncer\Creator\Document\Helper;
 
+use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
+
 class ModelsRelatedValidatorAndGrouper
 {
+    public function __construct(
+        private readonly ModelMapper $modelMapper,
+    )
+    {
+    }
+
     /**
      * @return array<object>
      */
@@ -12,12 +20,19 @@ class ModelsRelatedValidatorAndGrouper
         $modelsRelatedGrouped = [];
 
         foreach ($modelsRelated as $model) {
-            $tableName = '';
-            $identifier = '';
+            $tableName = $this->modelMapper->fetchTableNameFromModel($model);
+            $identifierValue = $this->modelMapper->fetchIdentifierValueFromModel($model);
 
-            $modelsRelatedGrouped[$tableName][$identifier] = $model;
+            $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
         }
 
-        return $modelsRelated;
+        $modelsRelatedNew = [];
+        foreach ($modelsRelatedGrouped as $tableName => $models) {
+            foreach ($models as $identifierValue => $model) {
+                $modelsRelatedNew[] = $model;
+            }
+        }
+
+        return $modelsRelatedNew;
     }
 }

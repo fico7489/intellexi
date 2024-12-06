@@ -77,4 +77,16 @@ class ModelMapper
 
         return $className::find($syncItemDto->getIdentifierValue());
     }
+
+    public function fetchTableNameFromModel(Model $model): string
+    {
+        return $model->getTable();
+    }
+
+    public function fetchIdentifierValueFromModel(Model $model) : mixed
+    {
+        $identifierName = $model->getKeyName();
+
+        return $model->{$identifierName};
+    }
 }
