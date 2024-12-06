@@ -19,7 +19,6 @@ class DatabaseMapper
 
     public function fetchTableNamesToPrimaryKeysMapping(): array
     {
-        dd(1111);
         $tableNames = $this->fetchTableNames();
 
         $tablePrimaryKeysMapping = [];
