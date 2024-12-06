@@ -6,6 +6,7 @@ use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelRootFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
@@ -20,6 +21,7 @@ class DocumentsCreator
         private readonly IndexMapper $indexMapper,
         private readonly ModelRootFetcher $modelRootFetcher,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
+        private readonly ShouldSyncDetector $shouldSyncDetector,
     ) {
     }
 
@@ -52,14 +54,16 @@ class DocumentsCreator
         $syncMapping = $this->syncMapper->create();
 
         foreach ($syncMapping as $tableName => $indexData) {
-            foreach ($indexData as $indexName => $changedFields) {
+            foreach ($indexData as $indexName => $changedFieldsTriggers) {
                 // sync is matched by changed table $syncItemDto and table from $syncMapping
                 if ($tableName === $syncItemDto->getTableName()) {
-                    $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+                    if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
+                        $index = $this->indexMapper->fetchIndexByIndexName($indexName);
 
-                    $modelRoot = $this->modelRootFetcher->fetch($syncItemDto);
-                    $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelRoot);
-                    $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
+                        $modelRoot = $this->modelRootFetcher->fetch($syncItemDto);
+                        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelRoot);
+                        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
+                    }
                 }
             }
         }

@@ -42,6 +42,7 @@ class ApplicationIndex implements IndexDefinerModelInterface
             ],
             User::class => [
                 'id',
+                'first_name',
                 'last_name',
             ],
             'role_user' => [

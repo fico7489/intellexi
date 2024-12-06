@@ -47,6 +47,7 @@ class UserIndex implements IndexDefinerModelInterface
             User::class => [
                 'id',
                 'first_name',
+                'email',
             ],
         ]);
     }

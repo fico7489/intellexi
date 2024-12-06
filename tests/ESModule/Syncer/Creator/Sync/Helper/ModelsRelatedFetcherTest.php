@@ -19,10 +19,10 @@ class ModelsRelatedFetcherTest extends TestCase
             {
                 return [];
             }
+
             public function syncModels($syncModels): array
             {
                 return [
-
                 ];
             }
         };
