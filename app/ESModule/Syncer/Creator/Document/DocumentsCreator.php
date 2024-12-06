@@ -34,13 +34,14 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $documentsGrouped = [];
+        $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {
-            $documents = $this->createForItem($syncItemDto);
+            $documents = $this->createForItem($documents, $syncItemDto);
+        }
 
-            foreach ($documents as $document) {
-                $documentsGrouped[$document->getIndex()][] = $document;
-            }
+        $documentsGrouped = [];
+        foreach ($documents as $document) {
+            $documentsGrouped[$document->getIndex()][] = $document;
         }
 
         // TODO exclude duplicates one more time
@@ -51,23 +52,22 @@ class DocumentsCreator
     /**
      * @return array<DocumentDto>
      */
-    public function createForItem(SyncItemDto $syncItemDto): array
+    public function createForItem(array $documents, SyncItemDto $syncItemDto): array
     {
-        $documents = [];
-
         $syncMapping = $this->syncMapper->create();
-
         foreach ($syncMapping as $tableName => $indexData) {
             foreach ($indexData as $indexName => $changedFieldsTriggers) {
                 // sync is matched by changed table $syncItemDto and table from $syncMapping
                 if ($tableName === $syncItemDto->getTableName()) {
                     if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
                         $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+                        $className = $index->getClassName();
 
                         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
                         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
-                        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $index->getClassName());
-                        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelSource);
+                        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $className);
+                        $documentsCurrent = $this->createDocumentsForModelsRelated($syncItemDto, $index, $modelsRelated, $modelSource);
+                        $documents = array_merge($documents, $documentsCurrent);
                     }
                 }
             }
@@ -79,11 +79,12 @@ class DocumentsCreator
     private function createDocumentsForModelsRelated(
         SyncItemDto $syncItemDto,
         IndexDefinerModelInterface $index,
-        array $documents,
         array $modelsRelated,
         object $modelSource,
     ): array {
         // TODO make updates unique by model->id
+
+        $documents = [];
         foreach ($modelsRelated as $modelRelated) {
             /** @var Model $modelRelated */
 
