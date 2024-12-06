@@ -8,6 +8,8 @@ use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class ModelsRelatedFetcher
 {
+    private array $closuresExecuted = [];
+
     public function __construct(
         private readonly ModelMapper $modelMapper,
         private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,

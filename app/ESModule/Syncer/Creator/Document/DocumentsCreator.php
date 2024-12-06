@@ -2,9 +2,10 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
+use App\ESModule\Syncer\Creator\Document\DocumentsCreator\DocumentCreator;
+use App\ESModule\Syncer\Creator\Document\DocumentsCreator\DocumentsGrouper;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
-use App\ESModule\Syncer\Creator\Document\Helper\SyncItemDocumentCreator;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
@@ -15,7 +16,8 @@ class DocumentsCreator
         private readonly SyncMapper $syncMapper,
         private readonly IndexMapper $indexMapper,
         private readonly ShouldSyncDetector $shouldSyncDetector,
-        private readonly SyncItemDocumentCreator $syncItemDocumentCreator,
+        private readonly DocumentCreator $syncItemDocumentCreator,
+        private readonly DocumentsGrouper $documentsGrouper,
     ) {
     }
 
@@ -46,17 +48,6 @@ class DocumentsCreator
             }
         }
 
-        // TODO test grouping, add delete different
-        // TODO mark document as root in DTO
-        // TODO add to document source of trigger
-        // TODO group in different service for ESAdapter
-        $documentsGrouped = [];
-        foreach ($documents as $document) {
-            $documentsGrouped[$document->getIndex()][] = $document;
-        }
-
-        // TODO exclude duplicates one more time
-
-        return $documentsGrouped;
+        return $this->documentsGrouper->group($documents);
     }
 }
