@@ -71,7 +71,7 @@ class ModelMapper
         return isset($mapping[$tableName]);
     }
 
-    public function fetchModel(string $className, SyncItemDto $syncItemDto): ?Model
+    public function fetchModel(SyncItemDto $syncItemDto, string $className): ?object
     {
         // MAKE sure that newest model is fetched
 

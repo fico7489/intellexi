@@ -5,7 +5,6 @@ namespace App\ESModule\Syncer\Creator\Document\Helper;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
-use Illuminate\Database\Eloquent\Model;
 
 class ModelRootFetcher
 {
@@ -15,7 +14,7 @@ class ModelRootFetcher
     ) {
     }
 
-    public function fetch(SyncItemDto $syncItemDto): ?Model
+    public function fetch(SyncItemDto $syncItemDto): ?object
     {
         $tableName = $syncItemDto->getTableName();
 
@@ -24,7 +23,7 @@ class ModelRootFetcher
         }
 
         $className = $this->modelMapper->convertTableNameToClassName($tableName);
-        $modelRoot = $this->modelMapper->fetchModel($className, $syncItemDto);
+        $modelRoot = $this->modelMapper->fetchModel($syncItemDto, $className);
 
         return $modelRoot;
     }

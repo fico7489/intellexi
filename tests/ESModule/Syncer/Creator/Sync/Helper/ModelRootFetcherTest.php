@@ -11,7 +11,7 @@ use Tests\ESModule\Syncer\Creator\Sync\TestCase;
 
 class ModelRootFetcherTest extends TestCase
 {
-    public function testIsForSync()
+    public function testIsNotForSync()
     {
         $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
 
@@ -26,5 +26,31 @@ class ModelRootFetcherTest extends TestCase
         app(ModelRootFetcher::class)->fetch($syncItemDto);
     }
 
+    public function testIsForSync()
+    {
+        $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
 
+        $this->mock(SyncMapper::class, function (MockInterface $mock) {
+            $mock->allows('isTableNameForIndex')->andReturn(true);
+        });
+
+        $className = 'App\Models\User';
+        $model = new \stdClass();
+        $model->id = 1;
+
+        $this->mock(ModelMapper::class, function (MockInterface $mock) use ($model, $syncItemDto, $className) {
+            $mock->allows('convertTableNameToClassName')
+                ->with($this->equalTo('test-table'))
+                ->andReturn($className)
+                ->once();
+
+            $mock->allows('fetchModel')
+                ->with($this->equalTo($syncItemDto), $this->equalTo($className))
+                ->andReturn($model)
+                ->once();
+        });
+
+        $modelFetched = app(ModelRootFetcher::class)->fetch($syncItemDto);
+        $this->assertEquals($model, $modelFetched);
+    }
 }

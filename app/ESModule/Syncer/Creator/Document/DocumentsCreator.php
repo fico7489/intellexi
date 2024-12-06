@@ -76,7 +76,7 @@ class DocumentsCreator
         }
 
         $className = $this->modelMapper->convertTableNameToClassName($tableName);
-        $modelRoot = $this->modelMapper->fetchModel($className, $syncItemDto);
+        $modelRoot = $this->modelMapper->fetchModel($syncItemDto, $className);
 
         return $modelRoot;
     }
