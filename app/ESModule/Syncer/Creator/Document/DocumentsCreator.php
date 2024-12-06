@@ -6,6 +6,7 @@ use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedValidatorAndGrouper;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
@@ -22,6 +23,7 @@ class DocumentsCreator
         private readonly ModelSourceFetcher $modelSourceFetcher,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
         private readonly ShouldSyncDetector $shouldSyncDetector,
+        private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
     ) {
     }
 
@@ -62,6 +64,7 @@ class DocumentsCreator
 
                         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
                         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
+                        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated);
                         $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelSource, $tableName);
                     }
                 }
