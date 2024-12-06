@@ -4,14 +4,14 @@ namespace App\ESModule\Syncer;
 
 use App\ESModule\Cdc\Event\CdcDtosEvent;
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
-use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
+use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineEsSyncer;
 
 class Syncer
 {
     public function __construct(
-        private readonly SyncItemCreator $syncRowsCreator,
-        private readonly DocumentsCreator $documentsCreator,
+        private readonly SyncItemCreator      $syncItemCreator,
+        private readonly DocumentsCreator     $documentsCreator,
         private readonly SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
@@ -20,9 +20,9 @@ class Syncer
     {
         $cdcDtos = $event->getCdcDtos();
 
-        $syncDtos = $this->syncRowsCreator->create($cdcDtos);
+        $syncItemDtos = $this->syncItemCreator->create($cdcDtos);
 
-        $documentDtos = $this->documentsCreator->create($syncDtos);
+        $documentDtos = $this->documentsCreator->create($syncItemDtos);
 
         $this->searchEngineSyncer->syncDocuments($documentDtos);
     }

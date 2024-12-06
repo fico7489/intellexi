@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\Sync;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
+use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
 use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Mockery\MockInterface;

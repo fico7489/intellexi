@@ -3,15 +3,15 @@
 namespace App\ESModule\Syncer\Fetcher;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use Illuminate\Database\Eloquent\Model;
 
-class Mappingetcher
+class MappingFetcher
 {
     public function fetch(
         IndexDefinerModelInterface $index,
-        Model $model,
-        SyncDto $syncDto,
+        Model                      $model,
+        SyncItemDto                $syncItemDto,
     ) {
         $mapping = [];
 

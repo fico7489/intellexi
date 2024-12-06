@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Mapper\ModelMapper;
 
-use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -64,10 +64,10 @@ class ModelMapper
         return isset(array_flip($mapping)[$className]);
     }
 
-    public function fetchModel(string $className, SyncDto $syncDto): ?Model
+    public function fetchModel(string $className, SyncItemDto $syncItemDto): ?Model
     {
         // MAKE sure that newest model is fetched
 
-        return $className::find($syncDto->getIdentifierValue());
+        return $className::find($syncItemDto->getIdentifierValue());
     }
 }

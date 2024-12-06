@@ -3,7 +3,7 @@
 namespace App\ES\Index\Model;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\Models\Application;
 use App\Models\User;
 
@@ -54,11 +54,11 @@ class ApplicationIndex implements IndexDefinerModelInterface
     public function syncModels($syncModels): array
     {
         return [
-            User::class => function (SyncDto $syncDto, User $model, array $relatedModels) {
+            User::class => function (SyncItemDto $syncItemDto, User $model, array $relatedModels) {
                 return array_merge($relatedModels, $model->applications->all());
             },
-            'role_user' => function (SyncDto $syncDto, $model, array $relatedModels) {
-                $user = User::find($syncDto->getData()['user_id']);
+            'role_user' => function (SyncItemDto $syncItemDto, $model, array $relatedModels) {
+                $user = User::find($syncItemDto->getData()['user_id']);
 
                 return array_merge($relatedModels, [$user]);
             },

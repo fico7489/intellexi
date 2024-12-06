@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Sync\Dto;
+namespace App\ESModule\Syncer\Creator\SyncItem\Dto;
 
-class SyncDto
+class SyncItemDto
 {
     final public const string TYPE_UPSERT = 'upsert';
     final public const string TYPE_DELETE = 'delete';
