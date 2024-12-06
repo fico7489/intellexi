@@ -13,7 +13,10 @@ class ModelsRelatedFetcher
     ) {
     }
 
-    public function fetch(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, $modelRoot)
+    /**
+     * @return array<object>
+     */
+    public function fetch(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, ?object $modelRoot): array
     {
         $tableName = $syncItemDto->getTableName();
         $syncModels = $index->syncModels([]);
