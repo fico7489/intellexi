@@ -10,8 +10,8 @@ class MappingFetcher
 {
     public function fetch(
         IndexDefinerModelInterface $index,
-        Model                      $model,
-        SyncItemDto                $syncItemDto,
+        Model $model,
+        SyncItemDto $syncItemDto,
     ) {
         $mapping = [];
 

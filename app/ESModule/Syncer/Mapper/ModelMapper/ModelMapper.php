@@ -64,6 +64,13 @@ class ModelMapper
         return isset(array_flip($mapping)[$className]);
     }
 
+    public function isTableNameModel($tableName): string
+    {
+        $mapping = $this->fetchAllClassNames();
+
+        return isset($mapping[$tableName]);
+    }
+
     public function fetchModel(string $className, SyncItemDto $syncItemDto): ?Model
     {
         // MAKE sure that newest model is fetched

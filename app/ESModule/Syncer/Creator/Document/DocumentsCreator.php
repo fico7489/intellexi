@@ -79,17 +79,25 @@ class DocumentsCreator
 
     private function fetchModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, $modelRoot, string $tableName): array
     {
-        $className = $this->modelMapper->convertTableNameToClassName($tableName);
+        if ($this->modelMapper->isTableNameModel($tableName)) {
+            $className = $this->modelMapper->convertTableNameToClassName($tableName);
 
-        if ($index->getClassName() === $className) {
-            return [$modelRoot];
+            if ($index->getClassName() === $className) {
+                // root model
+                return [$modelRoot];
+            }
+
+            $syncModels = $index->syncModels([]);
+            if (isset($syncModels[$className])) {
+                return $syncModels[$className]($modelRoot, $syncItemDto, []);
+            }
         }
 
-        if (!isset($index->syncModels([])[$className])) {
-            return [];
+        if (isset($syncModels[$tableName])) {
+            return $syncModels[$tableName]($modelRoot, $syncItemDto, []);
         }
 
-        return $index->syncModels([])[$className]($syncItemDto, $modelRoot, []);
+        return [];
     }
 
     private function createDocumentsForModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, array $documents, array $modelsRelated, $modelRoot, $tableName): array

@@ -54,10 +54,10 @@ class ApplicationIndex implements IndexDefinerModelInterface
     public function syncModels($syncModels): array
     {
         return [
-            User::class => function (SyncItemDto $syncItemDto, User $model, array $relatedModels) {
+            User::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
                 return array_merge($relatedModels, $model->applications->all());
             },
-            'role_user' => function (SyncItemDto $syncItemDto, $model, array $relatedModels) {
+            'role_user' => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
                 $user = User::find($syncItemDto->getData()['user_id']);
 
                 return array_merge($relatedModels, [$user]);

@@ -10,8 +10,8 @@ use App\ESModule\Syncer\SearchEngine\SearchEngineEsSyncer;
 class Syncer
 {
     public function __construct(
-        private readonly SyncItemCreator      $syncItemCreator,
-        private readonly DocumentsCreator     $documentsCreator,
+        private readonly SyncItemCreator $syncItemCreator,
+        private readonly DocumentsCreator $documentsCreator,
         private readonly SearchEngineEsSyncer $searchEngineSyncer,// TODO by interface
     ) {
     }
