@@ -19,9 +19,13 @@ class ModelsRelatedFetcher
     public function fetch(SyncItemDto $syncItemDto, IndexSyncInterface $index, ?object $modelRoot): array
     {
         $tableName = $syncItemDto->getTableName();
-        $syncModels = $index->syncModels([]);
 
-        // TODO decorators before
+        $syncModels = [];
+        // TODO decorate before syncModels
+        $syncModels = $index->syncModels($syncModels);
+        // TODO decorate before syncModels
+
+        // TODO decorators before $modelsRelated
         $modelsRelated = [];
         if ($this->modelMapper->isTableNameModel($tableName)) {
             $className = $this->modelMapper->convertTableNameToClassName($tableName);
@@ -35,7 +39,7 @@ class ModelsRelatedFetcher
             $modelsRelated = $syncModels[$tableName]($modelRoot, $syncItemDto, $modelsRelated);
         }
 
-        // TODO decorators after
+        // TODO decorators after $modelsRelated
 
         return $modelsRelated;
     }

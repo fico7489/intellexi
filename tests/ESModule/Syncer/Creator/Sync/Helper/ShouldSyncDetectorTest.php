@@ -29,7 +29,6 @@ class ShouldSyncDetectorTest extends TestCase
 
     public function testIsNotForSync2()
     {
-
         $this->assertEquals(false, app(ShouldSyncDetector::class)->detect(['id2'], ['id', 'name']));
     }
 
@@ -40,6 +39,6 @@ class ShouldSyncDetectorTest extends TestCase
 
     public function testIsNotForSync4()
     {
-        $this->assertEquals(false, app(ShouldSyncDetector::class)->detect(['id2', 'name2', 'test2'],  ['id', 'name']));
+        $this->assertEquals(false, app(ShouldSyncDetector::class)->detect(['id2', 'name2', 'test2'], ['id', 'name']));
     }
 }
