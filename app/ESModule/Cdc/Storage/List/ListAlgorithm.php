@@ -21,25 +21,19 @@ readonly class ListAlgorithm
         $channel = 'maxwell';
         $configRedis = config('database.redis.default');
         $limit = 100;
-        $sleep = 2;
+        $sleep = 6;
 
         while (true) {
             $cdcPayloads = null;
 
             $predis = new Client($configRedis);
-            $payload = $predis->lmpop([$channel], 'left', $limit);
-
-            if ('NULL' === gettype($payload)) {
-                continue;
-            }
+            $payload = $predis->blmpop(0, [$channel], 'left', $limit);
 
             $cdcPayloads = $payload[$channel];
 
             if (null !== $cdcPayloads) {
                 $this->processor->processCdcPayloads($cdcPayloads);
             }
-
-            sleep($sleep);
         }
     }
 }
