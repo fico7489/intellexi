@@ -34,31 +34,19 @@ class DocumentsCreator
         foreach ($syncItemDtos as $syncItemDto) {
             foreach ($syncMapping as $tableName => $indexData) {
                 foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                    $documents = $this->createDocumentsMatched($syncItemDto, $documents, $tableName, $indexName, $changedFieldsTriggers);
+                    // sync is matched by changed table $syncItemDto and table from $syncMapping
+                    if ($tableName === $syncItemDto->getTableName()
+                        && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
+                    ) {
+                        $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+
+                        $documentsNew = $this->documentCreator->create($syncItemDto, $index);
+                        $documents = array_merge($documents, $documentsNew);
+                    }
                 }
             }
         }
 
-        return $this->groupDocuments($documents);
-    }
-
-    public function createDocumentsMatched($syncItemDto, $documents, $tableName, $indexName, $changedFieldsTriggers)
-    {
-        // sync is matched by changed table $syncItemDto and table from $syncMapping
-        if ($tableName === $syncItemDto->getTableName()
-            && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
-        ) {
-            $index = $this->indexMapper->fetchIndexByIndexName($indexName);
-
-            $documentsNew = $this->documentCreator->create($syncItemDto, $index);
-            $documents = array_merge($documents, $documentsNew);
-        }
-
-        return $documents;
-    }
-
-    public function groupDocuments(array $documents): array
-    {
         return $this->documentsGrouper->group($documents);
     }
 }
