@@ -43,6 +43,8 @@ class DocumentsCreator
             }
         }
 
+        // TODO exclude duplicates one more time
+
         return $documentsGrouped;
     }
 
@@ -65,7 +67,7 @@ class DocumentsCreator
                         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
                         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
                         $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $index->getClassName());
-                        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelSource, $tableName);
+                        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelSource);
                     }
                 }
             }
@@ -74,8 +76,13 @@ class DocumentsCreator
         return $documents;
     }
 
-    private function createDocumentsForModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, array $documents, array $modelsRelated, $modelSource, $tableName): array
-    {
+    private function createDocumentsForModelsRelated(
+        SyncItemDto $syncItemDto,
+        IndexDefinerModelInterface $index,
+        array $documents,
+        array $modelsRelated,
+        object $modelSource,
+    ): array {
         // TODO make updates unique by model->id
         foreach ($modelsRelated as $modelRelated) {
             /** @var Model $modelRelated */
