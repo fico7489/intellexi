@@ -2,6 +2,6 @@
 
 namespace App\ESModule\Syncer\Creator\SyncItem\Exception;
 
-class GrouperException extends \Exception
+class SyncItemCreatorException extends \Exception
 {
 }

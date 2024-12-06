@@ -64,7 +64,7 @@ class DocumentsCreator
 
                         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
                         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
-                        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated);
+                        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $index->getClassName());
                         $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelSource, $tableName);
                     }
                 }

@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer\Creator\Sync\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Creator\SyncItem\Exception\GrouperException;
+use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
 use Tests\ESModule\Syncer\Creator\Sync\TestCase;
 
 class CreatorUpdateTest extends TestCase
@@ -81,7 +81,7 @@ class CreatorUpdateTest extends TestCase
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->expectException(GrouperException::class);
+        $this->expectException(SyncItemCreatorException::class);
         $this->expectExceptionMessage('Grouper: update detected after delete');
         $this->createService()->create($cdcDtos);
     }

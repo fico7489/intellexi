@@ -4,7 +4,7 @@ namespace App\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Creator\SyncItem\Exception\GrouperException;
+use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
 use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
@@ -23,7 +23,7 @@ class SyncItemCreator
      *
      * @return array<SyncItemDto>
      *
-     * @throws GrouperException
+     * @throws SyncItemCreatorException
      */
     public function create(array $cdcDtos): array
     {
@@ -52,7 +52,7 @@ class SyncItemCreator
             if (CdcDto::TYPE_DELETE === $type) {
                 if (isset($syncItemDtosGrouped[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $syncItemDtosGrouped[$tableName][$identifierValue]->getType()) {
                     // it is not possible to receive two cdc for deleting a row
-                    throw new GrouperException('Grouper: delete already deleted');
+                    throw new SyncItemCreatorException('Grouper: delete already deleted');
                 }
 
                 $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncItemDto::TYPE_DELETE, $identifierValue);
@@ -68,7 +68,7 @@ class SyncItemCreator
 
                     if (SyncItemDto::TYPE_DELETE === $syncItemDto->getType()) {
                         // it is not possible to receive update after row is already deleted
-                        throw new GrouperException('Grouper: update detected after delete');
+                        throw new SyncItemCreatorException('Grouper: update detected after delete');
                     }
 
                     // if we already have item stored as insert or update we will merge it with new item
@@ -88,7 +88,7 @@ class SyncItemCreator
             } elseif (CdcDto::TYPE_INSERT === $type) {
                 if (isset($syncItemDtosGrouped[$tableName][$identifierValue])) {
                     // row could not be inserted more times
-                    throw new GrouperException('Grouper: insert detected after insert, delete or update');
+                    throw new SyncItemCreatorException('Grouper: insert detected after insert, delete or update');
                 }
 
                 $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncItemDto::TYPE_UPSERT, $identifierValue);

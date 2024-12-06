@@ -8,14 +8,13 @@ class ModelsRelatedValidatorAndGrouper
 {
     public function __construct(
         private readonly ModelMapper $modelMapper,
-    )
-    {
+    ) {
     }
 
     /**
      * @return array<object>
      */
-    public function validateAndGroup(array $modelsRelated): array
+    public function validateAndGroup(array $modelsRelated, string $classNameSource): array
     {
         $modelsRelatedGrouped = [];
 
@@ -24,6 +23,9 @@ class ModelsRelatedValidatorAndGrouper
             $identifierValue = $this->modelMapper->fetchIdentifierValueFromModel($model);
 
             $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
+
+            if ($model instanceof $classNameSource) {
+            }
         }
 
         $modelsRelatedNew = [];

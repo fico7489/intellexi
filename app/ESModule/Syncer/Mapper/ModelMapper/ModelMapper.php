@@ -83,7 +83,7 @@ class ModelMapper
         return $model->getTable();
     }
 
-    public function fetchIdentifierValueFromModel(Model $model) : mixed
+    public function fetchIdentifierValueFromModel(Model $model): mixed
     {
         $identifierName = $model->getKeyName();
 

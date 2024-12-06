@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\Sync\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\Creator\SyncItem\Exception\GrouperException;
+use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
 use Tests\ESModule\Syncer\Creator\Sync\TestCase;
 
 class CreatorDeleteTest extends TestCase
@@ -76,7 +76,7 @@ class CreatorDeleteTest extends TestCase
 
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->expectException(GrouperException::class);
+        $this->expectException(SyncItemCreatorException::class);
         $this->expectExceptionMessage('Grouper: delete already deleted');
         $this->createService()->create($cdcDtos);
     }
