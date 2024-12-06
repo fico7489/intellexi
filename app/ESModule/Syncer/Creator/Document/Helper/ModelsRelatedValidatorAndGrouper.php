@@ -13,7 +13,11 @@ class ModelsRelatedValidatorAndGrouper
     }
 
     /**
+     * @param array<object> $modelsRelated
+     *
      * @return array<object>
+     *
+     * @throws DocumentCreatorException
      */
     public function validateAndGroup(array $modelsRelated, string $classNameSource): array
     {
