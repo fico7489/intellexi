@@ -28,13 +28,6 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $documents = $this->createDocuments($syncItemDtos);
-
-        return $this->groupDocuments($documents);
-    }
-
-    public function createDocuments(array $syncItemDtos): array
-    {
         $syncMapping = $this->syncMapper->create();
 
         $documents = [];
@@ -46,7 +39,7 @@ class DocumentsCreator
             }
         }
 
-        return $documents;
+        return $this->groupDocuments($documents);
     }
 
     public function createDocumentsMatched($syncItemDto, $documents, $tableName, $indexName, $changedFieldsTriggers)
