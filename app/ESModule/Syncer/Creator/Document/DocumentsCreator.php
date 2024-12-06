@@ -26,9 +26,23 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
+        $syncMapping = $this->syncMapper->create();
+
         $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {
-            $documents = array_merge($documents, $this->createForItem($syncItemDto));
+            foreach ($syncMapping as $tableName => $indexData) {
+                foreach ($indexData as $indexName => $changedFieldsTriggers) {
+                    // sync is matched by changed table $syncItemDto and table from $syncMapping
+                    if ($tableName === $syncItemDto->getTableName()
+                        && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
+                    ) {
+                        $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+                        $className = $index->getClassName();
+
+                        $documents = array_merge($documents, $this->syncItemDocumentCreator->create($syncItemDto, $index));
+                    }
+                }
+            }
         }
 
         $documentsGrouped = [];
@@ -39,29 +53,5 @@ class DocumentsCreator
         // TODO exclude duplicates one more time
 
         return $documentsGrouped;
-    }
-
-    /**
-     * @return array<DocumentDto>
-     */
-    public function createForItem(SyncItemDto $syncItemDto): array
-    {
-        $documents = [];
-        $syncMapping = $this->syncMapper->create();
-        foreach ($syncMapping as $tableName => $indexData) {
-            foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                // sync is matched by changed table $syncItemDto and table from $syncMapping
-                if ($tableName === $syncItemDto->getTableName()
-                    && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
-                ) {
-                    $index = $this->indexMapper->fetchIndexByIndexName($indexName);
-                    $className = $index->getClassName();
-
-                    $documents = array_merge($documents, $this->syncItemDocumentCreator->create($syncItemDto, $index));
-                }
-            }
-        }
-
-        return $documents;
     }
 }
