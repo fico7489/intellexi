@@ -34,19 +34,40 @@ class DocumentsCreator
         foreach ($syncItemDtos as $syncItemDto) {
             foreach ($syncMapping as $tableName => $indexData) {
                 foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                    // sync is matched by changed table $syncItemDto and table from $syncMapping
-                    if ($tableName === $syncItemDto->getTableName()
-                        && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
-                    ) {
-                        $index = $this->indexMapper->fetchIndexByIndexName($indexName);
-
-                        $documentsNew = $this->documentCreator->create($syncItemDto, $index);
-                        $documents = array_merge($documents, $documentsNew);
-                    }
+                    $documents = array_merge($documents, $this->createForMatched($syncItemDto, $tableName, $indexName, $changedFieldsTriggers));
                 }
             }
         }
 
+        $this->testTwo();
+
+        //return  $documents;
         return $this->documentsGrouper->group($documents);
+    }
+
+    public function createForMatched($syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
+    {
+        $documents = [];
+
+        // sync is matched by changed table $syncItemDto and table from $syncMapping
+        if ($tableName === $syncItemDto->getTableName()
+            && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
+        ) {
+            $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+
+            return $this->documentCreator->create($syncItemDto, $index);
+        }
+
+        return [];
+    }
+
+    public function testOne()
+    {
+        $this->testTwo();
+    }
+
+    public function testTwo()
+    {
+        dump('testTwo');
     }
 }
