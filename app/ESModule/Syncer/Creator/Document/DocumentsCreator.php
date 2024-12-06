@@ -5,21 +5,21 @@ namespace App\ESModule\Syncer\Creator\Document;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelRootFetcher;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Illuminate\Database\Eloquent\Model;
 
 class DocumentsCreator
 {
     public function __construct(
-        private readonly ModelMapper $modelMapper,
         private readonly DataFetcher $dataFetcher,
         private readonly SyncMapper $syncMapper,
         private readonly IndexMapper $indexMapper,
         private readonly ModelRootFetcher $modelRootFetcher,
+        private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
     ) {
     }
 
@@ -58,51 +58,13 @@ class DocumentsCreator
                     $index = $this->indexMapper->fetchIndexByIndexName($indexName);
 
                     $modelRoot = $this->modelRootFetcher->fetch($syncItemDto);
-                    $modelsRelated = $this->fetchModelsRelated($syncItemDto, $index, $modelRoot, $tableName);
+                    $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelRoot);
                     $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
                 }
             }
         }
 
         return $documents;
-    }
-
-    private function fetchModelRoot(SyncItemDto $syncItemDto): ?Model
-    {
-        $tableName = $syncItemDto->getTableName();
-
-        if (!$this->syncMapper->isTableNameForIndex($tableName)) {
-            return null;
-        }
-
-        $className = $this->modelMapper->convertTableNameToClassName($tableName);
-        $modelRoot = $this->modelMapper->fetchModel($syncItemDto, $className);
-
-        return $modelRoot;
-    }
-
-    private function fetchModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, $modelRoot, string $tableName): array
-    {
-        $syncModels = $index->syncModels([]);
-
-        if ($this->modelMapper->isTableNameModel($tableName)) {
-            $className = $this->modelMapper->convertTableNameToClassName($tableName);
-
-            if ($index->getClassName() === $className) {
-                // root model
-                return [$modelRoot];
-            }
-
-            if (isset($syncModels[$className])) {
-                return $syncModels[$className]($modelRoot, $syncItemDto, []);
-            }
-        }
-
-        if (isset($syncModels[$tableName])) {
-            return $syncModels[$tableName]($modelRoot, $syncItemDto, []);
-        }
-
-        return [];
     }
 
     private function createDocumentsForModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, array $documents, array $modelsRelated, $modelRoot, $tableName): array
