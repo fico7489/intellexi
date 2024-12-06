@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\Sync;
+namespace Tests\ESModule\Syncer\Creator\Sync\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\SyncItem\Exception\GrouperException;
+use Tests\ESModule\Syncer\Creator\Sync\TestCase;
 
 class CreatorDeleteTest extends TestCase
 {
