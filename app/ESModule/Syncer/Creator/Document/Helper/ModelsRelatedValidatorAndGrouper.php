@@ -2,6 +2,7 @@
 
 namespace App\ESModule\Syncer\Creator\Document\Helper;
 
+use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class ModelsRelatedValidatorAndGrouper
@@ -24,7 +25,8 @@ class ModelsRelatedValidatorAndGrouper
 
             $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
 
-            if ($model instanceof $classNameSource) {
+            if (!$model instanceof $classNameSource) {
+                throw new DocumentCreatorException('Related model is not instanceof source className="'.$classNameSource.'"');
             }
         }
 

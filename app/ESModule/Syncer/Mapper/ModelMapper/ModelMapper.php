@@ -78,12 +78,12 @@ class ModelMapper
         return $className::find($syncItemDto->getIdentifierValue());
     }
 
-    public function fetchTableNameFromModel(Model $model): string
+    public function fetchTableNameFromModel(object $model): string
     {
         return $model->getTable();
     }
 
-    public function fetchIdentifierValueFromModel(Model $model): mixed
+    public function fetchIdentifierValueFromModel(object $model): mixed
     {
         $identifierName = $model->getKeyName();
 
