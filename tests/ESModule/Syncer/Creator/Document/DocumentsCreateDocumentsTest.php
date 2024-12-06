@@ -12,7 +12,7 @@ use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
-class DocumentsCreatorTest extends TestCase
+class DocumentsCreateDocumentsTest extends TestCase
 {
     public function testNotMatchedTable()
     {
