@@ -55,7 +55,7 @@ class DocumentsCreator
                 if ($tableName === $syncItemDto->getTableName()) {
                     $index = $this->indexMapper->fetchIndexByIndexName($indexName);
 
-                    $modelRoot = $this->fetchModelRoot($syncItemDto, $tableName);
+                    $modelRoot = $this->fetchModelRoot($syncItemDto);
                     $modelsRelated = $this->fetchModelsRelated($syncItemDto, $index, $modelRoot, $tableName);
                     $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
                 }
@@ -65,8 +65,10 @@ class DocumentsCreator
         return $documents;
     }
 
-    private function fetchModelRoot(SyncItemDto $syncItemDto, string $tableName): ?Model
+    private function fetchModelRoot(SyncItemDto $syncItemDto): ?Model
     {
+        $tableName = $syncItemDto->getTableName();
+
         if (!$this->syncMapper->isTableNameForIndex($tableName)) {
             return null;
         }
