@@ -4,6 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelRootFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
@@ -18,6 +19,7 @@ class DocumentsCreator
         private readonly DataFetcher $dataFetcher,
         private readonly SyncMapper $syncMapper,
         private readonly IndexMapper $indexMapper,
+        private readonly ModelRootFetcher $modelRootFetcher,
     ) {
     }
 
@@ -55,7 +57,7 @@ class DocumentsCreator
                 if ($tableName === $syncItemDto->getTableName()) {
                     $index = $this->indexMapper->fetchIndexByIndexName($indexName);
 
-                    $modelRoot = $this->fetchModelRoot($syncItemDto);
+                    $modelRoot = $this->modelRootFetcher->fetch($syncItemDto);
                     $modelsRelated = $this->fetchModelsRelated($syncItemDto, $index, $modelRoot, $tableName);
                     $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
                 }
