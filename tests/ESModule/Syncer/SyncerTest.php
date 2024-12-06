@@ -8,7 +8,6 @@ use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Sync\Dto\SyncDto;
 use App\ESModule\Syncer\Creator\Sync\SyncItemCreator;
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use App\ESModule\Syncer\SearchEngine\SearchEngineEsSyncer;
 use App\ESModule\Syncer\Syncer;
 use Mockery\MockInterface;
