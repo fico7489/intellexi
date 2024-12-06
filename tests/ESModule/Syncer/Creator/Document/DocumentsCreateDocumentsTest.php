@@ -23,15 +23,15 @@ class DocumentsCreateDocumentsTest extends TestCase
                 ],
             ];
 
-            $mock->allows('create')->andReturn([])->once();
+            // $mock->allows('create')->andReturn([])->once();
         });
-
-        $this->mock(DocumentsCreator::class, function ($mock) {
-            $mock->shouldReceive('testTwo')->times(1);
-        })->makePartial();
 
         $service = app(DocumentsCreator::class);
 
-        $service->create([]);
+        $mock2 = \Mockery::instanceMock($service, function (MockInterface $mock) {
+            $mock->expects('testTwo')->times(1);
+        })->makePartial();
+
+        $mock2->create([]);
     }
 }
