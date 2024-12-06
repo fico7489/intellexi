@@ -27,12 +27,23 @@ readonly class ListAlgorithm
             $cdcPayloads = null;
 
             $predis = new Client($configRedis);
-            $payload = $predis->blmpop(0, [$channel], 'left', $limit);
+            $payload = $predis->blmpop(0, [$channel], 'left', 1);
 
             $cdcPayloads = $payload[$channel];
 
+            if (count($cdcPayloads) < $limit) {
+                usleep(2000);
+
+                $payload = $predis->lmpop([$channel], 'left', ($limit - 1));
+                $cdcPayloads2 = $payload[$channel];
+
+                $cdcPayloads = array_merge($cdcPayloads, $cdcPayloads2);
+            }
+
+            dump($cdcPayloads);
+
             if (null !== $cdcPayloads) {
-                $this->processor->processCdcPayloads($cdcPayloads);
+                //$this->processor->processCdcPayloads($cdcPayloads);
             }
         }
     }
