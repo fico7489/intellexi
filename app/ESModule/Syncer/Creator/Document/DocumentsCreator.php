@@ -36,7 +36,7 @@ class DocumentsCreator
     {
         $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {
-            $documents = $this->createForItem($documents, $syncItemDto);
+            $documents = array_merge($documents, $this->createForItem($syncItemDto));
         }
 
         $documentsGrouped = [];
@@ -52,8 +52,9 @@ class DocumentsCreator
     /**
      * @return array<DocumentDto>
      */
-    public function createForItem(array $documents, SyncItemDto $syncItemDto): array
+    public function createForItem(SyncItemDto $syncItemDto): array
     {
+        $documents = [];
         $syncMapping = $this->syncMapper->create();
         foreach ($syncMapping as $tableName => $indexData) {
             foreach ($indexData as $indexName => $changedFieldsTriggers) {
@@ -66,8 +67,7 @@ class DocumentsCreator
                         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
                         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
                         $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $className);
-                        $documentsCurrent = $this->createDocumentsForModelsRelated($syncItemDto, $index, $modelsRelated, $modelSource);
-                        $documents = array_merge($documents, $documentsCurrent);
+                        $documents = array_merge($documents, $this->createDocumentsForModelsRelated($syncItemDto, $index, $modelsRelated, $modelSource));
                     }
                 }
             }
