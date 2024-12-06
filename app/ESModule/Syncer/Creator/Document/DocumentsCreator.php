@@ -79,6 +79,8 @@ class DocumentsCreator
 
     private function fetchModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, $modelRoot, string $tableName): array
     {
+        $syncModels = $index->syncModels([]);
+
         if ($this->modelMapper->isTableNameModel($tableName)) {
             $className = $this->modelMapper->convertTableNameToClassName($tableName);
 
@@ -87,7 +89,6 @@ class DocumentsCreator
                 return [$modelRoot];
             }
 
-            $syncModels = $index->syncModels([]);
             if (isset($syncModels[$className])) {
                 return $syncModels[$className]($modelRoot, $syncItemDto, []);
             }
