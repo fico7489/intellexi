@@ -6,7 +6,7 @@ use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
-class ModelRootFetcher
+class ModelSourceFetcher
 {
     public function __construct(
         private readonly ModelMapper $modelMapper,
@@ -23,8 +23,8 @@ class ModelRootFetcher
         }
 
         $className = $this->modelMapper->convertTableNameToClassName($tableName);
-        $modelRoot = $this->modelMapper->fetchModel($syncItemDto, $className);
+        $modelSource = $this->modelMapper->fetchModel($syncItemDto, $className);
 
-        return $modelRoot;
+        return $modelSource;
     }
 }

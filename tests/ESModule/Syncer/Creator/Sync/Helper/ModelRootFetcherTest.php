@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Syncer\Creator\Sync\Helper;
 
-use App\ESModule\Syncer\Creator\Document\Helper\ModelRootFetcher;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
@@ -23,7 +23,7 @@ class ModelRootFetcherTest extends TestCase
             $mock->allows('convertTableNameToClassName')->never();
         });
 
-        app(ModelRootFetcher::class)->fetch($syncItemDto);
+        app(ModelSourceFetcher::class)->fetch($syncItemDto);
     }
 
     public function testIsForSync()
@@ -50,7 +50,7 @@ class ModelRootFetcherTest extends TestCase
                 ->once();
         });
 
-        $modelFetched = app(ModelRootFetcher::class)->fetch($syncItemDto);
+        $modelFetched = app(ModelSourceFetcher::class)->fetch($syncItemDto);
         $this->assertEquals($model, $modelFetched);
     }
 }

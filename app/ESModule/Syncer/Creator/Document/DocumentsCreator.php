@@ -4,7 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelRootFetcher;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
@@ -19,7 +19,7 @@ class DocumentsCreator
         private readonly DataFetcher $dataFetcher,
         private readonly SyncMapper $syncMapper,
         private readonly IndexMapper $indexMapper,
-        private readonly ModelRootFetcher $modelRootFetcher,
+        private readonly ModelSourceFetcher $modelSourceFetcher,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
         private readonly ShouldSyncDetector $shouldSyncDetector,
     ) {
@@ -60,9 +60,9 @@ class DocumentsCreator
                     if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
                         $index = $this->indexMapper->fetchIndexByIndexName($indexName);
 
-                        $modelRoot = $this->modelRootFetcher->fetch($syncItemDto);
-                        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelRoot);
-                        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelRoot, $tableName);
+                        $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
+                        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
+                        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $documents, $modelsRelated, $modelSource, $tableName);
                     }
                 }
             }
@@ -71,7 +71,7 @@ class DocumentsCreator
         return $documents;
     }
 
-    private function createDocumentsForModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, array $documents, array $modelsRelated, $modelRoot, $tableName): array
+    private function createDocumentsForModelsRelated(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index, array $documents, array $modelsRelated, $modelSource, $tableName): array
     {
         // TODO make updates unique by model->id
         foreach ($modelsRelated as $modelRelated) {
@@ -85,7 +85,7 @@ class DocumentsCreator
             $data = $this->dataFetcher->fetch($index, $modelRelated);
 
             $type = DocumentDto::TYPE_UPSERT;
-            if ($modelRelated === $modelRoot) {
+            if ($modelRelated === $modelSource) {
                 $type = $syncItemDto->getType();
             }
 
