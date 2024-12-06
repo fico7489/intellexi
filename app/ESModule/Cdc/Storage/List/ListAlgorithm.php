@@ -3,31 +3,43 @@
 namespace App\ESModule\Cdc\Storage\List;
 
 use App\ESModule\Cdc\Processor\Processor;
+use Predis\Client;
 
 readonly class ListAlgorithm
 {
     public function __construct(
-        private Processor $processor,
+        private Processor   $processor,
         private ListStorage $storage,
-        private string $limit,
-        private string $sleep,
-    ) {
+        private string      $limit,
+        private string      $sleep,
+    )
+    {
     }
 
     public function run()
     {
+        $channel = 'maxwell';
+        $configRedis = config('database.redis.default');
+        $limit = 100;
+        $sleep = 2;
+
         while (true) {
             $cdcPayloads = null;
-            try {
-                $cdcPayloads = $this->storage->popFromList($this->limit);
-            } catch (\Exception $e) {
-                // TODO
+
+            $predis = new Client($configRedis);
+            $payload = $predis->lmpop([$channel], 'left', $limit);
+
+            if ('NULL' === gettype($payload)) {
+                continue;
             }
+
+            $cdcPayloads = $payload[$channel];
+
             if (null !== $cdcPayloads) {
                 $this->processor->processCdcPayloads($cdcPayloads);
             }
 
-            sleep($this->sleep);
+            sleep($sleep);
         }
     }
 }

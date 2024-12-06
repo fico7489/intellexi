@@ -15,6 +15,7 @@ readonly class RedisListStorage implements ListStorage
 
     public function popFromList(int $limit): ?array
     {
+        dd($this->options);
         $predis = new Client($this->options);
         $payload = $predis->lmpop([$this->channel], 'left', $limit);
 
