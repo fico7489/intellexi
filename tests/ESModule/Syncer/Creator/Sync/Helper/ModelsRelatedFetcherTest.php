@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\Sync\Helper;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use Mockery\MockInterface;

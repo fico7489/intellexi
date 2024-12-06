@@ -36,15 +36,20 @@ class DocumentsCreator
                     if ($tableName === $syncItemDto->getTableName()
                         && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
                     ) {
+                        // TODO add $index to updating map
                         $index = $this->indexMapper->fetchIndexByIndexName($indexName);
-                        $className = $index->getClassName();
 
-                        $documents = array_merge($documents, $this->syncItemDocumentCreator->create($syncItemDto, $index));
+                        $documentsNew = $this->syncItemDocumentCreator->create($syncItemDto, $index);
+                        $documents = array_merge($documents, $documentsNew);
                     }
                 }
             }
         }
 
+        // TODO test grouping, add delete different
+        // TODO mark document as root in DTO
+        // TODO add to document source of trigger
+        // TODO group in different service for ESAdapter
         $documentsGrouped = [];
         foreach ($documents as $document) {
             $documentsGrouped[$document->getIndex()][] = $document;

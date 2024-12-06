@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\Sync\Helper;
 
 use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedValidatorAndGrouper;
+use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedValidatorAndGrouper;
 use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\Sync\TestCase;

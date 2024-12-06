@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\Helper;
+namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
@@ -10,6 +10,7 @@ class ModelsRelatedFetcher
 {
     public function __construct(
         private readonly ModelMapper $modelMapper,
+        private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
     ) {
     }
 
@@ -40,6 +41,9 @@ class ModelsRelatedFetcher
         }
 
         // TODO decorators after $modelsRelated
+
+        $className = $index->getClassName();
+        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $className);
 
         return $modelsRelated;
     }

@@ -4,6 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document\Helper;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use Illuminate\Database\Eloquent\Model;
@@ -13,18 +14,15 @@ class SyncItemDocumentCreator
     public function __construct(
         private readonly ModelSourceFetcher $modelSourceFetcher,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
-        private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
         private readonly DataFetcher $dataFetcher,
     ) {
     }
 
     public function create(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index): array
     {
-        $className = $index->getClassName();
-
         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
+
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
-        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $className);
 
         $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $modelsRelated, $modelSource);
 
