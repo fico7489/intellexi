@@ -102,7 +102,9 @@ class ConfigProvider
 
     public function buildSyncMapping(): array
     {
-        return $this->syncMapBuilder->buildSyncMapping($this->configIndexes);
+        $connectionDto = $this->buildConnectionDto();
+
+        return $connectionDto->getSyncMap();
     }
 
     public function buildConnectionDto(): ConnectionDto
