@@ -7,7 +7,6 @@ use App\ESModule\Config\Dto\ConnectionDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Provider\Builder\ConnectionDtoBuilder;
-use App\ESModule\Syncer\Provider\Builder\SyncMapBuilder;
 
 class ConfigProvider
 {
@@ -20,13 +19,12 @@ class ConfigProvider
         private readonly array $configIndexes,
         private readonly OrmAdapter $ormAdapter,
         private readonly ConnectionDtoBuilder $connectionDtoBuilder,
-        private readonly SyncMapBuilder $syncMapBuilder,
     ) {
     }
 
     public function getTableNamesSync(): array
     {
-        $syncMapping = $this->buildSyncMapping();
+        $syncMapping = $this->getSyncMapping();
 
         $tableNamesSync = [];
         foreach ($syncMapping as $tableName => $items) {
@@ -100,14 +98,14 @@ class ConfigProvider
         // TODO
     }
 
-    public function buildSyncMapping(): array
+    public function getSyncMapping(): array
     {
-        $connectionDto = $this->buildConnectionDto();
+        $connectionDto = $this->getConnectionDto();
 
         return $connectionDto->getSyncMap();
     }
 
-    public function buildConnectionDto(): ConnectionDto
+    public function getConnectionDto(): ConnectionDto
     {
         return $this->connectionDtoBuilder->build($this->configConnection, $this->configIndexes);
     }

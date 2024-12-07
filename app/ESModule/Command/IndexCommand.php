@@ -20,7 +20,7 @@ class IndexCommand
     {
         $this->info('Showing indexes');
 
-        $connectionDto = $this->configProvider->buildConnectionDto();
+        $connectionDto = $this->configProvider->getConnectionDto();
         foreach ($connectionDto->getIndexes() as $indexDto) {
             $exists = $this->clientAdapter->indexExists($indexDto);
 
@@ -34,7 +34,7 @@ class IndexCommand
     {
         $this->info('Creating indexes');
 
-        $connectionDto = $this->configProvider->buildConnectionDto();
+        $connectionDto = $this->configProvider->getConnectionDto();
         $indexes = $connectionDto->getIndexes();
         foreach ($indexes as $indexDto) {
             $exists = $this->clientAdapter->indexExists($indexDto);
@@ -53,7 +53,7 @@ class IndexCommand
     {
         $this->info('Deleting indexes');
 
-        $connectionDto = $this->configProvider->buildConnectionDto();
+        $connectionDto = $this->configProvider->getConnectionDto();
         $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
 
         $this->clientAdapter->deleteByPrefix($connectionDto);
@@ -65,7 +65,7 @@ class IndexCommand
     {
         $this->info('Deleting stale indexes');
 
-        $connectionDto = $this->configProvider->buildConnectionDto();
+        $connectionDto = $this->configProvider->getConnectionDto();
         $indexesByPrefix = $this->clientAdapter->getIndexesByPrefix($connectionDto);
 
         $indexNamesFromConfig = [];

@@ -24,7 +24,7 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $syncMapping = $this->configProvider->buildSyncMapping();
+        $syncMapping = $this->configProvider->getConnectionDto()->getSyncMap();
 
         $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {

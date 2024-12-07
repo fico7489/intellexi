@@ -14,7 +14,7 @@ class GlobalConfigCommand extends Command
         /** @var ConfigProvider $configProvider */
         $configProvider = app(ConfigProvider::class);
 
-        $config = $configProvider->buildConnectionDto();
+        $config = $configProvider->getConnectionDto();
 
         dump($config);
     }

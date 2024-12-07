@@ -15,7 +15,7 @@ class DatabaseToIndexSyncMapCommand extends Command
 
         /** @var ConfigProvider $configProvider */
         $configProvider = app(ConfigProvider::class);
-        $databaseToIndexSyncMap = $configProvider->buildSyncMapping();
+        $databaseToIndexSyncMap = $configProvider->getConnectionDto()->getSyncMap();
 
         dump($databaseToIndexSyncMap);
 
