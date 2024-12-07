@@ -2,14 +2,14 @@
 
 namespace App\ESModule\Syncer\Creator\Document\Helper;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
 class ModelSourceFetcher
 {
     public function __construct(
-        private readonly ModelMapper $modelMapper,
+        private readonly OrmMapper $modelMapper,
         private readonly SyncMapper $syncMapper,
     ) {
     }

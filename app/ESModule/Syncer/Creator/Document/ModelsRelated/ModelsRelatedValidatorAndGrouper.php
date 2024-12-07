@@ -2,13 +2,13 @@
 
 namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
 use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class ModelsRelatedValidatorAndGrouper
 {
     public function __construct(
-        private readonly ModelMapper $modelMapper,
+        private readonly OrmMapper $modelMapper,
     ) {
     }
 

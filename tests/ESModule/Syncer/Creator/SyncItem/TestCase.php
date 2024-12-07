@@ -3,8 +3,8 @@
 namespace Tests\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
+use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
-use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Mockery\MockInterface;
 
@@ -22,7 +22,7 @@ class TestCase extends \Tests\TestCase
             $mock->allows('isTableNameForSync')->andReturn(true);
         })->makePartial();
 
-        $this->mock(DatabaseMapper::class, function (MockInterface $mock) {
+        $this->mock(DatabaseAdapter::class, function (MockInterface $mock) {
             $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn([
                 'test-table' => 'id',
             ]);

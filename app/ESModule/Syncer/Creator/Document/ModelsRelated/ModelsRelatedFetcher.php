@@ -3,15 +3,15 @@
 namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class ModelsRelatedFetcher
 {
     private array $closuresExecuted = [];
 
     public function __construct(
-        private readonly ModelMapper $modelMapper,
+        private readonly OrmMapper $modelMapper,
         private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
     ) {
     }

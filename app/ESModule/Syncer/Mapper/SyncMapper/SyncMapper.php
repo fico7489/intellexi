@@ -2,14 +2,14 @@
 
 namespace App\ESModule\Syncer\Mapper\SyncMapper;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
 use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 
 class SyncMapper
 {
     public function __construct(
         private readonly IndexMapper $indexMapper,
-        private readonly ModelMapper $modelMapper,
+        private readonly OrmMapper $modelMapper,
     ) {
     }
 

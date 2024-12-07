@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Mapper\ModelMapper;
+namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;

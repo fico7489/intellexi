@@ -2,9 +2,9 @@
 
 namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
@@ -19,7 +19,7 @@ class ModelRootFetcherTest extends TestCase
             $mock->allows('isTableNameForIndex')->andReturn(false);
         });
 
-        $this->mock(ModelMapper::class, function (MockInterface $mock) {
+        $this->mock(OrmMapper::class, function (MockInterface $mock) {
             $mock->allows('convertTableNameToClassName')->never();
         });
 
@@ -38,7 +38,7 @@ class ModelRootFetcherTest extends TestCase
         $model = new \stdClass();
         $model->id = 1;
 
-        $this->mock(ModelMapper::class, function (MockInterface $mock) use ($model, $syncItemDto, $className) {
+        $this->mock(OrmMapper::class, function (MockInterface $mock) use ($model, $syncItemDto, $className) {
             $mock->allows('convertTableNameToClassName')
                 ->with($this->equalTo('test-table'))
                 ->andReturn($className)

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer\Mapper\DatabaseMapper;
+namespace App\ESModule\Syncer\Adapter\DatabaseAdapter;
 
-class DatabaseMapper
+class DatabaseAdapter
 {
     public function __construct(
         private readonly MySqlAdapter $adapter,

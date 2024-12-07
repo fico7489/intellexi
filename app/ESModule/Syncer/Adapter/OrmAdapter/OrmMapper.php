@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer\Mapper\ModelMapper;
+namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
-class ModelMapper
+class OrmMapper
 {
     public function __construct(
         private readonly EloquentAdapter $ormAdapter,// TODO interface

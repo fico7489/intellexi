@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Debug;
 
-use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
+use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use Illuminate\Console\Command;
 
 class DatabaseMapperCommand extends Command
@@ -13,8 +13,8 @@ class DatabaseMapperCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        /** @var DatabaseMapper $databaseMapper */
-        $databaseMapper = app(DatabaseMapper::class);
+        /** @var DatabaseAdapter $databaseMapper */
+        $databaseMapper = app(DatabaseAdapter::class);
 
         $tableNames = $databaseMapper->fetchTableNames();
 

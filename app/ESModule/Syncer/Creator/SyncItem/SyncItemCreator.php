@@ -3,15 +3,15 @@
 namespace App\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
+use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
-use App\ESModule\Syncer\Mapper\DatabaseMapper\DatabaseMapper;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
 class SyncItemCreator
 {
     public function __construct(
-        private readonly DatabaseMapper $databaseMapper,
+        private readonly DatabaseAdapter $databaseMapper,
         private readonly SyncMapper $syncMapper,
     ) {
     }

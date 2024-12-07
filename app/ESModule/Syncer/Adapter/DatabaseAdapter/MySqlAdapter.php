@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Mapper\DatabaseMapper;
+namespace App\ESModule\Syncer\Adapter\DatabaseAdapter;
 
 use Illuminate\Support\Facades\DB;
 

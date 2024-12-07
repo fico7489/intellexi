@@ -2,9 +2,9 @@
 
 namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
 use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedValidatorAndGrouper;
-use App\ESModule\Syncer\Mapper\ModelMapper\ModelMapper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
@@ -16,7 +16,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
             public $id = 1;
         };
 
-        $this->mock(ModelMapper::class, function (MockInterface $mock) {
+        $this->mock(OrmMapper::class, function (MockInterface $mock) {
             $mock->allows('fetchTableNameFromModel')->andReturn('test-table');
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
         });
@@ -36,7 +36,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
         $object2 = clone $object;
         $object2->id = 2;
 
-        $this->mock(ModelMapper::class, function (MockInterface $mock) {
+        $this->mock(OrmMapper::class, function (MockInterface $mock) {
             $mock->allows('fetchTableNameFromModel')->andReturn('test-table');
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(2)->once();
@@ -58,7 +58,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
         $object2 = clone $object;
         $object2->id = 1;
 
-        $this->mock(ModelMapper::class, function (MockInterface $mock) {
+        $this->mock(OrmMapper::class, function (MockInterface $mock) {
             $mock->allows('fetchTableNameFromModel')->andReturn('test-table');
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
@@ -80,7 +80,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
             public $id = 2;
         };
 
-        $this->mock(ModelMapper::class, function (MockInterface $mock) {
+        $this->mock(OrmMapper::class, function (MockInterface $mock) {
             $mock->allows('fetchTableNameFromModel')->andReturn('test-table');
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(2)->once();
