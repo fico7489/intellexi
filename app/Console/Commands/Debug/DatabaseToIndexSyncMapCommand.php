@@ -15,7 +15,7 @@ class DatabaseToIndexSyncMapCommand extends Command
 
         /** @var SyncMapper $databaseToIndexSyncMapCreator */
         $databaseToIndexSyncMapCreator = app(SyncMapper::class);
-        $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->create();
+        $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->buildSyncMapping();
 
         dump($databaseToIndexSyncMap);
 

@@ -40,7 +40,7 @@ class SyncMapper
         ];
     }
 
-    public function create(): array
+    public function buildSyncMapping(): array
     {
         $syncMapping = [];
 
@@ -65,7 +65,7 @@ class SyncMapper
 
     public function getTableNamesSync(): array
     {
-        $syncMapping = $this->create();
+        $syncMapping = $this->buildSyncMapping();
 
         $tableNamesSync = [];
         foreach ($syncMapping as $tableName => $items) {
