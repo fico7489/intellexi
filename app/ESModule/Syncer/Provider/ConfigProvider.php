@@ -10,8 +10,12 @@ use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 
 class ConfigProvider
 {
+    /**
+     * @param array<IndexDefinerModelInterface> $configIndexes
+     */
     public function __construct(
-        private readonly mixed $configConnection,
+        // TODO
+        private readonly DefaultConnection $configConnection,
         private readonly array $configIndexes,
         private readonly OrmAdapter $ormAdapter,
     ) {
@@ -119,36 +123,30 @@ class ConfigProvider
     /**
      * @return array<ConnectionDto>
      */
-    public function buildConfigMap(): array
+    public function buildConfigMap(): ConnectionDto
     {
-        $connectionsDefiners = [$this->configConnection];
+        $connectionDefiner = $this->configConnection;
+
+        $connection = new ConnectionDto(
+            $connectionDefiner->getName(),
+            $connectionDefiner->getHost(),
+            $connectionDefiner->getPort(),
+            $connectionDefiner->getPrefix(),
+        );
+
         $indexDefiners = $this->configIndexes;
-
-        $connectionDtos = [];
-        foreach ($connectionsDefiners as $connectionDefiner) {
-            /** @var DefaultConnection $connectionDefiner */
-            $connection = new ConnectionDto(
-                $connectionDefiner->getName(),
-                $connectionDefiner->getHost(),
-                $connectionDefiner->getPort(),
-                $connectionDefiner->getPrefix(),
+        $indexes = [];
+        foreach ($indexDefiners as $indexDefiner) {
+            $indexes[$indexDefiner->getIndexName()] = new IndexDto(
+                $indexDefiner->getIndexName(),
+                $indexDefiner->getMapping([]),
+                $indexDefiner->getSettings([]),
+                $connection
             );
-
-            $indexes = [];
-            foreach ($indexDefiners as $indexDefiner) {
-                $indexes[] = new IndexDto(
-                    $indexDefiner->getIndexName(),
-                    $indexDefiner->getMapping([]),
-                    $indexDefiner->getSettings([]),
-                    $connection
-                );
-            }
-
-            $connection->setIndexes($indexes);
-
-            $connectionDtos[] = $connection;
         }
 
-        return $connectionDtos;
+        $connection->setIndexes($indexes);
+
+        return $connection;
     }
 }
