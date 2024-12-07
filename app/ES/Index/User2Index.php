@@ -2,10 +2,10 @@
 
 namespace App\ES\Index;
 
-use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexModelInterface;
 use App\Models\User;
 
-class User2Index implements IndexDefinerModelInterface
+class User2Index implements IndexModelInterface
 {
     public function getIndexName(): string
     {

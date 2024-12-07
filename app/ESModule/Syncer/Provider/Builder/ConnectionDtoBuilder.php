@@ -3,8 +3,8 @@
 namespace App\ESModule\Syncer\Provider\Builder;
 
 use App\ES\Connection\DefaultConnection;
-use App\ESModule\Config\Dto\ConnectionDto;
-use App\ESModule\Config\Dto\IndexDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\ConnectionDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class ConnectionDtoBuilder
 {

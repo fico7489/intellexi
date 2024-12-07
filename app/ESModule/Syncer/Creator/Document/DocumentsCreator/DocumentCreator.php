@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 
-use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
@@ -18,7 +18,7 @@ class DocumentCreator
     ) {
     }
 
-    public function create(SyncItemDto $syncItemDto, IndexDefinerModelInterface $index): array
+    public function create(SyncItemDto $syncItemDto, IndexModelInterface $index): array
     {
         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
 
@@ -31,7 +31,7 @@ class DocumentCreator
 
     private function createDocumentsForModelsRelated(
         SyncItemDto $syncItemDto,
-        IndexDefinerModelInterface $index,
+        IndexModelInterface $index,
         array $modelsRelated,
         object $modelSource,
     ): array {

@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Client;
 
-use App\ESModule\Config\Dto\ConnectionDto;
-use App\ESModule\Config\Dto\IndexDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\ConnectionDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 use Elastica\Client;
 use Elastica\Mapping;
 use Elastica\Request;

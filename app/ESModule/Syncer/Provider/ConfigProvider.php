@@ -3,16 +3,16 @@
 namespace App\ESModule\Syncer\Provider;
 
 use App\ES\Connection\DefaultConnection;
-use App\ESModule\Config\Dto\ConfigDto;
-use App\ESModule\Config\Dto\ConnectionDto;
-use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Provider\Builder\ConfigDtoBuilder;
+use App\ESModule\Syncer\Provider\Builder\Dto\ConfigDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\ConnectionDto;
 
 class ConfigProvider
 {
     /**
-     * @param array<IndexDefinerModelInterface> $configIndexes
+     * @param array<IndexModelInterface> $configIndexes
      */
     public function __construct(
         // TODO
@@ -58,7 +58,7 @@ class ConfigProvider
     }
 
     /**
-     * @return array<IndexDefinerModelInterface>
+     * @return array<IndexModelInterface>
      */
     public function fetchClassNamesIndex(): array
     {
@@ -73,7 +73,7 @@ class ConfigProvider
         return $classNamesIndex;
     }
 
-    public function fetchIndexByIndexName(string $indexName): IndexDefinerModelInterface
+    public function fetchIndexByIndexName(string $indexName): IndexModelInterface
     {
         $classNamesIndex = $this->fetchClassNamesIndex();
 

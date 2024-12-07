@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Config\Interface;
 
-interface IndexDefinerModelInterface extends IndexSyncInterface
+interface IndexModelInterface extends IndexSyncInterface
 {
     public function getIndexName(): string;
 

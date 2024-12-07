@@ -2,12 +2,12 @@
 
 namespace App\ES\Index;
 
-use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\Models\Application;
 use App\Models\User;
 
-class ApplicationIndex implements IndexDefinerModelInterface
+class ApplicationIndex implements IndexModelInterface
 {
     public function getIndexName(): string
     {

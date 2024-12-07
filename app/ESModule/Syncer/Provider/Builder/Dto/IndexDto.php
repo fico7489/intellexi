@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Config\Dto;
+namespace App\ESModule\Syncer\Provider\Builder\Dto;
 
 readonly class IndexDto
 {

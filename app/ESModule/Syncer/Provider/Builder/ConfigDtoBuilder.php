@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Provider\Builder;
 
 use App\ES\Connection\DefaultConnection;
-use App\ESModule\Config\Dto\ConfigDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\ConfigDto;
 
 class ConfigDtoBuilder
 {
