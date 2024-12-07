@@ -44,7 +44,7 @@ class ModelsRelatedFetcher
 
         // TODO decorators after $modelsRelated
 
-        $classNameOrm = $index->getClassName();
+        $classNameOrm = $index->getClassNameOrm();
         $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $classNameOrm);
 
         return $modelsRelated;

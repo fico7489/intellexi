@@ -13,7 +13,7 @@ class UserIndex implements IndexModelInterface
         return 'users_es_index';
     }
 
-    public function getClassName(): string
+    public function getClassNameOrm(): string
     {
         return User::class;
     }

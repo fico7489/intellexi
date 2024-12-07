@@ -6,7 +6,7 @@ interface IndexModelInterface extends IndexSyncInterface
 {
     public function getIndexName(): string;
 
-    public function getClassName(): string;
+    public function getClassNameOrm(): string;
 
     public function getMapping(array $mapping): array;
 

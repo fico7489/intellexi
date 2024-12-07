@@ -14,7 +14,7 @@ class ApplicationIndex implements IndexModelInterface
         return 'applications_es_index';
     }
 
-    public function getClassName(): string
+    public function getClassNameOrm(): string
     {
         return Application::class;
     }

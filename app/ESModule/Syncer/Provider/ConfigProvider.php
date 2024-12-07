@@ -38,10 +38,10 @@ class ConfigProvider
 
     public function getTableNamesIndex(): array
     {
-        $classNamesIndex = $this->fetchClassNamesIndex();
+        $classNamesOrmToIndexMapping = $this->fetchClassNamesOrmToIndexMapping();
 
         $tableNamesIndex = [];
-        foreach ($classNamesIndex as $className => $indexDefiner) {
+        foreach ($classNamesOrmToIndexMapping as $className => $indexDefiner) {
             $tableName = $this->ormAdapter->convertClassNameOrmToTableName($className);
 
             $tableNamesIndex[$tableName] = true;
@@ -60,22 +60,21 @@ class ConfigProvider
     /**
      * @return array<IndexModelInterface>
      */
-    public function fetchClassNamesIndex(): array
+    public function fetchClassNamesOrmToIndexMapping(): array
     {
         $indexDefiners = $this->configIndexes;
 
-        $classNamesIndex = [];
-
+        $classNamesOrmToIndexMapping = [];
         foreach ($indexDefiners as $indexDefiner) {
-            $classNamesIndex[$indexDefiner->getClassName()] = $indexDefiner;
+            $classNamesOrmToIndexMapping[$indexDefiner->getClassNameOrm()] = $indexDefiner;
         }
 
-        return $classNamesIndex;
+        return $classNamesOrmToIndexMapping;
     }
 
     public function fetchIndexByIndexName(string $indexName): IndexModelInterface
     {
-        $classNamesIndex = $this->fetchClassNamesIndex();
+        $classNamesOrmToIndexMapping = $this->fetchClassNamesOrmToIndexMapping();
 
         $indexDefiners = $this->configIndexes;
         foreach ($indexDefiners as $indexDefiner) {
