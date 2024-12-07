@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Mapper\SyncMapper;
+namespace App\ESModule\Syncer\Provider;
 
 use App\ES\Connection\DefaultConnection;
 use App\ES\Index\Model\ApplicationIndex;
@@ -10,7 +10,7 @@ use App\ESModule\Config\Dto\IndexDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 
-class SyncMapper
+class ConfigProvider
 {
     public function __construct(
         private readonly OrmAdapter $ormAdapter,

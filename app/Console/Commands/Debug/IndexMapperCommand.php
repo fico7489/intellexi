@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Debug;
 
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 use Illuminate\Console\Command;
 
 class IndexMapperCommand extends Command
@@ -13,8 +13,8 @@ class IndexMapperCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        /** @var SyncMapper $indexMapper */
-        $indexMapper = app(SyncMapper::class);
+        /** @var ConfigProvider $indexMapper */
+        $indexMapper = app(ConfigProvider::class);
 
         $data = $indexMapper->fetchClassNamesIndex();
 

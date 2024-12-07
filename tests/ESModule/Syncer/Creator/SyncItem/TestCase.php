@@ -5,7 +5,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem;
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 
 class TestCase extends \Tests\TestCase
@@ -17,7 +17,7 @@ class TestCase extends \Tests\TestCase
     {
         parent::setUp();
 
-        $this->mock(SyncMapper::class, function (MockInterface $mock) {
+        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(true);
             $mock->allows('isTableNameForSync')->andReturn(true);
         })->makePartial();

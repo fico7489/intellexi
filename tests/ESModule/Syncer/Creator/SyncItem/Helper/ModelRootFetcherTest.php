@@ -5,7 +5,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
@@ -15,7 +15,7 @@ class ModelRootFetcherTest extends TestCase
     {
         $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
 
-        $this->mock(SyncMapper::class, function (MockInterface $mock) {
+        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isTableNameForIndex')->andReturn(false);
         });
 
@@ -30,7 +30,7 @@ class ModelRootFetcherTest extends TestCase
     {
         $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
 
-        $this->mock(SyncMapper::class, function (MockInterface $mock) {
+        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isTableNameForIndex')->andReturn(true);
         });
 

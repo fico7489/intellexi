@@ -6,12 +6,12 @@ use App\ESModule\Syncer\Creator\Document\DocumentsCreator\DocumentsGrouper;
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator\MatchedSyncItemCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class DocumentsCreator
 {
     public function __construct(
-        private readonly SyncMapper $syncMapper,
+        private readonly ConfigProvider $syncMapper,
         private readonly MatchedSyncItemCreator $matchedSyncItemCreator,
         private readonly DocumentsGrouper $documentsGrouper,
     ) {

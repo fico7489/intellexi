@@ -6,13 +6,13 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncItemCreator
 {
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
-        private readonly SyncMapper $syncMapper,
+        private readonly ConfigProvider $syncMapper,
     ) {
     }
 

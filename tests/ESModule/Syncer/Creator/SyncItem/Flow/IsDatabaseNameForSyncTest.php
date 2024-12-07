@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Syncer\Creator\SyncItem\Flow;
 
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
@@ -13,7 +13,7 @@ class IsDatabaseNameForSyncTest extends TestCase
         $cdcDto = $this->createCdcDto();
         $cdcDtos = [$cdcDto];
 
-        $this->mock(SyncMapper::class, function (MockInterface $mock) {
+        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(true);
             $mock->expects('isTableNameForSync')->once();
         })->makePartial();
@@ -26,7 +26,7 @@ class IsDatabaseNameForSyncTest extends TestCase
         $cdcDto = $this->createCdcDto();
         $cdcDtos = [$cdcDto];
 
-        $this->mock(SyncMapper::class, function (MockInterface $mock) {
+        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(false);
             $mock->allows('isTableNameForSync')->never();
         })->makePartial();

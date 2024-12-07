@@ -3,7 +3,7 @@
 namespace App\ESModule\Command;
 
 use App\ESModule\Client\ClientAdapter;
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class IndexCommand
@@ -11,7 +11,7 @@ class IndexCommand
     private OutputStyle $output;
 
     public function __construct(
-        private readonly SyncMapper $syncMapper,
+        private readonly ConfigProvider $syncMapper,
         private readonly ClientAdapter $clientAdapter,
     ) {
     }

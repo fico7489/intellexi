@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Debug;
 
-use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
+use App\ESModule\Syncer\Provider\ConfigProvider;
 use Illuminate\Console\Command;
 
 class DatabaseToIndexSyncMapCommand extends Command
@@ -13,8 +13,8 @@ class DatabaseToIndexSyncMapCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        /** @var SyncMapper $databaseToIndexSyncMapCreator */
-        $databaseToIndexSyncMapCreator = app(SyncMapper::class);
+        /** @var ConfigProvider $databaseToIndexSyncMapCreator */
+        $databaseToIndexSyncMapCreator = app(ConfigProvider::class);
         $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->buildSyncMapping();
 
         dump($databaseToIndexSyncMap);
