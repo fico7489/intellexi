@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Adapter\DatabaseAdapter;
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // TODO convert to raw sql PHP queries
 
 class MySqlAdapter
 {

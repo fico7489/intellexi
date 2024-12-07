@@ -5,7 +5,7 @@ namespace App\ESModule\Syncer\SearchEngine;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use GuzzleHttp\Client;
 
-class SearchEngineEsSyncer
+class SearchEngineDataClient
 {
     public function syncDocuments($dataSync): void
     {

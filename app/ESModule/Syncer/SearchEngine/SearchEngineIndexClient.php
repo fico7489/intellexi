@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Client;
+namespace App\ESModule\Syncer\SearchEngine;
 
 use App\ESModule\Syncer\Provider\Builder\Dto\ConnectionDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
@@ -8,7 +8,7 @@ use Elastica\Client;
 use Elastica\Mapping;
 use Elastica\Request;
 
-class ClientAdapter
+class SearchEngineIndexClient
 {
     public function getClient(ConnectionDto $connectionDto): Client
     {

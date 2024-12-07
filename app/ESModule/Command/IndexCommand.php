@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Command;
 
-use App\ESModule\Client\ClientAdapter;
 use App\ESModule\Syncer\Provider\ConfigProvider;
+use App\ESModule\Syncer\SearchEngine\SearchEngineIndexClient;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class IndexCommand
@@ -12,7 +12,7 @@ class IndexCommand
 
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly ClientAdapter $clientAdapter,
+        private readonly SearchEngineIndexClient $clientAdapter,
     ) {
     }
 

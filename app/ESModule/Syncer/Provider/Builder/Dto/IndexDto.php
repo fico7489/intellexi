@@ -12,7 +12,7 @@ readonly class IndexDto
         private readonly array $mapping,
         private readonly array $settings,
         private readonly ConnectionDto $connection,
-        private readonly IndexModelInterface $definer,
+        private readonly IndexModelInterface $definer,// TODO can not be cached
     ) {
     }
 

@@ -19,7 +19,7 @@ class SyncItemCreator
     /**
      * It converts CdcDtos to SyncItemDtos.
      *
-     * @param array<CdcDto> $cdcDtos
+     * @param array<CdcDto> $cdcDtos //TODO try to remove CdcDto, so that package will be independent
      *
      * @return array<SyncItemDto>
      *

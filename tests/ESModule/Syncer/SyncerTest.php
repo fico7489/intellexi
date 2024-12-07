@@ -8,7 +8,7 @@ use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
-use App\ESModule\Syncer\SearchEngine\SearchEngineEsSyncer;
+use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 use App\ESModule\Syncer\Syncer;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
@@ -37,7 +37,7 @@ class SyncerTest extends TestCase
                 ->once();
         });
 
-        $this->mock(SearchEngineEsSyncer::class, function (MockInterface $mock) use ($document) {
+        $this->mock(SearchEngineDataClient::class, function (MockInterface $mock) use ($document) {
             $mock
                 ->allows('syncDocuments')
                 ->with($this->equalTo([$document]))

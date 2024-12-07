@@ -5,7 +5,7 @@ namespace App\ESModule\Syncer\Adapter\DatabaseAdapter;
 class DatabaseAdapter
 {
     public function __construct(
-        private readonly MySqlAdapter $adapter,
+        private readonly MySqlAdapter $adapter,// TODO interface
     ) {
     }
 
