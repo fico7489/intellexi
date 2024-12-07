@@ -8,13 +8,21 @@ use App\ESModule\Config\Dto\IndexDto;
 
 class ConnectionDtoBuilder
 {
+    public function __construct(
+        private readonly SyncMapBuilder $syncMapBuilder,
+    ) {
+    }
+
     public function build(DefaultConnection $connectionDefiner, array $indexDefiners): ConnectionDto
     {
+        $syncMap = $this->syncMapBuilder->buildSyncMapping($indexDefiners);
+
         $connectionDto = new ConnectionDto(
             $connectionDefiner->getName(),
             $connectionDefiner->getHost(),
             $connectionDefiner->getPort(),
             $connectionDefiner->getPrefix(),
+            $syncMap,
         );
 
         $indexesDtos = [];
