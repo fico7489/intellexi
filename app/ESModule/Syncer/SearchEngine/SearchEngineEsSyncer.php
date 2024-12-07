@@ -14,23 +14,6 @@ class SearchEngineEsSyncer
         }
     }
 
-    private function documentPrepare(string $indexName, int $identifierValue, array $data): array
-    {
-        // TODO delete
-
-        $data = ['doc' => array_merge(['id' => $identifierValue], $data), 'doc_as_upsert' => true];
-
-        return [
-            [
-                'update' => [
-                    '_index' => $indexName,
-                    '_id' => $identifierValue,
-                ],
-            ],
-            $data,
-        ];
-    }
-
     public function esIndexSync(string $indexName, array $documents): bool
     {
         $baseUri = 'http://elasticsearch:9200';
@@ -78,5 +61,22 @@ class SearchEngineEsSyncer
         // TODO async
 
         return true;
+    }
+
+    private function documentPrepare(string $indexName, int $identifierValue, array $data): array
+    {
+        // TODO delete
+
+        $data = ['doc' => array_merge(['id' => $identifierValue], $data), 'doc_as_upsert' => true];
+
+        return [
+            [
+                'update' => [
+                    '_index' => $indexName,
+                    '_id' => $identifierValue,
+                ],
+            ],
+            $data,
+        ];
     }
 }
