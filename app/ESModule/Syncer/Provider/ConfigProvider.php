@@ -21,10 +21,9 @@ class ConfigProvider
     ) {
     }
 
-    public function isDatabaseNameForSync($tableName): bool
+    public function isDatabaseNameForSync($databaseName): bool
     {
-        // TODO
-        return true;
+        return $databaseName === $this->getConfigDto()->getDatabaseName();
     }
 
     public function isTableNameForSync($tableName): bool
