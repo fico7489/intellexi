@@ -28,7 +28,8 @@ class ConnectionDtoBuilder
                 $indexDefiner->getClassNameOrm(),
                 $indexDefiner->getMapping([]),
                 $indexDefiner->getSettings([]),
-                $connectionDto
+                $connectionDto,
+                $indexDefiner
             );
         }
 

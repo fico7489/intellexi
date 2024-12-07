@@ -17,7 +17,7 @@ class DocumentsGrouper
         // TODO group in different service for ESAdapter
         $documentsGrouped = [];
         foreach ($documents as $document) {
-            $documentsGrouped[$document->getIndex()][] = $document;
+            $documentsGrouped[$document->getIndexName()][] = $document;
         }
 
         // TODO exclude duplicates one more time

@@ -22,9 +22,9 @@ class MatchedSyncItemCreator
         if ($tableName === $syncItemDto->getTableName()
             && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
         ) {
-            $index = $this->configProvider->fetchIndexByIndexName($indexName);
+            $indexDto = $this->configProvider->fetchIndexByIndexName($indexName);
 
-            return $this->documentCreator->create($syncItemDto, $index);
+            return $this->documentCreator->create($syncItemDto, $indexDto);
         }
 
         return [];

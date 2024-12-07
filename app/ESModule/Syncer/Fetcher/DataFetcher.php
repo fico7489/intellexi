@@ -2,17 +2,17 @@
 
 namespace App\ESModule\Syncer\Fetcher;
 
-use App\ESModule\Config\Interface\IndexModelInterface;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class DataFetcher
 {
-    public function fetch(IndexModelInterface $index, object $model)
+    public function fetch(IndexDto $indexDto, object $model): array
     {
         $data = [];
 
         // TODO decorate
 
-        $data = $index->getData($data, $model);
+        $data = $indexDto->getDefiner()->getData($data, $model);
 
         return $data;
     }

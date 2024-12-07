@@ -32,12 +32,12 @@ class ClientAdapter
 
     public function getIndexesByPrefix(ConnectionDto $connectionDto): array
     {
-        $indexes = $this->getIndexes($connectionDto);
+        $indexNames = $this->getIndexes($connectionDto);
 
         $indexesByPrefix = [];
-        foreach ($indexes as $index) {
-            if (str_contains($index, $connectionDto->getPrefix())) {
-                $indexesByPrefix[] = $index;
+        foreach ($indexNames as $indexName) {
+            if (str_contains($indexName, $connectionDto->getPrefix())) {
+                $indexesByPrefix[] = $indexName;
             }
         }
 

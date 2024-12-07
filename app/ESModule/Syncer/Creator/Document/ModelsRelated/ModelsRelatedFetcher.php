@@ -2,9 +2,9 @@
 
 namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
-use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class ModelsRelatedFetcher
 {
@@ -19,13 +19,13 @@ class ModelsRelatedFetcher
     /**
      * @return array<object>
      */
-    public function fetch(SyncItemDto $syncItemDto, IndexSyncInterface $index, ?object $modelSource): array
+    public function fetch(SyncItemDto $syncItemDto, IndexDto $indexDto, ?object $modelSource): array
     {
         $tableName = $syncItemDto->getTableName();
 
         $syncModels = [];
         // TODO decorate before syncModels
-        $syncModels = $index->syncModels($syncModels);
+        $syncModels = $indexDto->getDefiner()->syncModels($syncModels);
         // TODO decorate before syncModels
 
         // TODO decorators before $modelsRelated
@@ -44,7 +44,7 @@ class ModelsRelatedFetcher
 
         // TODO decorators after $modelsRelated
 
-        $classNameOrm = $index->getClassNameOrm();
+        $classNameOrm = $indexDto->getClassNameOrm();
         $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $classNameOrm);
 
         return $modelsRelated;

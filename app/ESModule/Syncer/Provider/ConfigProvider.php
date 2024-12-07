@@ -6,6 +6,7 @@ use App\ES\Connection\DefaultConnection;
 use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Provider\Builder\ConfigDtoBuilder;
 use App\ESModule\Syncer\Provider\Builder\Dto\ConfigDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class ConfigProvider
 {
@@ -39,16 +40,9 @@ class ConfigProvider
         return isset($tableNamesIndex[$tableName]);
     }
 
-    public function fetchIndexByIndexName(string $indexName): IndexModelInterface
+    public function fetchIndexByIndexName(string $indexName): IndexDto
     {
-        $indexDefiners = $this->configIndexes;
-        foreach ($indexDefiners as $indexDefiner) {
-            if ($indexDefiner->getIndexName() === $indexName) {
-                return $indexDefiner;
-            }
-        }
-
-        // TODO
+        return $this->getConfigDto()->getConnectionDto()->getIndexes()[$indexName];
     }
 
     public function getConfigDto(): ConfigDto

@@ -2,12 +2,12 @@
 
 namespace App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 
-use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class DocumentCreator
 {
@@ -18,20 +18,20 @@ class DocumentCreator
     ) {
     }
 
-    public function create(SyncItemDto $syncItemDto, IndexModelInterface $index): array
+    public function create(SyncItemDto $syncItemDto, IndexDto $indexDto): array
     {
         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
 
-        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $index, $modelSource);
+        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
-        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $index, $modelsRelated, $modelSource);
+        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $indexDto, $modelsRelated, $modelSource);
 
         return $documents;
     }
 
     private function createDocumentsForModelsRelated(
         SyncItemDto $syncItemDto,
-        IndexModelInterface $index,
+        IndexDto $indexDto,
         array $modelsRelated,
         object $modelSource,
     ): array {
@@ -39,12 +39,11 @@ class DocumentCreator
 
         $documents = [];
         foreach ($modelsRelated as $modelRelated) {
-            // TODO prefix
-            $indexName = 'prefix_'.$index->getIndexName();
+            $indexName = $indexDto->getNameWithPrefix();
 
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
-            $data = $this->dataFetcher->fetch($index, $modelRelated);
+            $data = $this->dataFetcher->fetch($indexDto, $modelRelated);
 
             $type = DocumentDto::TYPE_UPSERT;
             if ($modelRelated === $modelSource) {

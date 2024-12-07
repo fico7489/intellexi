@@ -2,6 +2,8 @@
 
 namespace App\ESModule\Syncer\Provider\Builder\Dto;
 
+use App\ESModule\Config\Interface\IndexModelInterface;
+
 readonly class IndexDto
 {
     public function __construct(
@@ -10,6 +12,7 @@ readonly class IndexDto
         private readonly array $mapping,
         private readonly array $settings,
         private readonly ConnectionDto $connection,
+        private readonly IndexModelInterface $definer,
     ) {
     }
 
@@ -41,5 +44,10 @@ readonly class IndexDto
     public function getConnection(): ConnectionDto
     {
         return $this->connection;
+    }
+
+    public function getDefiner(): IndexModelInterface
+    {
+        return $this->definer;
     }
 }
