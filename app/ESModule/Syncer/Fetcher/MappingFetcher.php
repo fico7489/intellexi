@@ -7,7 +7,8 @@ use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 
 class MappingFetcher
 {
-    public function fetch(IndexDefinerModelInterface $index, object $model, SyncItemDto $syncItemDto,) {
+    public function fetch(IndexDefinerModelInterface $index, object $model, SyncItemDto $syncItemDto)
+    {
         $mapping = [];
 
         // TODO decorate

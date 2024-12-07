@@ -23,7 +23,8 @@ class ModelSourceFetcher
         }
 
         $className = $this->modelMapper->convertTableNameToClassName($tableName);
-        $modelSource = $this->modelMapper->fetchModel($syncItemDto, $className);
+        $identifierValue = $syncItemDto->getIdentifierValue();
+        $modelSource = $this->modelMapper->fetchModel($className, $identifierValue);
 
         return $modelSource;
     }

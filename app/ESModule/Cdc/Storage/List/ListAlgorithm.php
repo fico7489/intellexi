@@ -8,12 +8,11 @@ use Predis\Client;
 readonly class ListAlgorithm
 {
     public function __construct(
-        private Processor   $processor,
+        private Processor $processor,
         private ListStorage $storage,
-        private string      $limit,
-        private string      $sleep,
-    )
-    {
+        private string $limit,
+        private string $sleep,
+    ) {
     }
 
     public function run()
@@ -34,7 +33,7 @@ readonly class ListAlgorithm
             if (count($cdcPayloads) < $limit) {
                 usleep(2000);
 
-                $payload = $predis->lmpop([$channel], 'left', ($limit - 1));
+                $payload = $predis->lmpop([$channel], 'left', $limit - 1);
                 if ('NULL' !== gettype($payload)) {
                     $cdcPayloads2 = $payload[$channel];
 
