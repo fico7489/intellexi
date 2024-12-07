@@ -6,7 +6,7 @@ use App\ES\Connection\DefaultConnection;
 use App\ESModule\Config\Dto\ConnectionDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Provider\Builder\ConnectionDtoBuilder;
+use App\ESModule\Syncer\Provider\Builder\ConfigDtoBuilder;
 
 class ConfigProvider
 {
@@ -18,7 +18,7 @@ class ConfigProvider
         private readonly DefaultConnection $configConnection,
         private readonly array $configIndexes,
         private readonly OrmAdapter $ormAdapter,
-        private readonly ConnectionDtoBuilder $connectionDtoBuilder,
+        private readonly ConfigDtoBuilder $configDtoBuilder,
     ) {
     }
 
@@ -88,6 +88,8 @@ class ConfigProvider
 
     public function getConnectionDto(): ConnectionDto
     {
-        return $this->connectionDtoBuilder->build($this->configConnection, $this->configIndexes);
+        $configDto = $this->configDtoBuilder->build($this->configConnection, $this->configIndexes);
+
+        return $configDto->getConnectionDto();
     }
 }
