@@ -4,9 +4,9 @@ namespace App\ESModule\Syncer\Provider;
 
 use App\ES\Connection\DefaultConnection;
 use App\ESModule\Config\Dto\ConnectionDto;
-use App\ESModule\Config\Dto\IndexDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
+use App\ESModule\Syncer\Provider\Builder\ConnectionDtoBuilder;
 
 class ConfigProvider
 {
@@ -18,30 +18,8 @@ class ConfigProvider
         private readonly DefaultConnection $configConnection,
         private readonly array $configIndexes,
         private readonly OrmAdapter $ormAdapter,
+        private readonly ConnectionDtoBuilder $connectionDtoBuilder,
     ) {
-    }
-
-    public function buildSyncMapping(): array
-    {
-        $syncMapping = [];
-
-        $indexDefiners = $this->fetchClassNamesIndex();
-        foreach ($indexDefiners as $className => $indexDefiner) {
-            // TODO [], syncMap([]) DTO
-            $syncMap = $indexDefiner->syncMap([]);
-            foreach ($syncMap as $classNameSyncMap => $changedFields) {
-                $tableName = $classNameSyncMap;
-                if ($this->ormAdapter->isClassNameModel($classNameSyncMap)) {
-                    $tableName = $this->ormAdapter->convertClassNameToTableName($classNameSyncMap);
-                }
-
-                $indexName = $indexDefiner->getIndexName();
-
-                $syncMapping[$tableName][$indexName] = $changedFields;
-            }
-        }
-
-        return $syncMapping;
     }
 
     public function getTableNamesSync(): array
@@ -120,30 +98,31 @@ class ConfigProvider
         // TODO
     }
 
-    public function buildConnectionDto(): ConnectionDto
+    public function buildSyncMapping(): array
     {
-        $connectionDefiner = $this->configConnection;
+        $syncMapping = [];
 
-        $connection = new ConnectionDto(
-            $connectionDefiner->getName(),
-            $connectionDefiner->getHost(),
-            $connectionDefiner->getPort(),
-            $connectionDefiner->getPrefix(),
-        );
+        $indexDefiners = $this->fetchClassNamesIndex();
+        foreach ($indexDefiners as $className => $indexDefiner) {
+            // TODO [], syncMap([]) DTO
+            $syncMap = $indexDefiner->syncMap([]);
+            foreach ($syncMap as $classNameSyncMap => $changedFields) {
+                $tableName = $classNameSyncMap;
+                if ($this->ormAdapter->isClassNameModel($classNameSyncMap)) {
+                    $tableName = $this->ormAdapter->convertClassNameToTableName($classNameSyncMap);
+                }
 
-        $indexDefiners = $this->configIndexes;
-        $indexes = [];
-        foreach ($indexDefiners as $indexDefiner) {
-            $indexes[$indexDefiner->getIndexName()] = new IndexDto(
-                $indexDefiner->getIndexName(),
-                $indexDefiner->getMapping([]),
-                $indexDefiner->getSettings([]),
-                $connection
-            );
+                $indexName = $indexDefiner->getIndexName();
+
+                $syncMapping[$tableName][$indexName] = $changedFields;
+            }
         }
 
-        $connection->setIndexes($indexes);
+        return $syncMapping;
+    }
 
-        return $connection;
+    public function buildConnectionDto(): ConnectionDto
+    {
+        return $this->connectionDtoBuilder->build($this->configConnection, $this->configIndexes);
     }
 }
