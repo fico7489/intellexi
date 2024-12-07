@@ -98,13 +98,6 @@ class ConfigProvider
         return $tableNamesSync;
     }
 
-    public function getSyncMapping(): array
-    {
-        $connectionDto = $this->getConnectionDto();
-
-        return $connectionDto->getSyncMap();
-    }
-
     public function getConnectionDto(): ConnectionDto
     {
         return $this->connectionDtoBuilder->build($this->configConnection, $this->configIndexes);
