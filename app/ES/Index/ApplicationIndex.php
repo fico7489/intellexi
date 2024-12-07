@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ES\Index\Model;
+namespace App\ES\Index;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;

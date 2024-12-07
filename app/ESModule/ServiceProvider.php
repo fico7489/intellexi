@@ -3,8 +3,8 @@
 namespace App\ESModule;
 
 use App\ES\Connection\DefaultConnection;
-use App\ES\Index\Model\ApplicationIndex;
-use App\ES\Index\Model\UserIndex;
+use App\ES\Index\ApplicationIndex;
+use App\ES\Index\UserIndex;
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Converter\MaxwellConverter;
 use App\ESModule\Cdc\Event\CdcDtosEvent;

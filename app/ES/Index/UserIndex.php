@@ -1,15 +1,16 @@
 <?php
 
-namespace App\ES\Index\Model;
+namespace App\ES\Index;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\Models\User;
 
-class User2Index implements IndexDefinerModelInterface
+class UserIndex implements IndexDefinerModelInterface
 {
     public function getIndexName(): string
     {
-        return 'users2';
+        return 'users';
     }
 
     public function getClassName(): string
@@ -31,17 +32,27 @@ class User2Index implements IndexDefinerModelInterface
     {
         return [
             'id' => $model->id,
-            'last_name' => $model->last_name,
+            'first_name' => $model->first_name,
         ];
     }
 
     public function syncMap($syncMap): array
     {
-        return [];
+        return array_merge($syncMap, [
+            User::class => [
+                'id',
+                'first_name',
+                'email',
+            ],
+        ]);
     }
 
     public function syncModels($syncModels): array
     {
-        return [];
+        return [
+            User::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
+                return array_merge($relatedModels, [$model]);
+            },
+        ];
     }
 }
