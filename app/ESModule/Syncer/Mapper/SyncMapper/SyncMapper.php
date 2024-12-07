@@ -2,13 +2,14 @@
 
 namespace App\ESModule\Syncer\Mapper\SyncMapper;
 
+use App\ESModule\Config\ConfigFetcher;
+use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
-use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
 
 class SyncMapper
 {
     public function __construct(
-        private readonly IndexMapper $indexMapper,
+        private readonly ConfigFetcher $configFetcher,
         private readonly OrmMapper $modelMapper,
     ) {
     }
@@ -17,7 +18,7 @@ class SyncMapper
     {
         $syncMapping = [];
 
-        $indexDefiners = $this->indexMapper->fetchClassNamesIndex();
+        $indexDefiners = $this->fetchClassNamesIndex();
         foreach ($indexDefiners as $className => $indexDefiner) {
             // TODO [], syncMap([])
             $syncMap = $indexDefiner->syncMap([]);
@@ -63,7 +64,7 @@ class SyncMapper
 
     public function getTableNamesIndex(): array
     {
-        $classNamesIndex = $this->indexMapper->fetchClassNamesIndex();
+        $classNamesIndex = $this->fetchClassNamesIndex();
 
         $tableNamesIndex = [];
         foreach ($classNamesIndex as $className => $indexDefiner) {
@@ -80,5 +81,35 @@ class SyncMapper
         $tableNamesIndex = $this->getTableNamesIndex();
 
         return isset($tableNamesIndex[$tableName]);
+    }
+
+    /**
+     * @return array<IndexDefinerModelInterface>
+     */
+    public function fetchClassNamesIndex(): array
+    {
+        $indexDefiners = $this->configFetcher->fetchIndexes();
+
+        $classNamesIndex = [];
+
+        foreach ($indexDefiners as $indexDefiner) {
+            $classNamesIndex[$indexDefiner->getClassName()] = $indexDefiner;
+        }
+
+        return $classNamesIndex;
+    }
+
+    public function fetchIndexByIndexName(string $indexName): IndexDefinerModelInterface
+    {
+        $classNamesIndex = $this->fetchClassNamesIndex();
+
+        $indexDefiners = $this->configFetcher->fetchIndexes();
+        foreach ($indexDefiners as $indexDefiner) {
+            if ($indexDefiner->getIndexName() === $indexName) {
+                return $indexDefiner;
+            }
+        }
+
+        // TODO
     }
 }

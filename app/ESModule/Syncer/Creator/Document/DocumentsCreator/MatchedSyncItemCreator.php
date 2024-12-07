@@ -3,13 +3,13 @@
 namespace App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
-use App\ESModule\Syncer\Mapper\IndexMapper\IndexMapper;
+use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
 class MatchedSyncItemCreator
 {
     public function __construct(
         private readonly ShouldSyncDetector $shouldSyncDetector,
-        private readonly IndexMapper $indexMapper,
+        private readonly SyncMapper $indexMapper,
         private readonly DocumentCreator $documentCreator,
     ) {
     }
