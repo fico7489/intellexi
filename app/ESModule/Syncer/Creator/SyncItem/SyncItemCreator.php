@@ -12,7 +12,7 @@ class SyncItemCreator
 {
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
-        private readonly SyncMapper      $syncMapper,
+        private readonly SyncMapper $syncMapper,
     ) {
     }
 

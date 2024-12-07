@@ -2,16 +2,42 @@
 
 namespace App\ESModule\Syncer\Mapper\SyncMapper;
 
-use App\ESModule\Config\ConfigFetcher;
+use App\ES\Connection\DefaultConnection;
+use App\ES\Index\Model\ApplicationIndex;
+use App\ES\Index\Model\UserIndex;
+use App\ESModule\Config\Dto\ConnectionDto;
+use App\ESModule\Config\Dto\IndexDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 
 class SyncMapper
 {
     public function __construct(
-        private readonly ConfigFetcher $configFetcher,
-        private readonly OrmAdapter    $ormAdapter,
+        private readonly OrmAdapter $ormAdapter,
     ) {
+    }
+
+    // TODO interface
+    /**
+     * @return array<DefaultConnection>
+     */
+    public function fetchConnections(): array
+    {
+        return [
+            app(DefaultConnection::class),
+        ];
+    }
+
+    /**
+     * @return array<IndexDefinerModelInterface>
+     */
+    public function fetchIndexes(): array
+    {
+        // TODO load by attributes
+        return [
+            app(ApplicationIndex::class),
+            app(UserIndex::class),
+        ];
     }
 
     public function create(): array
@@ -88,7 +114,7 @@ class SyncMapper
      */
     public function fetchClassNamesIndex(): array
     {
-        $indexDefiners = $this->configFetcher->fetchIndexes();
+        $indexDefiners = $this->fetchIndexes();
 
         $classNamesIndex = [];
 
@@ -103,7 +129,7 @@ class SyncMapper
     {
         $classNamesIndex = $this->fetchClassNamesIndex();
 
-        $indexDefiners = $this->configFetcher->fetchIndexes();
+        $indexDefiners = $this->fetchIndexes();
         foreach ($indexDefiners as $indexDefiner) {
             if ($indexDefiner->getIndexName() === $indexName) {
                 return $indexDefiner;
@@ -111,5 +137,43 @@ class SyncMapper
         }
 
         // TODO
+    }
+
+    /**
+     * @return array<ConnectionDto>
+     */
+    public function buildConfigMap(): array
+    {
+        $connectionsDefiners = $this->fetchConnections();
+        $indexDefiners = $this->fetchIndexes();
+
+        $connectionDtos = [];
+        foreach ($connectionsDefiners as $connectionDefiner) {
+            /** @var DefaultConnection $connectionDefiner */
+            $connection = new ConnectionDto(
+                $connectionDefiner->getName(),
+                $connectionDefiner->getHost(),
+                $connectionDefiner->getPort(),
+                $connectionDefiner->getPrefix(),
+            );
+
+            $indexes = [];
+            foreach ($indexDefiners as $indexDefiner) {
+                if ($indexDefiner->getConnection() === $connection->getName()) {
+                    $indexes[] = new IndexDto(
+                        $indexDefiner->getIndexName(),
+                        $indexDefiner->getMapping([]),
+                        $indexDefiner->getSettings([]),
+                        $connection
+                    );
+                }
+            }
+
+            $connection->setIndexes($indexes);
+
+            $connectionDtos[] = $connection;
+        }
+
+        return $connectionDtos;
     }
 }

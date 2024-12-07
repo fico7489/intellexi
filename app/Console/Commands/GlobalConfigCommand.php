@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\ESModule\Config\ConfigGlobalFetcher;
+use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Illuminate\Console\Command;
 
 class GlobalConfigCommand extends Command
@@ -11,10 +11,10 @@ class GlobalConfigCommand extends Command
 
     public function handle()
     {
-        /** @var ConfigGlobalFetcher $service */
-        $service = app(ConfigGlobalFetcher::class);
+        /** @var SyncMapper $service */
+        $service = app(SyncMapper::class);
 
-        $config = $service->fetch();
+        $config = $service->buildConfigMap();
 
         dump($config);
     }

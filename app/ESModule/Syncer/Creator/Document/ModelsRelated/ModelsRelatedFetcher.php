@@ -11,7 +11,7 @@ class ModelsRelatedFetcher
     private array $closuresExecuted = [];
 
     public function __construct(
-        private readonly OrmAdapter                       $ormAdapter,
+        private readonly OrmAdapter $ormAdapter,
         private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
     ) {
     }

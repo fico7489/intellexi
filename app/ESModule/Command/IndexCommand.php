@@ -3,7 +3,7 @@
 namespace App\ESModule\Command;
 
 use App\ESModule\Client\ClientAdapter;
-use App\ESModule\Config\ConfigGlobalFetcher;
+use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class IndexCommand
@@ -11,7 +11,7 @@ class IndexCommand
     private OutputStyle $output;
 
     public function __construct(
-        private readonly ConfigGlobalFetcher $configGlobalFetcher,
+        private readonly SyncMapper $syncMapper,
         private readonly ClientAdapter $clientAdapter,
     ) {
     }
@@ -20,7 +20,7 @@ class IndexCommand
     {
         $this->info('Showing indexes');
 
-        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+        foreach ($this->syncMapper->buildConfigMap() as $connectionDto) {
             $this->info('  Connection:'.$connectionDto->getName());
 
             foreach ($connectionDto->getIndexes() as $indexDto) {
@@ -37,7 +37,7 @@ class IndexCommand
     {
         $this->info('Creating indexes');
 
-        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+        foreach ($this->syncMapper->buildConfigMap() as $connectionDto) {
             $this->info('  Connection:'.$connectionDto->getName());
 
             $indexes = $connectionDto->getIndexes();
@@ -59,7 +59,7 @@ class IndexCommand
     {
         $this->info('Deleting indexes');
 
-        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+        foreach ($this->syncMapper->buildConfigMap() as $connectionDto) {
             $client = $this->clientAdapter->getClient($connectionDto);
 
             $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
@@ -74,7 +74,7 @@ class IndexCommand
     {
         $this->info('Deleting stale indexes');
 
-        foreach ($this->configGlobalFetcher->fetch() as $connectionDto) {
+        foreach ($this->syncMapper->buildConfigMap() as $connectionDto) {
             $indexesByPrefix = $this->clientAdapter->getIndexesByPrefix($connectionDto);
 
             $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
