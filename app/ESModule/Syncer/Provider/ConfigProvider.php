@@ -3,6 +3,7 @@
 namespace App\ESModule\Syncer\Provider;
 
 use App\ES\Connection\DefaultConnection;
+use App\ESModule\Config\Dto\ConfigDto;
 use App\ESModule\Config\Dto\ConnectionDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
@@ -86,9 +87,14 @@ class ConfigProvider
         // TODO
     }
 
+    public function getConfigDto(): ConfigDto
+    {
+        return $this->configDtoBuilder->build($this->configConnection, $this->configIndexes);
+    }
+
     public function getConnectionDto(): ConnectionDto
     {
-        $configDto = $this->configDtoBuilder->build($this->configConnection, $this->configIndexes);
+        $configDto = $this->getConfigDto();
 
         return $configDto->getConnectionDto();
     }

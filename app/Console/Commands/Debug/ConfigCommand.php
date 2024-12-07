@@ -5,9 +5,9 @@ namespace App\Console\Commands\Debug;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Illuminate\Console\Command;
 
-class ConnectionDtoCommand extends Command
+class ConfigCommand extends Command
 {
-    protected $signature = 'es:debug:connection-dto';
+    protected $signature = 'es:debug:config';
 
     public function handle(): void
     {
@@ -15,9 +15,9 @@ class ConnectionDtoCommand extends Command
 
         /** @var ConfigProvider $configProvider */
         $configProvider = app(ConfigProvider::class);
-        $connectionDto = $configProvider->getConnectionDto();
+        $configDto = $configProvider->getConfigDto();
 
-        dump($connectionDto);
+        dump($configDto);
 
         dump((floor(microtime(true) * 1000) - $milliseconds).' ms');
     }
