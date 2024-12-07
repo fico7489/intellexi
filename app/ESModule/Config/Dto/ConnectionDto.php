@@ -12,7 +12,6 @@ class ConnectionDto
         private readonly string $port,
         private readonly string $prefix,
         private readonly array $syncMap,
-        private readonly array $tableNamesSync,
     ) {
     }
 
@@ -39,11 +38,6 @@ class ConnectionDto
     public function getSyncMap(): array
     {
         return $this->syncMap;
-    }
-
-    public function getTableNamesSync(): array
-    {
-        return $this->tableNamesSync;
     }
 
     public function setIndexes(array $indexes): void

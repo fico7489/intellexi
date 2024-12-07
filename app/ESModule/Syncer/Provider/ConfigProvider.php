@@ -30,9 +30,9 @@ class ConfigProvider
 
     public function isTableNameForSync($tableName): bool
     {
-        $tableNamesSync = $this->getConnectionDto()->getTableNamesSync();
+        $syncMap = $this->getConnectionDto()->getSyncMap();
 
-        return isset($tableNamesSync[$tableName]);
+        return isset($syncMap[$tableName]);
     }
 
     public function getTableNamesIndex(): array
