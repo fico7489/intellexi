@@ -17,12 +17,18 @@ class ConnectionDtoBuilder
     {
         $syncMap = $this->syncMapBuilder->buildSyncMapping($indexDefiners);
 
+        $tableNamesSync = [];
+        foreach ($syncMap as $tableName => $items) {
+            $tableNamesSync[$tableName] = true;
+        }
+
         $connectionDto = new ConnectionDto(
             $connectionDefiner->getName(),
             $connectionDefiner->getHost(),
             $connectionDefiner->getPort(),
             $connectionDefiner->getPrefix(),
             $syncMap,
+            $tableNamesSync,
         );
 
         $indexesDtos = [];

@@ -5,9 +5,9 @@ namespace App\Console\Commands\Debug;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Illuminate\Console\Command;
 
-class DatabaseToIndexSyncMapCommand extends Command
+class ConnectionDtoCommand extends Command
 {
-    protected $signature = 'es:debug:database-to-index-sync-map';
+    protected $signature = 'es:debug:connection-dto';
 
     public function handle(): void
     {
@@ -15,9 +15,9 @@ class DatabaseToIndexSyncMapCommand extends Command
 
         /** @var ConfigProvider $configProvider */
         $configProvider = app(ConfigProvider::class);
-        $databaseToIndexSyncMap = $configProvider->getConnectionDto()->getSyncMap();
+        $connectionDto = $configProvider->getConnectionDto();
 
-        dump($databaseToIndexSyncMap);
+        dump($connectionDto);
 
         dump((floor(microtime(true) * 1000) - $milliseconds).' ms');
     }
