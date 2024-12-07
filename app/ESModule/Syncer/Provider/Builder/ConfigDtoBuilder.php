@@ -20,6 +20,9 @@ class ConfigDtoBuilder
     {
         $connectionDto = $this->connectionDtoBuilder->build($connectionDefiner, $indexDefiners);
 
+        //TODO
+        $databaseName = 'intellexi';
+
         $tableNamesDetected = $this->databaseAdapter->fetchTableNames();
         $classNamesOrmDetected = $this->ormAdapter->fetchAllClassNames();
 
@@ -47,6 +50,7 @@ class ConfigDtoBuilder
 
         $configDto = new ConfigDto(
             $connectionDto,
+            $databaseName,
             $tableNamesDetected,
             $indexNamesDetected,
             array_values($classNamesOrmDetected),
