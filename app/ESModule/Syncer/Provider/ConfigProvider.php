@@ -22,18 +22,6 @@ class ConfigProvider
     ) {
     }
 
-    public function getTableNamesSync(): array
-    {
-        $syncMapping = $this->getSyncMapping();
-
-        $tableNamesSync = [];
-        foreach ($syncMapping as $tableName => $items) {
-            $tableNamesSync[$tableName] = true;
-        }
-
-        return $tableNamesSync;
-    }
-
     public function isDatabaseNameForSync($tableName): bool
     {
         // TODO
@@ -96,6 +84,18 @@ class ConfigProvider
         }
 
         // TODO
+    }
+
+    public function getTableNamesSync(): array
+    {
+        $syncMapping = $this->getConnectionDto()->getSyncMap();
+
+        $tableNamesSync = [];
+        foreach ($syncMapping as $tableName => $items) {
+            $tableNamesSync[$tableName] = true;
+        }
+
+        return $tableNamesSync;
     }
 
     public function getSyncMapping(): array
