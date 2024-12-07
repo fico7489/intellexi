@@ -4,13 +4,13 @@ namespace App\ESModule\Syncer\Mapper\SyncMapper;
 
 use App\ESModule\Config\ConfigFetcher;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 
 class SyncMapper
 {
     public function __construct(
         private readonly ConfigFetcher $configFetcher,
-        private readonly OrmMapper $modelMapper,
+        private readonly OrmAdapter    $ormAdapter,
     ) {
     }
 
@@ -20,12 +20,12 @@ class SyncMapper
 
         $indexDefiners = $this->fetchClassNamesIndex();
         foreach ($indexDefiners as $className => $indexDefiner) {
-            // TODO [], syncMap([])
+            // TODO [], syncMap([]) DTO
             $syncMap = $indexDefiner->syncMap([]);
             foreach ($syncMap as $classNameSyncMap => $changedFields) {
                 $tableName = $classNameSyncMap;
-                if ($this->modelMapper->isClassNameModel($classNameSyncMap)) {
-                    $tableName = $this->modelMapper->convertClassNameToTableName($classNameSyncMap);
+                if ($this->ormAdapter->isClassNameModel($classNameSyncMap)) {
+                    $tableName = $this->ormAdapter->convertClassNameToTableName($classNameSyncMap);
                 }
 
                 $indexName = $indexDefiner->getIndexName();
@@ -68,7 +68,7 @@ class SyncMapper
 
         $tableNamesIndex = [];
         foreach ($classNamesIndex as $className => $indexDefiner) {
-            $tableName = $this->modelMapper->convertClassNameToTableName($className);
+            $tableName = $this->ormAdapter->convertClassNameToTableName($className);
 
             $tableNamesIndex[$tableName] = true;
         }

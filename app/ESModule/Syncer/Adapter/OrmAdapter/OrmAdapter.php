@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
-class OrmMapper
+class OrmAdapter
 {
     public function __construct(
         private readonly EloquentAdapter $ormAdapter,// TODO interface

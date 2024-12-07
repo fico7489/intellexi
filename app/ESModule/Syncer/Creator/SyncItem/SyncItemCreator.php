@@ -11,8 +11,8 @@ use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 class SyncItemCreator
 {
     public function __construct(
-        private readonly DatabaseAdapter $databaseMapper,
-        private readonly SyncMapper $syncMapper,
+        private readonly DatabaseAdapter $databaseAdapter,
+        private readonly SyncMapper      $syncMapper,
     ) {
     }
 
@@ -46,7 +46,7 @@ class SyncItemCreator
             }
 
             // detect identifier
-            $identifierValue = $this->databaseMapper->detectIdentifierValue($tableName, $data);
+            $identifierValue = $this->databaseAdapter->detectIdentifierValue($tableName, $data);
 
             // we will group each cdcDto inside array with table->identifier keys, so that we remove duplicated and detect any problems
             if (CdcDto::TYPE_DELETE === $type) {

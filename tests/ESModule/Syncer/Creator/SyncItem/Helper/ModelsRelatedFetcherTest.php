@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
-use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use Mockery\MockInterface;
@@ -40,7 +40,7 @@ class ModelsRelatedFetcherTest extends TestCase
             },
         ]);
 
-        $this->mock(OrmMapper::class, function (MockInterface $mock) {
+        $this->mock(OrmAdapter::class, function (MockInterface $mock) {
             $mock->allows('isTableNameModel')->with($this->equalTo('test-table'))->andReturn(false)->once();
         });
 
@@ -67,7 +67,7 @@ class ModelsRelatedFetcherTest extends TestCase
             },
         ]);
 
-        $this->mock(OrmMapper::class, function (MockInterface $mock) use ($object) {
+        $this->mock(OrmAdapter::class, function (MockInterface $mock) use ($object) {
             $mock->allows('isTableNameModel')->with($this->equalTo('test-table'))->andReturn(true)->once();
             $mock->allows('convertTableNameToClassName')->with($this->equalTo('test-table'))->andReturn($object::class)->once();
         });
@@ -101,7 +101,7 @@ class ModelsRelatedFetcherTest extends TestCase
             },
         ]);
 
-        $this->mock(OrmMapper::class, function (MockInterface $mock) use ($object) {
+        $this->mock(OrmAdapter::class, function (MockInterface $mock) use ($object) {
             $mock->allows('isTableNameModel')->with($this->equalTo('test-table'))->andReturn(true)->once();
             $mock->allows('convertTableNameToClassName')->with($this->equalTo('test-table'))->andReturn($object::class)->once();
         });

@@ -2,14 +2,14 @@
 
 namespace App\ESModule\Syncer\Creator\Document\Helper;
 
-use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Mapper\SyncMapper\SyncMapper;
 
 class ModelSourceFetcher
 {
     public function __construct(
-        private readonly OrmMapper $modelMapper,
+        private readonly OrmAdapter $ormAdapter,
         private readonly SyncMapper $syncMapper,
     ) {
     }
@@ -22,9 +22,9 @@ class ModelSourceFetcher
             return null;
         }
 
-        $className = $this->modelMapper->convertTableNameToClassName($tableName);
+        $className = $this->ormAdapter->convertTableNameToClassName($tableName);
         $identifierValue = $syncItemDto->getIdentifierValue();
-        $modelSource = $this->modelMapper->fetchModel($className, $identifierValue);
+        $modelSource = $this->ormAdapter->fetchModel($className, $identifierValue);
 
         return $modelSource;
     }

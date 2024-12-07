@@ -2,13 +2,13 @@
 
 namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
-use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
 
 class ModelsRelatedValidatorAndGrouper
 {
     public function __construct(
-        private readonly OrmMapper $modelMapper,
+        private readonly OrmAdapter $ormAdapter,
     ) {
     }
 
@@ -24,8 +24,8 @@ class ModelsRelatedValidatorAndGrouper
         $modelsRelatedGrouped = [];
 
         foreach ($modelsRelated as $model) {
-            $tableName = $this->modelMapper->fetchTableNameFromModel($model);
-            $identifierValue = $this->modelMapper->fetchIdentifierValueFromModel($model);
+            $tableName = $this->ormAdapter->fetchTableNameFromModel($model);
+            $identifierValue = $this->ormAdapter->fetchIdentifierValueFromModel($model);
 
             $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
 

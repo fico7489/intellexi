@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
-use App\ESModule\Syncer\Adapter\OrmAdapter\OrmMapper;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 
 class ModelsRelatedFetcher
@@ -11,7 +11,7 @@ class ModelsRelatedFetcher
     private array $closuresExecuted = [];
 
     public function __construct(
-        private readonly OrmMapper $modelMapper,
+        private readonly OrmAdapter                       $ormAdapter,
         private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
     ) {
     }
@@ -30,8 +30,8 @@ class ModelsRelatedFetcher
 
         // TODO decorators before $modelsRelated
         $modelsRelated = [];
-        if ($this->modelMapper->isTableNameModel($tableName)) {
-            $className = $this->modelMapper->convertTableNameToClassName($tableName);
+        if ($this->ormAdapter->isTableNameModel($tableName)) {
+            $className = $this->ormAdapter->convertTableNameToClassName($tableName);
 
             if (isset($syncModels[$className])) {
                 $modelsRelated = $syncModels[$className]($modelSource, $syncItemDto, $modelsRelated);
