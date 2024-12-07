@@ -36,23 +36,9 @@ class ConfigProvider
         return isset($syncMap[$tableName]);
     }
 
-    public function getTableNamesIndex(): array
-    {
-        $classNamesOrmToIndexMapping = $this->fetchClassNamesOrmToIndexMapping();
-
-        $tableNamesIndex = [];
-        foreach ($classNamesOrmToIndexMapping as $className => $indexDefiner) {
-            $tableName = $this->ormAdapter->convertClassNameOrmToTableName($className);
-
-            $tableNamesIndex[$tableName] = true;
-        }
-
-        return $tableNamesIndex;
-    }
-
     public function isTableNameForIndex($tableName): bool
     {
-        $tableNamesIndex = $this->getTableNamesIndex();
+        $tableNamesIndex = array_flip($this->getConfigDto()->getTableNamesForSync());
 
         return isset($tableNamesIndex[$tableName]);
     }
