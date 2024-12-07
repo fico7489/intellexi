@@ -24,7 +24,8 @@ class ConfigDtoBuilder
         $databaseName = 'intellexi';
 
         $tableNamesDetected = $this->databaseAdapter->fetchTableNames();
-        $classNamesOrmDetected = $this->ormAdapter->fetchAllClassNames();
+        $classNamesOrm = $this->ormAdapter->fetchAllClassNames();
+        $classNamesOrmDetected = array_values($classNamesOrm);
 
         $indexNamesDetected = [];
         foreach ($connectionDto->getIndexes() as $index) {
@@ -53,7 +54,7 @@ class ConfigDtoBuilder
             $databaseName,
             $tableNamesDetected,
             $indexNamesDetected,
-            array_values($classNamesOrmDetected),
+            $classNamesOrmDetected,
             $tableNamesToIndexNamesMapping,
             $tableNamesToClassNameOrmMapping
         );
