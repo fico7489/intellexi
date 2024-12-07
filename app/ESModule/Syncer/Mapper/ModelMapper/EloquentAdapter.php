@@ -15,12 +15,12 @@ class EloquentAdapter
         return $className::find($identifierValue);
     }
 
-    public function fetchTableNameFromModel(object $model): string
+    public function fetchTableNameFromModel(Model $model): string
     {
         return $model->getTable();
     }
 
-    public function fetchIdentifierValueFromModel(object $model): mixed
+    public function fetchIdentifierValueFromModel(Model $model): mixed
     {
         $identifierName = $model->getKeyName();
 

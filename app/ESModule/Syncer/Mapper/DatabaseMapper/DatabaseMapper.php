@@ -2,35 +2,21 @@
 
 namespace App\ESModule\Syncer\Mapper\DatabaseMapper;
 
-use Illuminate\Support\Facades\DB;
-
 class DatabaseMapper
 {
+    public function __construct(
+        private readonly MySqlAdapter $adapter,
+    ) {
+    }
+
     public function fetchTableNames(): array
     {
-        $tableNames = collect(DB::connection()->select('show tables'))->map(function ($val) {
-            foreach ($val as $key => $tbl) {
-                return $tbl;
-            }
-        })->toArray();
-
-        return $tableNames;
+        return $this->adapter->fetchTableNames();
     }
 
     public function fetchTableNamesToPrimaryKeysMapping(): array
     {
-        $tableNames = $this->fetchTableNames();
-
-        $tablePrimaryKeysMapping = [];
-        foreach ($tableNames as $tableName) {
-            $primaryKeyObjects = DB::connection()->select('SHOW KEYS FROM '.$tableName." WHERE Key_name = 'PRIMARY'");
-
-            $primaryKey = $primaryKeyObjects[0]->Column_name;
-
-            $tablePrimaryKeysMapping[$tableName] = $primaryKey;
-        }
-
-        return $tablePrimaryKeysMapping;
+        return $this->adapter->fetchTableNamesToPrimaryKeysMapping();
     }
 
     public function fetchTableNamesWithColumnsMapping(): array
@@ -39,8 +25,7 @@ class DatabaseMapper
         $tableNames = $this->fetchTableNames();
 
         foreach ($tableNames as $tableName) {
-            // TODO intellexi
-            $columns = DB::connection()->select('SHOW COLUMNS FROM `'.$tableName.'` FROM `intellexi`;');
+            $columns = $this->adapter->fetchColumns($tableName);
 
             foreach ($columns as $column) {
                 $field = $column->Field;
