@@ -7,11 +7,6 @@ use App\Models\User;
 
 class User2Index implements IndexDefinerModelInterface
 {
-    public function getConnection(): string
-    {
-        return 'default';
-    }
-
     public function getIndexName(): string
     {
         return 'users2';

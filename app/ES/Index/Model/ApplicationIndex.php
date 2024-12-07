@@ -9,11 +9,6 @@ use App\Models\User;
 
 class ApplicationIndex implements IndexDefinerModelInterface
 {
-    public function getConnection(): string
-    {
-        return 'default';
-    }
-
     public function getIndexName(): string
     {
         return 'applications';

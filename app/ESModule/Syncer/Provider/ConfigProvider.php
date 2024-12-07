@@ -136,14 +136,12 @@ class ConfigProvider
 
             $indexes = [];
             foreach ($indexDefiners as $indexDefiner) {
-                if ($indexDefiner->getConnection() === $connection->getName()) {
-                    $indexes[] = new IndexDto(
-                        $indexDefiner->getIndexName(),
-                        $indexDefiner->getMapping([]),
-                        $indexDefiner->getSettings([]),
-                        $connection
-                    );
-                }
+                $indexes[] = new IndexDto(
+                    $indexDefiner->getIndexName(),
+                    $indexDefiner->getMapping([]),
+                    $indexDefiner->getSettings([]),
+                    $connection
+                );
             }
 
             $connection->setIndexes($indexes);
