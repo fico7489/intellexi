@@ -1,13 +1,14 @@
 <?php
 
-namespace App\ESModule\CdcLaravel;
+namespace App\ESModule;
 
 use App\ESModule\Cdc\Converter\ConverterInterface;
 use App\ESModule\Cdc\Converter\MaxwellConverter;
 use App\ESModule\Cdc\Event\CdcDtosEvent;
-use App\ESModule\Cdc\Event\CdcPayloadsEvent;
 use App\ESModule\Cdc\Storage\List\ListAlgorithm;
 use App\ESModule\Cdc\Storage\List\ListStorage;
+use App\ESModule\CdcLaravel\Consumer;
+use App\ESModule\CdcLaravel\EventDispatcher;
 use App\ESModule\CdcStorageRedis\RedisListStorage;
 use App\ESModule\Syncer\Syncer;
 use Illuminate\Support\Facades\Event;

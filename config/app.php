@@ -161,7 +161,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        \App\ESModule\CdcLaravel\ServiceProvider::class,
+        \App\ESModule\ServiceProvider::class,
     ])->toArray(),
 
     /*
