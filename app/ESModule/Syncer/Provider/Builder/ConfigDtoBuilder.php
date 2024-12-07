@@ -3,12 +3,16 @@
 namespace App\ESModule\Syncer\Provider\Builder;
 
 use App\ES\Connection\DefaultConnection;
+use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Provider\Builder\Dto\ConfigDto;
 
 class ConfigDtoBuilder
 {
     public function __construct(
         private readonly ConnectionDtoBuilder $connectionDtoBuilder,
+        private readonly DatabaseAdapter $databaseAdapter,
+        private readonly OrmAdapter $ormAdapter,
     ) {
     }
 
@@ -16,7 +20,21 @@ class ConfigDtoBuilder
     {
         $connectionDto = $this->connectionDtoBuilder->build($connectionDefiner, $indexDefiners);
 
-        $configDto = new ConfigDto($connectionDto);
+        $tableNamesDetected = $this->databaseAdapter->fetchTableNames();
+        $classNamesOrmDetected = $this->ormAdapter->fetchAllClassNames();
+
+        $tableNamesToClassNameOrmMapping = [];
+        foreach ($tableNamesDetected as $tableName) {
+            $classNameOrm = $classNamesOrmDetected[$tableName] ?? null;
+            $tableNamesToClassNameOrmMapping[$tableName] = $classNameOrm;
+        }
+
+        $configDto = new ConfigDto(
+            $connectionDto,
+            $tableNamesDetected,
+            array_values($classNamesOrmDetected),
+            $tableNamesToClassNameOrmMapping
+        );
 
         return $configDto;
     }
