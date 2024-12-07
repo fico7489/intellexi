@@ -7,6 +7,7 @@ use App\ESModule\Config\Dto\ConnectionDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Provider\Builder\ConnectionDtoBuilder;
+use App\ESModule\Syncer\Provider\Builder\SyncMapBuilder;
 
 class ConfigProvider
 {
@@ -19,6 +20,7 @@ class ConfigProvider
         private readonly array $configIndexes,
         private readonly OrmAdapter $ormAdapter,
         private readonly ConnectionDtoBuilder $connectionDtoBuilder,
+        private readonly SyncMapBuilder $syncMapBuilder,
     ) {
     }
 
@@ -100,25 +102,7 @@ class ConfigProvider
 
     public function buildSyncMapping(): array
     {
-        $syncMapping = [];
-
-        $indexDefiners = $this->fetchClassNamesIndex();
-        foreach ($indexDefiners as $className => $indexDefiner) {
-            // TODO [], syncMap([]) DTO
-            $syncMap = $indexDefiner->syncMap([]);
-            foreach ($syncMap as $classNameSyncMap => $changedFields) {
-                $tableName = $classNameSyncMap;
-                if ($this->ormAdapter->isClassNameModel($classNameSyncMap)) {
-                    $tableName = $this->ormAdapter->convertClassNameToTableName($classNameSyncMap);
-                }
-
-                $indexName = $indexDefiner->getIndexName();
-
-                $syncMapping[$tableName][$indexName] = $changedFields;
-            }
-        }
-
-        return $syncMapping;
+        return $this->syncMapBuilder->buildSyncMapping($this->configIndexes);
     }
 
     public function buildConnectionDto(): ConnectionDto
