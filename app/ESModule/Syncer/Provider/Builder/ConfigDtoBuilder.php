@@ -11,9 +11,10 @@ class ConfigDtoBuilder
 {
     public function __construct(
         private readonly ConnectionDtoBuilder $connectionDtoBuilder,
-        private readonly DatabaseAdapter $databaseAdapter,
-        private readonly OrmAdapter $ormAdapter,
-    ) {
+        private readonly DatabaseAdapter      $databaseAdapter,
+        private readonly OrmAdapter           $ormAdapter,
+    )
+    {
     }
 
     public function build(DefaultConnection $connectionDefiner, array $indexDefiners): ConfigDto
@@ -49,6 +50,16 @@ class ConfigDtoBuilder
             $tableNamesToClassNameOrmMapping[$tableName] = $classNameOrm;
         }
 
+        $tableNamesIndex = [];
+        $tableNamesToIndexNamesMappingFlipped = array_flip($tableNamesToIndexNamesMapping);
+        foreach ($indexNamesDetected as $indexName) {
+            if(isset($tableNamesToIndexNamesMappingFlipped[$indexName])) {
+                $tableNamesIndex[] = $tableNamesToIndexNamesMappingFlipped[$indexName];
+            }
+        }
+
+
+
         $configDto = new ConfigDto(
             $connectionDto,
             $databaseName,
@@ -56,7 +67,9 @@ class ConfigDtoBuilder
             $indexNamesDetected,
             $classNamesOrmDetected,
             $tableNamesToIndexNamesMapping,
-            $tableNamesToClassNameOrmMapping
+            $tableNamesToClassNameOrmMapping,
+            $tableNamesIndex,
+            $tableNamesForSync,
         );
 
         return $configDto;

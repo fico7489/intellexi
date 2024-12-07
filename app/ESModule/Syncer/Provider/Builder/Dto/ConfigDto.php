@@ -12,6 +12,8 @@ class ConfigDto
         private readonly array $classNamesOrmDetected,
         private readonly array $tableNamesToIndexNamesMapping,
         private readonly array $tableNamesToClassNameOrmMapping,
+        private readonly array $tableNamesIndex,
+        private readonly array $tableNamesForSync,
     ) {
     }
 
@@ -48,5 +50,15 @@ class ConfigDto
     public function getTableNamesToClassNameOrmMapping(): array
     {
         return $this->tableNamesToClassNameOrmMapping;
+    }
+
+    public function getTableNamesIndex(): array
+    {
+        return $this->tableNamesIndex;
+    }
+
+    public function getTableNamesForSync(): array
+    {
+        return $this->tableNamesForSync;
     }
 }
