@@ -42,10 +42,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->app->when(RedisListStorage::class)->needs('$channel')->give('maxwell');
         $this->app->when(RedisListStorage::class)->needs('$options')->give(config('database.redis.default'));
 
-        $this->app->when(ConfigProvider::class)->needs('$configConnection')->give([
-            // TODO
-            app(DefaultConnection::class),
-        ]);
+        // TODO
+        $this->app->when(ConfigProvider::class)->needs('$configConnection')->give(app(DefaultConnection::class));
 
         $this->app->when(ConfigProvider::class)->needs('$configIndexes')->give([
             // TODO
