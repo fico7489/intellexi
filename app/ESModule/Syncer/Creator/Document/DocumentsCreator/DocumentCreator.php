@@ -8,7 +8,6 @@ use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
-use Illuminate\Database\Eloquent\Model;
 
 class DocumentCreator
 {
@@ -40,8 +39,6 @@ class DocumentCreator
 
         $documents = [];
         foreach ($modelsRelated as $modelRelated) {
-            /** @var Model $modelRelated */
-
             // TODO prefix
             $indexName = 'prefix_'.$index->getIndexName();
 

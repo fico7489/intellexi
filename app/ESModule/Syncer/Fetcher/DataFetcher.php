@@ -3,11 +3,10 @@
 namespace App\ESModule\Syncer\Fetcher;
 
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
-use Illuminate\Database\Eloquent\Model;
 
 class DataFetcher
 {
-    public function fetch(IndexDefinerModelInterface $index, Model $model)
+    public function fetch(IndexDefinerModelInterface $index, object $model)
     {
         $data = [];
 

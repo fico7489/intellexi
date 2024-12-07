@@ -35,15 +35,15 @@ readonly class ListAlgorithm
                 usleep(2000);
 
                 $payload = $predis->lmpop([$channel], 'left', ($limit - 1));
-                $cdcPayloads2 = $payload[$channel];
+                if ('NULL' !== gettype($payload)) {
+                    $cdcPayloads2 = $payload[$channel];
 
-                $cdcPayloads = array_merge($cdcPayloads, $cdcPayloads2);
+                    $cdcPayloads = array_merge($cdcPayloads, $cdcPayloads2);
+                }
             }
 
-            dump($cdcPayloads);
-
             if (null !== $cdcPayloads) {
-                //$this->processor->processCdcPayloads($cdcPayloads);
+                $this->processor->processCdcPayloads($cdcPayloads);
             }
         }
     }
