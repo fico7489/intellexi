@@ -30,8 +30,8 @@ class ModelsRelatedFetcher
 
         // TODO decorators before $modelsRelated
         $modelsRelated = [];
-        if ($this->ormAdapter->isTableNameModel($tableName)) {
-            $className = $this->ormAdapter->convertTableNameToClassName($tableName);
+        if ($this->ormAdapter->isTableNameOrm($tableName)) {
+            $className = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
 
             if (isset($syncModels[$className])) {
                 $modelsRelated = $syncModels[$className]($modelSource, $syncItemDto, $modelsRelated);

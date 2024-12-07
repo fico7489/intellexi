@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\File;
 
 class EloquentAdapter
 {
-    public function fetchModel(string $className, mixed $identifierValue): ?Model
+    public function fetchModel(string $classNameOrm, mixed $identifierValue): ?Model
     {
         // MAKE sure that newest model is fetched
 
-        return $className::find($identifierValue);
+        return $classNameOrm::find($identifierValue);
     }
 
     public function fetchTableNameFromModel(Model $model): string
@@ -27,7 +27,7 @@ class EloquentAdapter
         return $model->{$identifierName};
     }
 
-    public function fetchAllClassNames(): array
+    public function fetchAllClassNamesOrm(): array
     {
         $models = collect(File::allFiles(app_path()))
             ->map(function ($item) {
@@ -49,13 +49,13 @@ class EloquentAdapter
                 return $valid;
             });
 
-        $classNames = $models->values()->toArray();
+        $classNamesOrm = $models->values()->toArray();
 
         $mapping = [];
-        foreach ($classNames as $className) {
-            $tableName = (new $className())->getTable();
+        foreach ($classNamesOrm as $classNameOrm) {
+            $tableName = (new $classNameOrm())->getTable();
 
-            $mapping[$tableName] = $className;
+            $mapping[$tableName] = $classNameOrm;
         }
 
         return $mapping;

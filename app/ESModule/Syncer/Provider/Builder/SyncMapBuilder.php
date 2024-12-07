@@ -20,8 +20,8 @@ class SyncMapBuilder
             $syncMap = $indexDefiner->syncMap([]);
             foreach ($syncMap as $classNameSyncMap => $changedFields) {
                 $tableName = $classNameSyncMap;
-                if ($this->ormAdapter->isClassNameModel($classNameSyncMap)) {
-                    $tableName = $this->ormAdapter->convertClassNameToTableName($classNameSyncMap);
+                if ($this->ormAdapter->isClassNameOrm($classNameSyncMap)) {
+                    $tableName = $this->ormAdapter->convertClassNameOrmToTableName($classNameSyncMap);
                 }
 
                 $indexName = $indexDefiner->getIndexName();

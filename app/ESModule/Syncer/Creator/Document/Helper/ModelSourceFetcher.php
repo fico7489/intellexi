@@ -22,7 +22,7 @@ class ModelSourceFetcher
             return null;
         }
 
-        $className = $this->ormAdapter->convertTableNameToClassName($tableName);
+        $className = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
         $identifierValue = $syncItemDto->getIdentifierValue();
         $modelSource = $this->ormAdapter->fetchModel($className, $identifierValue);
 

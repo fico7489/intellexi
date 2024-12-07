@@ -9,42 +9,42 @@ class OrmAdapter
     ) {
     }
 
-    public function fetchAllClassNames(): array
+    public function fetchAllClassNamesOrm(): array
     {
-        return $this->ormAdapter->fetchAllClassNames();
+        return $this->ormAdapter->fetchAllClassNamesOrm();
     }
 
-    public function convertTableNameToClassName($tableName): string
+    public function convertTableNameToClassNameOrm($tableName): string
     {
-        $mapping = $this->fetchAllClassNames();
+        $mapping = $this->fetchAllClassNamesOrm();
 
         return $mapping[$tableName];
     }
 
-    public function convertClassNameToTableName($className): string
+    public function convertClassNameOrmToTableName($classNameOrm): string
     {
-        $mapping = $this->fetchAllClassNames();
+        $mapping = $this->fetchAllClassNamesOrm();
 
-        return array_flip($mapping)[$className];
+        return array_flip($mapping)[$classNameOrm];
     }
 
-    public function isClassNameModel($className): string
+    public function isClassNameOrm($classNameOrm): string
     {
-        $mapping = $this->fetchAllClassNames();
+        $mapping = $this->fetchAllClassNamesOrm();
 
-        return isset(array_flip($mapping)[$className]);
+        return isset(array_flip($mapping)[$classNameOrm]);
     }
 
-    public function isTableNameModel($tableName): string
+    public function isTableNameOrm($tableName): string
     {
-        $mapping = $this->fetchAllClassNames();
+        $mapping = $this->fetchAllClassNamesOrm();
 
         return isset($mapping[$tableName]);
     }
 
-    public function fetchModel(string $className, mixed $identifierValue): ?object
+    public function fetchModel(string $classNameOrm, mixed $identifierValue): ?object
     {
-        return $this->ormAdapter->fetchModel($className, $identifierValue);
+        return $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
     }
 
     public function fetchTableNameFromModel(object $model): string

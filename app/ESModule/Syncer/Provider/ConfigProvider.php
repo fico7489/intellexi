@@ -42,7 +42,7 @@ class ConfigProvider
 
         $tableNamesIndex = [];
         foreach ($classNamesIndex as $className => $indexDefiner) {
-            $tableName = $this->ormAdapter->convertClassNameToTableName($className);
+            $tableName = $this->ormAdapter->convertClassNameOrmToTableName($className);
 
             $tableNamesIndex[$tableName] = true;
         }
