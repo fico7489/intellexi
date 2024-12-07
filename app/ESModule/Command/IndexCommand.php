@@ -12,20 +12,19 @@ class IndexCommand
 
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly ClientAdapter  $clientAdapter,
-    )
-    {
+        private readonly ClientAdapter $clientAdapter,
+    ) {
     }
 
     public function showAll(): void
     {
         $this->info('Showing indexes');
 
-        $connectionDto = $this->configProvider->buildConfigMap();
+        $connectionDto = $this->configProvider->buildConnectionDto();
         foreach ($connectionDto->getIndexes() as $indexDto) {
             $exists = $this->clientAdapter->indexExists($indexDto);
 
-            $this->info('    Index:' . $indexDto->getNameWithPrefix() . ', exists:' . ($exists ? 'yes' : 'no'));
+            $this->info('    Index:'.$indexDto->getNameWithPrefix().', exists:'.($exists ? 'yes' : 'no'));
         }
 
         $this->info('DONE');
@@ -35,12 +34,12 @@ class IndexCommand
     {
         $this->info('Creating indexes');
 
-        $connectionDto = $this->configProvider->buildConfigMap();
+        $connectionDto = $this->configProvider->buildConnectionDto();
         $indexes = $connectionDto->getIndexes();
         foreach ($indexes as $indexDto) {
             $exists = $this->clientAdapter->indexExists($indexDto);
 
-            $this->info('    Index:' . $indexDto->getNameWithPrefix() . ', exists:' . ($exists ? 'yes' : 'no'));
+            $this->info('    Index:'.$indexDto->getNameWithPrefix().', exists:'.($exists ? 'yes' : 'no'));
 
             if (!$exists) {
                 $this->clientAdapter->createIndex($indexDto);
@@ -54,8 +53,8 @@ class IndexCommand
     {
         $this->info('Deleting indexes');
 
-        $connectionDto = $this->configProvider->buildConfigMap();
-        $this->info('  Connection:' . $connectionDto->getName() . ', prefix=' . $connectionDto->getPrefix());
+        $connectionDto = $this->configProvider->buildConnectionDto();
+        $this->info('  Connection:'.$connectionDto->getName().', prefix='.$connectionDto->getPrefix());
 
         $this->clientAdapter->deleteByPrefix($connectionDto);
 
@@ -66,7 +65,7 @@ class IndexCommand
     {
         $this->info('Deleting stale indexes');
 
-        $connectionDto = $this->configProvider->buildConfigMap();
+        $connectionDto = $this->configProvider->buildConnectionDto();
         $indexesByPrefix = $this->clientAdapter->getIndexesByPrefix($connectionDto);
 
         $indexNamesFromConfig = [];
@@ -76,7 +75,7 @@ class IndexCommand
 
         foreach ($indexesByPrefix as $indexByPrefix) {
             if (!in_array($indexByPrefix, $indexNamesFromConfig)) {
-                $this->info('    Index:' . $indexByPrefix . ' is stale');
+                $this->info('    Index:'.$indexByPrefix.' is stale');
 
                 $this->clientAdapter->deleteByName($connectionDto, $indexByPrefix);
             }
@@ -93,7 +92,7 @@ class IndexCommand
     private function info(string $string): void
     {
         if ($this->output) {
-            $this->output->writeln('<info>' . $string . '</info>');
+            $this->output->writeln('<info>'.$string.'</info>');
         }
     }
 }

@@ -120,10 +120,7 @@ class ConfigProvider
         // TODO
     }
 
-    /**
-     * @return array<ConnectionDto>
-     */
-    public function buildConfigMap(): ConnectionDto
+    public function buildConnectionDto(): ConnectionDto
     {
         $connectionDefiner = $this->configConnection;
 
