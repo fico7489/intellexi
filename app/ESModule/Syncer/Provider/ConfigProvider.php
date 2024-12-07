@@ -3,8 +3,6 @@
 namespace App\ESModule\Syncer\Provider;
 
 use App\ES\Connection\DefaultConnection;
-use App\ES\Index\Model\ApplicationIndex;
-use App\ES\Index\Model\UserIndex;
 use App\ESModule\Config\Dto\ConnectionDto;
 use App\ESModule\Config\Dto\IndexDto;
 use App\ESModule\Config\Interface\IndexDefinerModelInterface;
@@ -13,31 +11,10 @@ use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 class ConfigProvider
 {
     public function __construct(
+        private readonly mixed $configConnection,
+        private readonly array $configIndexes,
         private readonly OrmAdapter $ormAdapter,
     ) {
-    }
-
-    // TODO interface
-    /**
-     * @return array<DefaultConnection>
-     */
-    public function fetchConnections(): array
-    {
-        return [
-            app(DefaultConnection::class),
-        ];
-    }
-
-    /**
-     * @return array<IndexDefinerModelInterface>
-     */
-    public function fetchIndexes(): array
-    {
-        // TODO load by attributes
-        return [
-            app(ApplicationIndex::class),
-            app(UserIndex::class),
-        ];
     }
 
     public function buildSyncMapping(): array
@@ -114,7 +91,7 @@ class ConfigProvider
      */
     public function fetchClassNamesIndex(): array
     {
-        $indexDefiners = $this->fetchIndexes();
+        $indexDefiners = $this->configIndexes;
 
         $classNamesIndex = [];
 
@@ -129,7 +106,7 @@ class ConfigProvider
     {
         $classNamesIndex = $this->fetchClassNamesIndex();
 
-        $indexDefiners = $this->fetchIndexes();
+        $indexDefiners = $this->configIndexes;
         foreach ($indexDefiners as $indexDefiner) {
             if ($indexDefiner->getIndexName() === $indexName) {
                 return $indexDefiner;
@@ -144,8 +121,8 @@ class ConfigProvider
      */
     public function buildConfigMap(): array
     {
-        $connectionsDefiners = $this->fetchConnections();
-        $indexDefiners = $this->fetchIndexes();
+        $connectionsDefiners = [$this->configConnection];
+        $indexDefiners = $this->configIndexes;
 
         $connectionDtos = [];
         foreach ($connectionsDefiners as $connectionDefiner) {
