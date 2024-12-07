@@ -24,8 +24,8 @@ class ConnectionDtoBuilder
         $indexesDtos = [];
         foreach ($indexDefiners as $indexDefiner) {
             $indexesDtos[$indexDefiner->getIndexName()] = new IndexDto(
-                $indexDefiner->getClassNameOrm(),
                 $indexDefiner->getIndexName(),
+                $indexDefiner->getClassNameOrm(),
                 $indexDefiner->getMapping([]),
                 $indexDefiner->getSettings([]),
                 $connectionDto

@@ -38,7 +38,7 @@ class ConfigDtoBuilder
         $tableNamesToIndexNamesMapping = [];
         foreach ($tableNamesDetected as $tableName) {
             foreach ($connectionDto->getIndexes() as $index) {
-                $tableNameIndex = $this->ormAdapter->convertClassNameOrmToTableName($index->getClassName());
+                $tableNameIndex = $this->ormAdapter->convertClassNameOrmToTableName($index->getClassNameOrm());
 
                 if ($tableName === $tableNameIndex) {
                     $tableNamesToIndexNamesMapping[$tableName] = $index->getName();
