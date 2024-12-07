@@ -31,10 +31,10 @@ class ModelsRelatedFetcher
         // TODO decorators before $modelsRelated
         $modelsRelated = [];
         if ($this->ormAdapter->isTableNameOrm($tableName)) {
-            $className = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
+            $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
 
-            if (isset($syncModels[$className])) {
-                $modelsRelated = $syncModels[$className]($modelSource, $syncItemDto, $modelsRelated);
+            if (isset($syncModels[$classNameOrm])) {
+                $modelsRelated = $syncModels[$classNameOrm]($modelSource, $syncItemDto, $modelsRelated);
             }
         }
 
@@ -44,8 +44,8 @@ class ModelsRelatedFetcher
 
         // TODO decorators after $modelsRelated
 
-        $className = $index->getClassName();
-        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $className);
+        $classNameOrm = $index->getClassName();
+        $modelsRelated = $this->modelsRelatedValidatorAndGrouper->validateAndGroup($modelsRelated, $classNameOrm);
 
         return $modelsRelated;
     }

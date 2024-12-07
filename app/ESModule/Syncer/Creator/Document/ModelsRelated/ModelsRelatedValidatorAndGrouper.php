@@ -19,7 +19,7 @@ class ModelsRelatedValidatorAndGrouper
      *
      * @throws DocumentCreatorException
      */
-    public function validateAndGroup(array $modelsRelated, string $classNameSource): array
+    public function validateAndGroup(array $modelsRelated, string $classNameOrmSource): array
     {
         $modelsRelatedGrouped = [];
 
@@ -29,8 +29,8 @@ class ModelsRelatedValidatorAndGrouper
 
             $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
 
-            if (!$model instanceof $classNameSource) {
-                throw new DocumentCreatorException('Related model is not instanceof source className="'.$classNameSource.'"');
+            if (!$model instanceof $classNameOrmSource) {
+                throw new DocumentCreatorException('Related model is not instanceof source classNameOrm="'.$classNameOrmSource.'"');
             }
         }
 
