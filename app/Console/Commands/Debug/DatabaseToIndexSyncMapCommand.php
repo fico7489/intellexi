@@ -13,9 +13,9 @@ class DatabaseToIndexSyncMapCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        /** @var ConfigProvider $databaseToIndexSyncMapCreator */
-        $databaseToIndexSyncMapCreator = app(ConfigProvider::class);
-        $databaseToIndexSyncMap = $databaseToIndexSyncMapCreator->buildSyncMapping();
+        /** @var ConfigProvider $configProvider */
+        $configProvider = app(ConfigProvider::class);
+        $databaseToIndexSyncMap = $configProvider->buildSyncMapping();
 
         dump($databaseToIndexSyncMap);
 

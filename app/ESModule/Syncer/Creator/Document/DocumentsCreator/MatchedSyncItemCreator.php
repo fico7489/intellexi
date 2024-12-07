@@ -9,7 +9,7 @@ class MatchedSyncItemCreator
 {
     public function __construct(
         private readonly ShouldSyncDetector $shouldSyncDetector,
-        private readonly ConfigProvider $indexMapper,
+        private readonly ConfigProvider $configProvider,
         private readonly DocumentCreator $documentCreator,
     ) {
     }
@@ -22,7 +22,7 @@ class MatchedSyncItemCreator
         if ($tableName === $syncItemDto->getTableName()
             && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
         ) {
-            $index = $this->indexMapper->fetchIndexByIndexName($indexName);
+            $index = $this->configProvider->fetchIndexByIndexName($indexName);
 
             return $this->documentCreator->create($syncItemDto, $index);
         }

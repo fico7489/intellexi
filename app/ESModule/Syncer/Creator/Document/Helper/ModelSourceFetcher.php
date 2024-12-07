@@ -10,7 +10,7 @@ class ModelSourceFetcher
 {
     public function __construct(
         private readonly OrmAdapter $ormAdapter,
-        private readonly ConfigProvider $syncMapper,
+        private readonly ConfigProvider $configProvider,
     ) {
     }
 
@@ -18,7 +18,7 @@ class ModelSourceFetcher
     {
         $tableName = $syncItemDto->getTableName();
 
-        if (!$this->syncMapper->isTableNameForIndex($tableName)) {
+        if (!$this->configProvider->isTableNameForIndex($tableName)) {
             return null;
         }
 

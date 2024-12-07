@@ -12,7 +12,7 @@ class SyncItemCreator
 {
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
-        private readonly ConfigProvider $syncMapper,
+        private readonly ConfigProvider $configProvider,
     ) {
     }
 
@@ -36,12 +36,12 @@ class SyncItemCreator
             $changedFields = $cdcDto->getChangedFields();
 
             // don't do sync if database is not supported
-            if (!$this->syncMapper->isDatabaseNameForSync($databaseName)) {
+            if (!$this->configProvider->isDatabaseNameForSync($databaseName)) {
                 continue;
             }
 
             // don't do sync if tableName is not is for sync
-            if (!$this->syncMapper->isTableNameForSync($tableName)) {
+            if (!$this->configProvider->isTableNameForSync($tableName)) {
                 continue;
             }
 

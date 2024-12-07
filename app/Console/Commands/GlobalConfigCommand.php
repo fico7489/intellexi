@@ -11,10 +11,10 @@ class GlobalConfigCommand extends Command
 
     public function handle()
     {
-        /** @var ConfigProvider $service */
-        $service = app(ConfigProvider::class);
+        /** @var ConfigProvider $configProvider */
+        $configProvider = app(ConfigProvider::class);
 
-        $config = $service->buildConfigMap();
+        $config = $configProvider->buildConfigMap();
 
         dump($config);
     }

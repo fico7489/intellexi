@@ -11,7 +11,7 @@ use App\ESModule\Syncer\Provider\ConfigProvider;
 class DocumentsCreator
 {
     public function __construct(
-        private readonly ConfigProvider $syncMapper,
+        private readonly ConfigProvider $configProvider,
         private readonly MatchedSyncItemCreator $matchedSyncItemCreator,
         private readonly DocumentsGrouper $documentsGrouper,
     ) {
@@ -24,7 +24,7 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $syncMapping = $this->syncMapper->buildSyncMapping();
+        $syncMapping = $this->configProvider->buildSyncMapping();
 
         $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {

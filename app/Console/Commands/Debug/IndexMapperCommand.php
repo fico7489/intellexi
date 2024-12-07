@@ -13,10 +13,10 @@ class IndexMapperCommand extends Command
     {
         $milliseconds = floor(microtime(true) * 1000);
 
-        /** @var ConfigProvider $indexMapper */
-        $indexMapper = app(ConfigProvider::class);
+        /** @var ConfigProvider $configProvider */
+        $configProvider = app(ConfigProvider::class);
 
-        $data = $indexMapper->fetchClassNamesIndex();
+        $data = $configProvider->fetchClassNamesIndex();
 
         dump($data);
     }
