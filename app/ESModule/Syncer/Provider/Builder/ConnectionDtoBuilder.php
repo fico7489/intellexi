@@ -3,6 +3,7 @@
 namespace App\ESModule\Syncer\Provider\Builder;
 
 use App\ES\Connection\DefaultConnection;
+use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Provider\Builder\Dto\ConnectionDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
@@ -13,6 +14,9 @@ class ConnectionDtoBuilder
     ) {
     }
 
+    /**
+     * @param array<IndexModelInterface> $indexDefiners
+     */
     public function build(DefaultConnection $connectionDefiner, array $indexDefiners): ConnectionDto
     {
         $syncMap = $this->syncMapBuilder->buildSyncMapping($indexDefiners);
@@ -28,6 +32,7 @@ class ConnectionDtoBuilder
         $indexesDtos = [];
         foreach ($indexDefiners as $indexDefiner) {
             $indexesDtos[$indexDefiner->getIndexName()] = new IndexDto(
+                $indexDefiner->getClassName(),
                 $indexDefiner->getIndexName(),
                 $indexDefiner->getMapping([]),
                 $indexDefiner->getSettings([]),

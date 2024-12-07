@@ -10,7 +10,7 @@ class UserIndex implements IndexModelInterface
 {
     public function getIndexName(): string
     {
-        return 'users';
+        return 'users_es_index';
     }
 
     public function getClassName(): string

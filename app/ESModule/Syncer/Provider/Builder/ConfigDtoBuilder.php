@@ -28,6 +28,17 @@ class ConfigDtoBuilder
             $indexNamesDetected[] = $index->getName();
         }
 
+        $tableNamesToIndexNamesMapping = [];
+        foreach ($tableNamesDetected as $tableName) {
+            foreach ($connectionDto->getIndexes() as $index) {
+                $tableNameIndex = $this->ormAdapter->convertClassNameToTableName($index->getClassName());
+
+                if($tableName === $tableNameIndex){
+                    $tableNamesToIndexNamesMapping[$tableName] = $index->getName();
+                }
+            }
+        }
+
         $tableNamesToClassNameOrmMapping = [];
         foreach ($tableNamesDetected as $tableName) {
             $classNameOrm = $classNamesOrmDetected[$tableName] ?? null;
@@ -36,9 +47,10 @@ class ConfigDtoBuilder
 
         $configDto = new ConfigDto(
             $connectionDto,
-            $indexNamesDetected,
             $tableNamesDetected,
+            $indexNamesDetected,
             array_values($classNamesOrmDetected),
+            $tableNamesToIndexNamesMapping,
             $tableNamesToClassNameOrmMapping
         );
 

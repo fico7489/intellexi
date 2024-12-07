@@ -11,7 +11,7 @@ class ApplicationIndex implements IndexModelInterface
 {
     public function getIndexName(): string
     {
-        return 'applications';
+        return 'applications_es_index';
     }
 
     public function getClassName(): string

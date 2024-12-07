@@ -9,7 +9,7 @@ class User2Index implements IndexModelInterface
 {
     public function getIndexName(): string
     {
-        return 'users2';
+        return 'users2_es_index';
     }
 
     public function getClassName(): string

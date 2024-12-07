@@ -5,11 +5,17 @@ namespace App\ESModule\Syncer\Provider\Builder\Dto;
 readonly class IndexDto
 {
     public function __construct(
+        private readonly string $className,
         private readonly string $name,
         private readonly array $mapping,
         private readonly array $settings,
         private readonly ConnectionDto $connection,
     ) {
+    }
+
+    public function getClassName(): string
+    {
+        return $this->className;
     }
 
     public function getName(): string

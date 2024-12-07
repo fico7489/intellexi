@@ -6,9 +6,10 @@ class ConfigDto
 {
     public function __construct(
         private readonly ConnectionDto $connectionDto,
-        private readonly array         $indexNamesDetected,
         private readonly array         $tableNamesDetected,
+        private readonly array         $indexNamesDetected,
         private readonly array         $classNamesOrmDetected,
+        private readonly array         $tableNamesToIndexNamesMapping,
         private readonly array         $tableNamesToClassNameOrmMapping,
     )
     {
@@ -19,19 +20,24 @@ class ConfigDto
         return $this->connectionDto;
     }
 
-    public function getIndexNamesDetected(): array
-    {
-        return $this->indexNamesDetected;
-    }
-
     public function getTableNamesDetected(): array
     {
         return $this->tableNamesDetected;
     }
 
+    public function getIndexNamesDetected(): array
+    {
+        return $this->indexNamesDetected;
+    }
+
     public function getClassNamesOrmDetected(): array
     {
         return $this->classNamesOrmDetected;
+    }
+
+    public function getTableNamesToIndexNamesMapping(): array
+    {
+        return $this->tableNamesToIndexNamesMapping;
     }
 
     public function getTableNamesToClassNameOrmMapping(): array
