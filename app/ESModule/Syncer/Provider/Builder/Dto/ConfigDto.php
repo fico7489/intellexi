@@ -12,7 +12,7 @@ class ConfigDto
         private readonly array $classNamesOrmDetected,
         private readonly array $tableNamesToIndexNamesMapping,
         private readonly array $tableNamesToClassNameOrmMapping,
-        private readonly array $tableNamesIndex,
+        private readonly array $tableNamesForIndex,
         private readonly array $tableNamesForSync,
     ) {
     }
@@ -52,9 +52,9 @@ class ConfigDto
         return $this->tableNamesToClassNameOrmMapping;
     }
 
-    public function getTableNamesIndex(): array
+    public function getTableNamesForIndex(): array
     {
-        return $this->tableNamesIndex;
+        return $this->tableNamesForIndex;
     }
 
     public function getTableNamesForSync(): array

@@ -11,10 +11,9 @@ class ConfigDtoBuilder
 {
     public function __construct(
         private readonly ConnectionDtoBuilder $connectionDtoBuilder,
-        private readonly DatabaseAdapter      $databaseAdapter,
-        private readonly OrmAdapter           $ormAdapter,
-    )
-    {
+        private readonly DatabaseAdapter $databaseAdapter,
+        private readonly OrmAdapter $ormAdapter,
+    ) {
     }
 
     public function build(DefaultConnection $connectionDefiner, array $indexDefiners): ConfigDto
@@ -50,15 +49,18 @@ class ConfigDtoBuilder
             $tableNamesToClassNameOrmMapping[$tableName] = $classNameOrm;
         }
 
-        $tableNamesIndex = [];
+        $tableNamesForIndex = [];
         $tableNamesToIndexNamesMappingFlipped = array_flip($tableNamesToIndexNamesMapping);
         foreach ($indexNamesDetected as $indexName) {
-            if(isset($tableNamesToIndexNamesMappingFlipped[$indexName])) {
-                $tableNamesIndex[] = $tableNamesToIndexNamesMappingFlipped[$indexName];
+            if (isset($tableNamesToIndexNamesMappingFlipped[$indexName])) {
+                $tableNamesForIndex[] = $tableNamesToIndexNamesMappingFlipped[$indexName];
             }
         }
 
-
+        $tableNamesForSync = [];
+        foreach ($connectionDto->getSyncMap() as $tableName => $syncMap) {
+            $tableNamesForSync[] = $tableName;
+        }
 
         $configDto = new ConfigDto(
             $connectionDto,
@@ -68,7 +70,7 @@ class ConfigDtoBuilder
             $classNamesOrmDetected,
             $tableNamesToIndexNamesMapping,
             $tableNamesToClassNameOrmMapping,
-            $tableNamesIndex,
+            $tableNamesForIndex,
             $tableNamesForSync,
         );
 
