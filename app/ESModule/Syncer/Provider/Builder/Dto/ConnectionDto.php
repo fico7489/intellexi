@@ -11,7 +11,6 @@ class ConnectionDto
         private readonly string $host,
         private readonly string $port,
         private readonly string $prefix,
-        private readonly array $syncMap,
     ) {
     }
 
@@ -33,11 +32,6 @@ class ConnectionDto
     public function getPrefix(): string
     {
         return $this->prefix;
-    }
-
-    public function getSyncMap(): array
-    {
-        return $this->syncMap;
     }
 
     public function setIndexes(array $indexes): void

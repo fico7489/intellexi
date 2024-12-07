@@ -31,7 +31,7 @@ class ConfigProvider
 
     public function isTableNameForSync($tableName): bool
     {
-        $syncMap = $this->getConnectionDto()->getSyncMap();
+        $syncMap = $this->getConfigDto()->getSyncMap();
 
         return isset($syncMap[$tableName]);
     }

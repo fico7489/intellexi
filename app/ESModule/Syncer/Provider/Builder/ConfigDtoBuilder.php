@@ -11,6 +11,7 @@ class ConfigDtoBuilder
 {
     public function __construct(
         private readonly ConnectionDtoBuilder $connectionDtoBuilder,
+        private readonly SyncMapBuilder $syncMapBuilder,
         private readonly DatabaseAdapter $databaseAdapter,
         private readonly OrmAdapter $ormAdapter,
     ) {
@@ -22,6 +23,8 @@ class ConfigDtoBuilder
 
         // TODO
         $databaseName = 'intellexi';
+
+        $syncMap = $this->syncMapBuilder->buildSyncMapping($indexDefiners);
 
         $tableNamesDetected = $this->databaseAdapter->fetchTableNames();
         $classNamesOrm = $this->ormAdapter->fetchAllClassNamesOrm();
@@ -58,13 +61,14 @@ class ConfigDtoBuilder
         }
 
         $tableNamesForSync = [];
-        foreach ($connectionDto->getSyncMap() as $tableName => $syncMap) {
+        foreach ($syncMap as $tableName => $syncMapItem) {
             $tableNamesForSync[] = $tableName;
         }
 
         $configDto = new ConfigDto(
             $connectionDto,
             $databaseName,
+            $syncMap,
             $tableNamesDetected,
             $indexNamesDetected,
             $classNamesOrmDetected,

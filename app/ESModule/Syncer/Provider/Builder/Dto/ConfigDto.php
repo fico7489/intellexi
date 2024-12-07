@@ -7,6 +7,7 @@ class ConfigDto
     public function __construct(
         private readonly ConnectionDto $connectionDto,
         private readonly string $databaseName,
+        private readonly array $syncMap,
         private readonly array $tableNamesDetected,
         private readonly array $indexNamesDetected,
         private readonly array $classNamesOrmDetected,
@@ -25,6 +26,11 @@ class ConfigDto
     public function getDatabaseName(): string
     {
         return $this->databaseName;
+    }
+
+    public function getSyncMap(): array
+    {
+        return $this->syncMap;
     }
 
     public function getTableNamesDetected(): array
