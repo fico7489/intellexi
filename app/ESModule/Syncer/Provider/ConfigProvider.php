@@ -6,7 +6,6 @@ use App\ES\Connection\DefaultConnection;
 use App\ESModule\Config\Interface\IndexModelInterface;
 use App\ESModule\Syncer\Provider\Builder\ConfigDtoBuilder;
 use App\ESModule\Syncer\Provider\Builder\Dto\ConfigDto;
-use App\ESModule\Syncer\Provider\Builder\Dto\ConnectionDto;
 
 class ConfigProvider
 {
@@ -55,12 +54,5 @@ class ConfigProvider
     public function getConfigDto(): ConfigDto
     {
         return $this->configDtoBuilder->build($this->configConnection, $this->configIndexes);
-    }
-
-    public function getConnectionDto(): ConnectionDto
-    {
-        $configDto = $this->getConfigDto();
-
-        return $configDto->getConnectionDto();
     }
 }
