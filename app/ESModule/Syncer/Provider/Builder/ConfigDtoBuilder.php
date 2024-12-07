@@ -23,6 +23,11 @@ class ConfigDtoBuilder
         $tableNamesDetected = $this->databaseAdapter->fetchTableNames();
         $classNamesOrmDetected = $this->ormAdapter->fetchAllClassNames();
 
+        $indexNamesDetected = [];
+        foreach ($connectionDto->getIndexes() as $index) {
+            $indexNamesDetected[] = $index->getName();
+        }
+
         $tableNamesToClassNameOrmMapping = [];
         foreach ($tableNamesDetected as $tableName) {
             $classNameOrm = $classNamesOrmDetected[$tableName] ?? null;
@@ -31,6 +36,7 @@ class ConfigDtoBuilder
 
         $configDto = new ConfigDto(
             $connectionDto,
+            $indexNamesDetected,
             $tableNamesDetected,
             array_values($classNamesOrmDetected),
             $tableNamesToClassNameOrmMapping
