@@ -21,6 +21,7 @@ class DocumentCreator
     public function create(SyncItemDto $syncItemDto, IndexDto $indexDto): array
     {
         $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
+        dump($syncItemDto->getTableName(), $syncItemDto->getIdentifierValue(), is_null($modelSource));
 
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
@@ -36,7 +37,7 @@ class DocumentCreator
         ?object $modelSource,
     ): array {
         // TODO make updates unique by model->id
-dump(1111);
+
         $documents = [];
         foreach ($modelsRelated as $modelRelated) {
             $indexName = $indexDto->getNameWithPrefix();
