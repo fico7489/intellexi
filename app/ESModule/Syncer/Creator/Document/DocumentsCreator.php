@@ -38,26 +38,26 @@ class DocumentsCreator
         foreach ($syncItemDtos as $syncItemDto) {
             foreach ($syncMapping as $tableName => $indexData) {
                 foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                    $documents = array_merge($documents, $this->createForMatched($syncItemDto, $tableName, $indexName, $changedFieldsTriggers));
+                    $documents = $this->createForMatched($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
                 }
             }
         }
 
-        dump($documents);
+        dd(1112, $documents);
 
         // return  $documents;
         return $this->documentsGrouper->group($documents);
     }
 
-    private function createForMatched(SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
+    private function createForMatched(array $documents, SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
     {
         if ($tableName !== $syncItemDto->getTableName()) {
-            return [];
+            return $documents;
         }
 
         // sync is matched by changed table $syncItemDto and table from $syncMapping
         if (!$this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
-            return [];
+            return $documents;
         }
 
         $index = $this->configProvider->fetchIndexByIndexName($indexName);
@@ -69,9 +69,7 @@ class DocumentsCreator
             if (!isset($this->modelSources[$tableName][$identifierValue])) {
                 $tableName = $syncItemDto->getTableName();
 
-                if (!$this->configProvider->isTableNameClassNameOrm($tableName)) {
-                    $modelSource = null;
-                } else {
+                if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
                     $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
                     $modelSource = $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
                 }
@@ -82,8 +80,6 @@ class DocumentsCreator
             $modelSource = $this->modelSources[$tableName][$identifierValue];
         }
 
-        // dump($syncItemDto->getTableName(), $syncItemDto->getIdentifierValue(), $syncItemDto->getChangedFields(), is_null($modelSource));
-
-        return $this->documentCreator->create($syncItemDto, $index, $modelSource);
+        return $this->documentCreator->create($documents, $syncItemDto, $index, $modelSource);
     }
 }

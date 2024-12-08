@@ -12,45 +12,25 @@ class DocumentCreator
 {
     public function __construct(
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
-        private readonly DataFetcher $dataFetcher,
     ) {
     }
 
-    public function create(SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
+    public function create(array $documents, SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
     {
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
-        $documents = $this->createDocumentsForModelsRelated($syncItemDto, $indexDto, $modelsRelated, $modelSource);
-
-        return $documents;
-    }
-
-    private function createDocumentsForModelsRelated(
-        SyncItemDto $syncItemDto,
-        IndexDto $indexDto,
-        array $modelsRelated,
-        ?object $modelSource,
-    ): array {
         // TODO make updates unique by model->id
 
-        $documents = [];
         foreach ($modelsRelated as $modelRelated) {
-            $indexName = $indexDto->getNameWithPrefix();
-
-            $identifierName = $modelRelated->getKeyName();
-            $identifierValue = $modelRelated->{$identifierName};
-
             $type = $syncItemDto->getType();
             if ($modelRelated !== $modelSource) {
                 $type = DocumentDto::TYPE_UPSERT;
             }
 
-            $data = [];
-            if (SyncItemDto::TYPE_UPSERT === $syncItemDto->getType()) {
-                $data = $this->dataFetcher->fetch($indexDto, $modelRelated);
-            }
+            $identifierName = $modelRelated->getKeyName();
+            $identifierValue = $modelRelated->{$identifierName};
 
-            $documents[] = new DocumentDto($indexName, $identifierValue, $data, $type);
+            $documents[$indexDto->getName()][$identifierValue] = $type;
         }
 
         return $documents;
