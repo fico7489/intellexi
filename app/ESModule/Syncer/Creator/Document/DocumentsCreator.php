@@ -12,6 +12,8 @@ use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class DocumentsCreator
 {
+    private array $modelSources = [];
+
     public function __construct(
         private readonly ConfigProvider $configProvider,
         private readonly DocumentsGrouper $documentsGrouper,
@@ -36,7 +38,6 @@ class DocumentsCreator
         foreach ($syncItemDtos as $syncItemDto) {
             foreach ($syncMapping as $tableName => $indexData) {
                 foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                    dump(2222);
                     $documents = array_merge($documents, $this->createForMatched($syncItemDto, $tableName, $indexName, $changedFieldsTriggers));
                 }
             }
@@ -48,7 +49,7 @@ class DocumentsCreator
         return $this->documentsGrouper->group($documents);
     }
 
-    private function createForMatched($syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
+    private function createForMatched(SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
     {
         if ($tableName !== $syncItemDto->getTableName()) {
             return [];
@@ -61,7 +62,13 @@ class DocumentsCreator
 
         $index = $this->configProvider->fetchIndexByIndexName($indexName);
 
-        $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
+        $tableName = $syncItemDto->getTableName();
+        $identifierValue = $syncItemDto->getIdentifierValue();
+        if (!isset($this->modelSources[$tableName][$identifierValue])) {
+            $this->modelSources[$tableName][$identifierValue] = $this->modelSourceFetcher->fetch($tableName, $identifierValue);
+        }
+        $modelSource = $this->modelSources[$tableName][$identifierValue];
+
         // dump($syncItemDto->getTableName(), $syncItemDto->getIdentifierValue(), $syncItemDto->getChangedFields(), is_null($modelSource));
 
         return $this->documentCreator->create($syncItemDto, $index, $modelSource);
