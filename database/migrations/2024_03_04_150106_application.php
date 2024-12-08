@@ -14,10 +14,10 @@ return new class extends Migration
             $table->string('last_name', 255)->nullable();
             $table->string('club', 255)->nullable();
             $table->unsignedBigInteger('race_id')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
 
             $table->foreign('race_id')->references('id')->on('races');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
             $table->timestamps();
         });

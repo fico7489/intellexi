@@ -84,7 +84,11 @@ class ApplicationIndex implements IndexModelInterface
             'role_user' => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
                 $user = User::find($syncItemDto->getData()['user_id']);
 
-                return array_merge($relatedModels, [$user]);
+                if (!$user) {
+                    return $relatedModels;
+                }
+
+                return array_merge($relatedModels, $user->applications->all());
             },
         ];
     }

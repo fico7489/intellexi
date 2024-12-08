@@ -27,7 +27,15 @@ class TestCommand extends Command
             'club' => 'test',
         ]);
 
-        /*$role = Role::find(1);
-        $user->roles()->save($role);*/
+        $role = Role::find(1);
+        $role2 = Role::create([
+            'name' => 'role-name-'.random_int(1, 10000000),
+        ]);
+        /* @var User $user */
+        $user->roles()->saveMany([$role, $role2]);
+
+        // $role2->delete();
+
+        $user->delete();
     }
 }

@@ -33,7 +33,7 @@ class DocumentCreator
         SyncItemDto $syncItemDto,
         IndexDto $indexDto,
         array $modelsRelated,
-        object $modelSource,
+        ?object $modelSource,
     ): array {
         // TODO make updates unique by model->id
 
