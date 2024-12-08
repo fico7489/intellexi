@@ -36,18 +36,22 @@ class DocumentCreator
         ?object $modelSource,
     ): array {
         // TODO make updates unique by model->id
-
+dump(1111);
         $documents = [];
         foreach ($modelsRelated as $modelRelated) {
             $indexName = $indexDto->getNameWithPrefix();
 
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
-            $data = $this->dataFetcher->fetch($indexDto, $modelRelated);
 
-            $type = DocumentDto::TYPE_UPSERT;
-            if ($modelRelated === $modelSource) {
-                $type = $syncItemDto->getType();
+            $type = $syncItemDto->getType();
+            if ($modelRelated !== $modelSource) {
+                $type = DocumentDto::TYPE_UPSERT;
+            }
+
+            $data = [];
+            if (SyncItemDto::TYPE_UPSERT === $syncItemDto->getType()) {
+                $data = $this->dataFetcher->fetch($indexDto, $modelRelated);
             }
 
             $documents[] = new DocumentDto($indexName, $identifierValue, $data, $type);

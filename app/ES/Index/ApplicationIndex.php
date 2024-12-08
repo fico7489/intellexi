@@ -23,20 +23,28 @@ class ApplicationIndex implements IndexModelInterface
     public function getData(array $data, mixed $model): array
     {
         /** @var Application $model */
-        $roles = [];
-        foreach ($model->user->roles as $role) {
-            $roles[] = $role->name;
-        }
 
-        return [
+        $data = [
             'id' => $model->id,
             'club' => $model->club,
-            'user' => [
-                'id' => $model->user->id,
-                'first_name' => $model->user->first_name,
-                'roles' => $roles,
-            ],
         ];
+
+        if($model->user){
+            $user = $model->user;
+
+            $userData = [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+            ];
+
+            foreach ($model->user->roles as $role) {
+                $roles[] = $role->name;
+            }
+
+            $data['user'] = $userData;
+        }
+
+        return $data;
     }
 
     // TODO
