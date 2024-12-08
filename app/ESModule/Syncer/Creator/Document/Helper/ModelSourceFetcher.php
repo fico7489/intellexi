@@ -3,6 +3,7 @@
 namespace App\ESModule\Syncer\Creator\Document\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class ModelSourceFetcher
@@ -13,16 +14,19 @@ class ModelSourceFetcher
     ) {
     }
 
-    public function fetch(string $tableName, mixed $identifierValue): ?object
+    public function fetch(SyncItemDto $syncItemDto): ?object
     {
+        $tableName = $syncItemDto->getTableName();
+
         dump(4444);
 
+        //TODO move
         if (!$this->configProvider->isTableNameClassNameOrm($tableName)) {
             return null;
         }
 
         $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
-        $modelSource = $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
+        $modelSource = $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
 
         return $modelSource;
     }

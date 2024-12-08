@@ -78,7 +78,7 @@ class ApplicationIndex implements IndexModelInterface
             User::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
                 return array_merge($relatedModels, $model->applications->all());
             },
-            Role::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
+            Role::class => function (object $model, SyncItemDto $syncItemDto, array $relatedModels) {
                 $users = $model->users;
 
                 $applications = [];

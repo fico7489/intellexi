@@ -9,6 +9,7 @@ use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
+use App\Models\User;
 
 class DocumentsCreator
 {
@@ -62,12 +63,15 @@ class DocumentsCreator
 
         $index = $this->configProvider->fetchIndexByIndexName($indexName);
 
+        $modelSource = null;
         $tableName = $syncItemDto->getTableName();
         $identifierValue = $syncItemDto->getIdentifierValue();
-        if (!isset($this->modelSources[$tableName][$identifierValue])) {
-            $this->modelSources[$tableName][$identifierValue] = $this->modelSourceFetcher->fetch($tableName, $identifierValue);
+        if($this->configProvider->isTableNameClassNameOrm($tableName)){
+            if (!isset($this->modelSources[$tableName][$identifierValue])) {
+                $this->modelSources[$tableName][$identifierValue] = $this->modelSourceFetcher->fetch($syncItemDto);
+            }
+            $modelSource = $this->modelSources[$tableName][$identifierValue];
         }
-        $modelSource = $this->modelSources[$tableName][$identifierValue];
 
         // dump($syncItemDto->getTableName(), $syncItemDto->getIdentifierValue(), $syncItemDto->getChangedFields(), is_null($modelSource));
 
