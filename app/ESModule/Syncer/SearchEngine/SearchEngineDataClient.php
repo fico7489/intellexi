@@ -35,7 +35,6 @@ class SearchEngineDataClient
                 $datas[] = $data[1];
             }
         }
-        // dump($datas);
 
         $documentJsons = '';
         foreach ($datas as $data) {

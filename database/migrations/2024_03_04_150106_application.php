@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name', 255);
-            $table->string('last_name', 255);
+            $table->string('first_name', 255)->nullable();
+            $table->string('last_name', 255)->nullable();
             $table->string('club', 255)->nullable();
-            $table->unsignedBigInteger('race_id');
+            $table->unsignedBigInteger('race_id')->nullable();
             $table->unsignedBigInteger('user_id');
 
             $table->foreign('race_id')->references('id')->on('races');
