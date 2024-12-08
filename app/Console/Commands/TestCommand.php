@@ -18,8 +18,8 @@ class TestCommand extends Command
         ]);*/
 
         $user = User::create([
-            'first_name' => 'first_name-test' . rand(1, 1000000),
-            'email' => 'test@test-email-' . rand(1, 1000000) . '@gmail.com',
+            'first_name' => 'first_name-test'.rand(1, 1000000),
+            'email' => 'test@test-email-'.rand(1, 1000000).'@gmail.com',
         ]);
 
         $application = Application::create([
@@ -29,7 +29,7 @@ class TestCommand extends Command
 
         $role = Role::find(1);
         $role2 = Role::create([
-            'name' => 'role-name-' . random_int(1, 10000000),
+            'name' => 'role-name-'.random_int(1, 10000000),
         ]);
         /* @var User $user */
         $user->roles()->saveMany([$role, $role2]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
+namespace App\ESModule\Syncer\Creator\Document\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
@@ -8,8 +8,6 @@ use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class ModelsRelatedFetcher
 {
-    private array $closuresExecuted = [];
-
     public function __construct(
         private readonly OrmAdapter $ormAdapter,
         private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,

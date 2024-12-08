@@ -1,9 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\DocumentsCreator;
+namespace App\ESModule\Syncer\Creator\Document\Helper;
 
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 

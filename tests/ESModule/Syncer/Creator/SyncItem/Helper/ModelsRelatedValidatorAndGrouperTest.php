@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
-use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedValidatorAndGrouper;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedValidatorAndGrouper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 

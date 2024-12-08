@@ -3,8 +3,8 @@
 namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\Document\DocumentsCreator\DocumentCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\Helper\DocumentCreator;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
