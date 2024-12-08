@@ -4,9 +4,10 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Helper\DocumentCreator;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class DocumentsCreator
@@ -16,8 +17,8 @@ class DocumentsCreator
     public function __construct(
         private readonly ConfigProvider $configProvider,
         private readonly ShouldSyncDetector $shouldSyncDetector,
-        private readonly DocumentCreator $documentCreator,
         private readonly OrmAdapter $ormAdapter,
+        private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
     ) {
     }
 
@@ -53,8 +54,10 @@ class DocumentsCreator
             return $documents;
         }
 
-        $index = $this->configProvider->fetchIndexByIndexName($indexName);
+        // detect $indexDto
+        $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
 
+        // detect $modelSource
         $modelSource = null;
         $tableName = $syncItemDto->getTableName();
         $identifierValue = $syncItemDto->getIdentifierValue();
@@ -73,6 +76,30 @@ class DocumentsCreator
             $modelSource = $this->modelSources[$tableName][$identifierValue];
         }
 
-        return $this->documentCreator->create($documents, $syncItemDto, $index, $modelSource);
+        return $this->createForItem($documents, $syncItemDto, $indexDto, $modelSource);
+    }
+
+    private function createForItem(array $documents, SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
+    {
+        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
+
+        // TODO make updates unique by model->id
+
+        foreach ($modelsRelated as $modelRelated) {
+            $type = $syncItemDto->getType();
+            if ($modelRelated !== $modelSource) {
+                $type = DocumentDto::TYPE_UPSERT;
+            }
+
+            $identifierName = $modelRelated->getKeyName();
+            $identifierValue = $modelRelated->{$identifierName};
+
+            $documents[$indexDto->getName()][$identifierValue] = [
+                'type' => $type,
+                'modelRelated' => $modelRelated,
+            ];
+        }
+
+        return $documents;
     }
 }

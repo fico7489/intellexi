@@ -47,7 +47,7 @@ class ConfigProvider
         return isset($tableNamesToClassNameOrmMapping[$tableName]);
     }
 
-    public function fetchIndexByIndexName(string $indexName): IndexDto
+    public function fetchIndexDtoByIndexName(string $indexName): IndexDto
     {
         return $this->getConfigDto()->getConnectionDto()->getIndexes()[$indexName];
     }

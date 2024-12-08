@@ -43,7 +43,7 @@ class Syncer
                 $type = $data2['type'];
                 $modelRelated = $data2['modelRelated'];
 
-                $indexDto = $this->configProvider->fetchIndexByIndexName($indexName);
+                $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
 
                 $indexNameWithPrefix = $indexDto->getNameWithPrefix();
                 $data = $this->dataFetcher->fetch($indexDto, $modelRelated);
