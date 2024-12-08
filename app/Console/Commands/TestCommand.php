@@ -12,9 +12,9 @@ class TestCommand extends Command
 
     public function handle()
     {
-        $role = Role::create([
+        /*$role = Role::create([
             'name' => 'test-role-'.rand(1, 1000000),
-        ]);
+        ]);*/
 
         $user = User::create([
             'first_name' => 'test-first_name-'.rand(1, 1000000),
