@@ -18,6 +18,7 @@ class TestCommand extends Command
         ]);*/
 
         $user = User::create([
+            'first_name' => 'first_name-test' . rand(1, 1000000),
             'email' => 'test@test-email-'.rand(1, 1000000).'@gmail.com',
         ]);
 
@@ -25,5 +26,8 @@ class TestCommand extends Command
             'user_id' => $user->id,
             'club' => 'test',
         ]);
+
+        /*$role = Role::find(1);
+        $user->roles()->save($role);*/
     }
 }

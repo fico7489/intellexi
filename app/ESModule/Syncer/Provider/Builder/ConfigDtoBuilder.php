@@ -48,7 +48,7 @@ class ConfigDtoBuilder
 
         $tableNamesToClassNameOrmMapping = [];
         foreach ($tableNamesDetected as $tableName) {
-            $classNameOrm = $classNamesOrmDetected[$tableName] ?? null;
+            $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
             $tableNamesToClassNameOrmMapping[$tableName] = $classNameOrm;
         }
 

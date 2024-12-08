@@ -40,6 +40,14 @@ class ConfigProvider
         return isset($tableNamesIndex[$tableName]);
     }
 
+    public function isTableNameClassNameOrm($tableName): bool
+    {
+        $tableNamesToClassNameOrmMapping = $this->getConfigDto()->getTableNamesToClassNameOrmMapping();
+
+        dump($tableNamesToClassNameOrmMapping, $tableName);
+        return isset($tableNamesToClassNameOrmMapping[$tableName]);
+    }
+
     public function fetchIndexByIndexName(string $indexName): IndexDto
     {
         return $this->getConfigDto()->getConnectionDto()->getIndexes()[$indexName];

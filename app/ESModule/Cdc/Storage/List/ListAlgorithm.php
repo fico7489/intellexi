@@ -31,7 +31,7 @@ readonly class ListAlgorithm
             $cdcPayloads = $payload[$channel];
 
             if (count($cdcPayloads) < $limit) {
-                usleep(20000);
+                usleep(200000);
 
                 $payload = $predis->lmpop([$channel], 'left', ($limit - 1));
                 if ('NULL' !== gettype($payload)) {
@@ -40,7 +40,7 @@ readonly class ListAlgorithm
                     $cdcPayloads = array_merge($cdcPayloads, $cdcPayloads2);
                 }
             }
-dump($cdcPayloads);
+
             if (null !== $cdcPayloads) {
                 $this->processor->processCdcPayloads($cdcPayloads);
             }

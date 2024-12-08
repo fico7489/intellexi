@@ -18,7 +18,7 @@ class ModelSourceFetcher
     {
         $tableName = $syncItemDto->getTableName();
 
-        if (!$this->configProvider->isTableNameForIndex($tableName)) {
+        if (!$this->configProvider->isTableNameClassNameOrm($tableName)) {
             return null;
         }
 

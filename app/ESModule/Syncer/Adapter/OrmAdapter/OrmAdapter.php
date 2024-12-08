@@ -14,11 +14,11 @@ class OrmAdapter
         return $this->ormAdapter->fetchAllClassNamesOrm();
     }
 
-    public function convertTableNameToClassNameOrm($tableName): string
+    public function convertTableNameToClassNameOrm($tableName): ?string
     {
         $mapping = $this->fetchAllClassNamesOrm();
 
-        return $mapping[$tableName];
+        return $mapping[$tableName] ?? null;
     }
 
     public function convertClassNameOrmToTableName($classNameOrm): string
