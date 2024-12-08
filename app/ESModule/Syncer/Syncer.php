@@ -2,7 +2,6 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Cdc\Event\CdcDtosEvent;
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
@@ -16,10 +15,11 @@ class Syncer
     ) {
     }
 
-    public function sync(CdcDtosEvent $event): void
+    /**
+     * @params array<CdcDto>
+     */
+    public function sync(array $cdcDtos): void
     {
-        $cdcDtos = $event->getCdcDtos();
-
         $syncItemDtos = $this->syncItemCreator->create($cdcDtos);
 
         $documentDtos = $this->documentsCreator->create($syncItemDtos);

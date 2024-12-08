@@ -58,7 +58,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         Event::listen(function (CdcDtosEvent $event) {
             // dump('CDC Event:', $event->getCdcDtos());
 
-            app(Syncer::class)->sync($event);
+            app(Syncer::class)->sync($event->getCdcDtos());
         });
     }
 }
