@@ -56,7 +56,7 @@ class SearchEngineDataClient
             ]
         );
 
-        // dump('status code:'.$response->getStatusCode());
+         dump('status code:'.$response->getStatusCode());
 
         // TODO async
 
