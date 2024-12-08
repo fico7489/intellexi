@@ -45,6 +45,7 @@ class ConfigProvider
         $tableNamesToClassNameOrmMapping = $this->getConfigDto()->getTableNamesToClassNameOrmMapping();
 
         dump($tableNamesToClassNameOrmMapping, $tableName);
+
         return isset($tableNamesToClassNameOrmMapping[$tableName]);
     }
 

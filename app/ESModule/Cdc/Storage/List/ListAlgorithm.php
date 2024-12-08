@@ -33,7 +33,7 @@ readonly class ListAlgorithm
             if (count($cdcPayloads) < $limit) {
                 usleep(200000);
 
-                $payload = $predis->lmpop([$channel], 'left', ($limit - 1));
+                $payload = $predis->lmpop([$channel], 'left', $limit - 1);
                 if ('NULL' !== gettype($payload)) {
                     $cdcPayloads2 = $payload[$channel];
 
