@@ -23,7 +23,6 @@ class ApplicationIndex implements IndexModelInterface
     public function getData(array $data, mixed $model): array
     {
         /** @var Application $model */
-
         $roles = [];
         foreach ($model->user->roles as $role) {
             $roles[] = $role->name;
@@ -36,7 +35,7 @@ class ApplicationIndex implements IndexModelInterface
                 'id' => $model->user->id,
                 'first_name' => $model->user->first_name,
                 'roles' => $roles,
-            ]
+            ],
         ];
     }
 
@@ -59,7 +58,7 @@ class ApplicationIndex implements IndexModelInterface
             ],
             Role::class => [
                 'name',
-            ]
+            ],
         ]);
     }
 
