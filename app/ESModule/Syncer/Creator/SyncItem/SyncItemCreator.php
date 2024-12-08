@@ -114,6 +114,10 @@ class SyncItemCreator
             $changedFields = [];
         }
 
+        if (CdcDto::TYPE_INSERT === $type) {
+            $changedFields = $cdcDto->getData();
+        }
+
         return new SyncItemDto(
             $cdcDto->getTableName(),
             $type,
