@@ -5,7 +5,6 @@ namespace App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class DocumentCreator
@@ -30,7 +29,10 @@ class DocumentCreator
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
 
-            $documents[$indexDto->getName()][$identifierValue] = $type;
+            $documents[$indexDto->getName()][$identifierValue] = [
+                'type' => $type,
+                'modelRelated' => $modelRelated,
+            ];
         }
 
         return $documents;

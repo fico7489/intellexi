@@ -23,6 +23,8 @@ class ApplicationIndex implements IndexModelInterface
     public function getData(array $data, mixed $model): array
     {
         /** @var Application $model */
+        //$model = $model->fresh();
+
         $data = [
             'id' => $model->id,
             'club' => $model->club,
