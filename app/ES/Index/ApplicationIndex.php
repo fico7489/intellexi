@@ -23,13 +23,12 @@ class ApplicationIndex implements IndexModelInterface
     public function getData(array $data, mixed $model): array
     {
         /** @var Application $model */
-
         $data = [
             'id' => $model->id,
             'club' => $model->club,
         ];
 
-        if($model->user){
+        if ($model->user) {
             $user = $model->user;
 
             $userData = [

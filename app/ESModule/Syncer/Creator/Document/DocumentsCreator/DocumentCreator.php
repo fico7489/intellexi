@@ -3,7 +3,6 @@
 namespace App\ESModule\Syncer\Creator\Document\DocumentsCreator;
 
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
@@ -12,17 +11,13 @@ use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 class DocumentCreator
 {
     public function __construct(
-        private readonly ModelSourceFetcher $modelSourceFetcher,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
         private readonly DataFetcher $dataFetcher,
     ) {
     }
 
-    public function create(SyncItemDto $syncItemDto, IndexDto $indexDto): array
+    public function create(SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
     {
-        $modelSource = $this->modelSourceFetcher->fetch($syncItemDto);
-        dump($syncItemDto->getTableName(), $syncItemDto->getIdentifierValue(), is_null($modelSource));
-
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
         $documents = $this->createDocumentsForModelsRelated($syncItemDto, $indexDto, $modelsRelated, $modelSource);

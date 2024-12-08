@@ -37,6 +37,6 @@ class TestCommand extends Command
         // $role2->delete();
 
         usleep(300000);
-        $user->delete();
+        // $user->delete();
     }
 }
