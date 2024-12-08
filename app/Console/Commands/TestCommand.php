@@ -34,9 +34,9 @@ class TestCommand extends Command
         /* @var User $user */
         $user->roles()->saveMany([$role, $role2]);
 
-        // $role2->delete();
+        $role2->delete();
 
         usleep(300000);
-        $user->delete();
+        // $user->delete();
     }
 }

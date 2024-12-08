@@ -13,6 +13,8 @@ class EloquentAdapter
     {
         $tableName = $syncItemDto->getTableName();
 
+        // return $classNameOrm::find($syncItemDto->getIdentifierValue());
+
         /** @var Model $instance */
         $instance = new $classNameOrm();
         $instance->forceFill($syncItemDto->getData());

@@ -36,9 +36,11 @@ class ApplicationIndex implements IndexModelInterface
                 'first_name' => $user->first_name,
             ];
 
+            $roles = [];
             foreach ($model->user->roles as $role) {
                 $roles[] = $role->name;
             }
+            $userData['roles'] = $roles;
 
             $data['user'] = $userData;
         }
@@ -94,6 +96,7 @@ class ApplicationIndex implements IndexModelInterface
                 if (!$user) {
                     return $relatedModels;
                 }
+                dump(2222);
 
                 return array_merge($relatedModels, $user->applications->all());
             },
