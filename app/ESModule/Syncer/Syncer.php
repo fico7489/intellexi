@@ -20,10 +20,13 @@ class Syncer
      */
     public function sync(array $cdcDtos): void
     {
+        dump('count $cdcDtos='.count($cdcDtos));
         $syncItemDtos = $this->syncItemCreator->create($cdcDtos);
 
+        dump('count $syncItemDtos='.count($syncItemDtos));
         $documentDtos = $this->documentsCreator->create($syncItemDtos);
 
+        dump('count $documentDtos='.count($documentDtos));
         $this->searchEngineSyncer->syncDocuments($documentDtos);
     }
 }

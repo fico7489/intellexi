@@ -30,8 +30,6 @@ class DocumentsCreator
      */
     public function create(array $syncItemDtos): array
     {
-        dump('count $syncItemDtos='.count($syncItemDtos));
-
         $syncMapping = $this->configProvider->getConfigDto()->getSyncMap();
 
         $documents = [];
