@@ -16,15 +16,13 @@ class MatchedSyncItemCreator
 
     public function createForMatched($syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
     {
-        $documents = [];
-
         // sync is matched by changed table $syncItemDto and table from $syncMapping
         if ($tableName === $syncItemDto->getTableName()
             && $this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)
         ) {
-            $indexDto = $this->configProvider->fetchIndexByIndexName($indexName);
+            $index = $this->configProvider->fetchIndexByIndexName($indexName);
 
-            return $this->documentCreator->create($syncItemDto, $indexDto);
+            return $this->documentCreator->create($syncItemDto, $index);
         }
 
         return [];
