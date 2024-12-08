@@ -23,7 +23,6 @@ class SearchEngineDataClient
         $datas = [];
         foreach ($documents as $document) {
             /* @var DocumentDto $document */
-            dump($document);
             // dump('SYNC:' . $document->getIndex() . ' - ' $document->getIdentifier());
 
             /** @var DocumentDto $document */

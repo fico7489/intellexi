@@ -35,6 +35,8 @@ class DocumentsCreator
             }
         }
 
+        dump($documents);
+
         // return  $documents;
         return $this->documentsGrouper->group($documents);
     }
