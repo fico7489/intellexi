@@ -2,14 +2,13 @@
 
 namespace App\ESModule\Syncer\Creator\Document;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator\DocumentCreator;
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator\DocumentsGrouper;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
-use App\Models\User;
 
 class DocumentsCreator
 {
@@ -20,7 +19,7 @@ class DocumentsCreator
         private readonly DocumentsGrouper $documentsGrouper,
         private readonly ShouldSyncDetector $shouldSyncDetector,
         private readonly DocumentCreator $documentCreator,
-        private readonly ModelSourceFetcher $modelSourceFetcher,
+        private readonly OrmAdapter $ormAdapter,
     ) {
     }
 
@@ -66,10 +65,20 @@ class DocumentsCreator
         $modelSource = null;
         $tableName = $syncItemDto->getTableName();
         $identifierValue = $syncItemDto->getIdentifierValue();
-        if($this->configProvider->isTableNameClassNameOrm($tableName)){
+        if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
             if (!isset($this->modelSources[$tableName][$identifierValue])) {
-                $this->modelSources[$tableName][$identifierValue] = $this->modelSourceFetcher->fetch($syncItemDto);
+                $tableName = $syncItemDto->getTableName();
+
+                if (!$this->configProvider->isTableNameClassNameOrm($tableName)) {
+                    $modelSource = null;
+                } else {
+                    $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
+                    $modelSource = $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
+                }
+
+                $this->modelSources[$tableName][$identifierValue] = $modelSource;
             }
+
             $modelSource = $this->modelSources[$tableName][$identifierValue];
         }
 
