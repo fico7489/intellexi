@@ -1,14 +1,22 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Creator;
+namespace Tests\ESModule\Syncer\Creator\CdcSyncable\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Exception\Exception;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
-class CreatorUpdateTest extends TestCase
+class UpdateTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mockIndexNamesForSyncFinder(['test']);
+        $this->mockDatabaseAdapter(['test-table' => 'id']);
+    }
+
     public function testUpdateBasic()
     {
         $cdcDto = $this->createCdcDto();

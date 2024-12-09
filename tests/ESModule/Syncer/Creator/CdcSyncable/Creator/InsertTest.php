@@ -32,6 +32,7 @@ class InsertTest extends TestCase
         $this->assertEquals($cdcDto->getData(), $cdcSyncable->getData());
         $this->assertEquals([], $cdcSyncable->getChangedFields());
         $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
     }
 
     public function testInsertTwo()
@@ -50,6 +51,7 @@ class InsertTest extends TestCase
         $this->assertEquals([], $cdcSyncable->getChangedFields());
         $this->assertEquals($cdcDto->getData(), $cdcSyncable->getData());
         $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
 
         $cdcSyncable2 = $data[1];
         $this->assertEquals($cdcDto2->getTableName(), $cdcSyncable2->getTableName());
@@ -57,6 +59,7 @@ class InsertTest extends TestCase
         $this->assertEquals([], $cdcSyncable2->getChangedFields());
         $this->assertEquals($cdcDto2->getData(), $cdcSyncable2->getData());
         $this->assertEquals(2, $cdcSyncable2->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable2->getIndexNamesForSync());
     }
 
     public function testInsertExceptionAlreadyExists()
