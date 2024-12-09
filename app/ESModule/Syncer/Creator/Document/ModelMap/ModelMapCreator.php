@@ -40,21 +40,9 @@ class ModelMapCreator
     private function fetchModelSource(CdcSyncableDto $syncItemDto): ?object
     {
         $modelSource = null;
-        $tableName = $syncItemDto->getTableName();
-        $identifierValue = $syncItemDto->getIdentifierValue();
-        if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
-            if (!isset($this->modelSources[$tableName][$identifierValue])) {
-                $tableName = $syncItemDto->getTableName();
-
-                if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
-                    $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
-                    $modelSource = $this->ormAdapter->fetchModelByData($syncItemDto, $classNameOrm, $syncItemDto->getIdentifierValue());
-                }
-
-                $this->modelSources[$tableName][$identifierValue] = $modelSource;
-            }
-
-            $modelSource = $this->modelSources[$tableName][$identifierValue];
+        if ($this->configProvider->isTableNameClassNameOrm($syncItemDto->getTableName())) {
+            $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($syncItemDto->getTableName());
+            $modelSource = $this->ormAdapter->fetchModelByData($syncItemDto, $classNameOrm, $syncItemDto->getIdentifierValue());
         }
 
         return $modelSource;
