@@ -29,16 +29,16 @@ class Syncer
         $syncItemDtos = $this->syncItemCreator->create($cdcDtos);
 
         dump('count $syncItemDtos='.count($syncItemDtos));
-        $documentDtos = $this->documentsCreator->create($syncItemDtos);
-        // dd($documentDtos);
-        dump('count $documentDtos='.count($documentDtos));
+        $syncModelsDtos = $this->documentsCreator->create($syncItemDtos);
+
+        dump('count $documentDtos='.count($syncModelsDtos));
         // TODO test grouping, add delete different
         // TODO mark document as root in DTO
         // TODO add to document source of trigger
         // TODO group in different service for ESAdapter
         // TODO exclude duplicates one more time
         $documentsGrouped = [];
-        foreach ($documentDtos as $indexName => $data) {
+        foreach ($syncModelsDtos as $indexName => $data) {
             foreach ($data as $identifierValue => $data2) {
                 $type = $data2['type'];
                 $modelRelated = $data2['modelRelated'];

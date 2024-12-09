@@ -38,7 +38,7 @@ class DocumentsCreator
             foreach ($indexNames as $indexName => $changedFieldsTriggers) {
                 // sync is matched by changed table $syncItemDto and table from $syncMapping
                 if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
-                    $documents = $this->createForItem($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
+                    $documents = $this->createForItem($documents, $syncItemDto, $indexName);
                 }
             }
         }
@@ -46,8 +46,10 @@ class DocumentsCreator
         return $documents;
     }
 
-    private function createForItem(array $documents, SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
+    private function createForItem(array $documents, SyncItemDto $syncItemDto, $indexName): array
     {
+        $tableName = $syncItemDto->getTableName();
+
         // detect $indexDto
         $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
 
