@@ -7,6 +7,9 @@ use GuzzleHttp\Client;
 
 class SearchEngineDataClient
 {
+    /**
+     * @param array<DocumentDto> $documents
+     */
     public function syncDocuments($documents): void
     {
         $documentDtosGrouped = [];
@@ -30,7 +33,6 @@ class SearchEngineDataClient
             /* @var DocumentDto $document */
             dump('SYNC:'.$document->getIndexName().' - '.$document->getIdentifierValue());
 
-            /** @var DocumentDto $document */
             $data = $this->documentPrepare($indexName, $document->getIdentifierValue(), $document->getData());
 
             $datas[] = $data[0];
