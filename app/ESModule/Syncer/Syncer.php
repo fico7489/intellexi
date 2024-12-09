@@ -30,7 +30,7 @@ class Syncer
 
         dump('count $syncItemDtos='.count($syncItemDtos));
         $documentDtos = $this->documentsCreator->create($syncItemDtos);
-        //dd($documentDtos);
+        // dd($documentDtos);
         dump('count $documentDtos='.count($documentDtos));
         // TODO test grouping, add delete different
         // TODO mark document as root in DTO

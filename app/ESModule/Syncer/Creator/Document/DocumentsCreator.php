@@ -32,10 +32,11 @@ class DocumentsCreator
 
         $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {
-            foreach ($syncMapping as $tableName => $indexData) {
-                foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                    $documents = $this->createForItem($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
-                }
+            $tableName = $syncItemDto->getTableName();
+            $indexNames = $syncMapping[$tableName];
+
+            foreach ($indexNames as $indexName => $changedFieldsTriggers) {
+                $documents = $this->createForItem($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
             }
         }
 
