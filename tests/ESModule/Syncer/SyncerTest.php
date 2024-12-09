@@ -11,7 +11,7 @@ use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 use App\ESModule\Syncer\Syncer;
 use Mockery\MockInterface;
-use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
+use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class SyncerTest extends TestCase
 {

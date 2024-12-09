@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\SyncItem\Creator;
+namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Exception\Exception;
-use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
+use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class CreatorUpdateTest extends TestCase
 {

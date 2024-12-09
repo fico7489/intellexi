@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\Document;
+namespace Tests\ESModule\Syncer\Creator\DocumentOld;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
-use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
+use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class DocumentsCreateDocumentsTest extends TestCase
 {

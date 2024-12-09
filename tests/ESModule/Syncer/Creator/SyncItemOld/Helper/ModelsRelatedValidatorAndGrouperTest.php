@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
+namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedValidatorAndGrouper;
 use Mockery\MockInterface;
-use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
+use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class ModelsRelatedValidatorAndGrouperTest extends TestCase
 {

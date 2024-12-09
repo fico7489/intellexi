@@ -1,17 +1,17 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\SyncItem;
+namespace Tests\ESModule\Syncer\Creator\CdcSyncable;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\CdcSyncableCreator;
+use App\ESModule\Syncer\Creator\CdcSyncable\Helper\IndexNamesForSyncFinder;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 
 class TestCase extends \Tests\TestCase
 {
     protected CdcSyncableCreator $cdcConverter;
-    protected $mock;
 
     protected function setUp(): void
     {
@@ -27,6 +27,13 @@ class TestCase extends \Tests\TestCase
                 'test-table' => 'id',
             ]);
         })->makePartial();
+    }
+
+    protected function mockIndexNamesForSyncFinder($indexNamesForSync): void
+    {
+        $this->mock(IndexNamesForSyncFinder::class, function (MockInterface $mock) use ($indexNamesForSync) {
+            $mock->allows('findIndexNamesForSync')->andReturn($indexNamesForSync);
+        });
     }
 
     protected function createService(): CdcSyncableCreator

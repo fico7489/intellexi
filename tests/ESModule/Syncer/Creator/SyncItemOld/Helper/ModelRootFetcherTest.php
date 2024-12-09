@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
+namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ModelSourceFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
-use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
+use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class ModelRootFetcherTest extends TestCase
 {

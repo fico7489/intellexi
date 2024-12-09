@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
+namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Helper\ShouldSyncDetector;
-use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
+use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class ShouldSyncDetectorTest extends TestCase
 {

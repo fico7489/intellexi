@@ -28,7 +28,7 @@ class SyncableDocumentsCreator
         $syncModels = [];
         foreach ($syncItemDtos as $syncItemDto) {
             $tableName = $syncItemDto->getTableName();
-            $indexNames = $syncItemDto->getIndexNames();
+            $indexNames = $syncItemDto->getIndexNamesForSync();
 
             foreach ($indexNames as $indexName) {
                 // detect $modelSource

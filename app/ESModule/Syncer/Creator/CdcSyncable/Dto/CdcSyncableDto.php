@@ -42,7 +42,7 @@ class CdcSyncableDto
         return $this->identifierValue;
     }
 
-    public function getIndexNames(): array
+    public function getIndexNamesForSync(): array
     {
         return $this->indexNames;
     }
