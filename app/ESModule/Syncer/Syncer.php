@@ -3,8 +3,8 @@
 namespace App\ESModule\Syncer;
 
 use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
-use App\ESModule\Syncer\Creator\SyncDocument\SyncableDocumentsCreator;
-use App\ESModule\Syncer\Creator\SyncItem\SyncableItemsCreator;
+use App\ESModule\Syncer\Creator\SyncableDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\SyncableItem\SyncableItemsCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 
 class Syncer
@@ -13,7 +13,7 @@ class Syncer
         private readonly SyncableItemsCreator $syncableItemsCreator,
         private readonly SyncableDocumentsCreator $syncableDocumentsCreator,
         private readonly DocumentsCreator $documentsCreator,
-        private readonly SearchEngineDataClient $searchEngineSyncer,// TODO by interface
+        private readonly SearchEngineDataClient $searchEngineDataClient,// TODO by interface
     ) {
     }
 
@@ -31,6 +31,6 @@ class Syncer
         dump('count $syncableDocumentDtos='.count($syncableDocumentDtos));
         $documents = $this->documentsCreator->create($syncableDocumentDtos);
 
-        $this->searchEngineSyncer->syncDocuments($documents);
+        $this->searchEngineDataClient->syncDocuments($documents);
     }
 }

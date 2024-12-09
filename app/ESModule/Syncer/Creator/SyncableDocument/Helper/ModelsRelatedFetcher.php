@@ -1,9 +1,9 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncDocument\Helper;
+namespace App\ESModule\Syncer\Creator\SyncableDocument\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class ModelsRelatedFetcher

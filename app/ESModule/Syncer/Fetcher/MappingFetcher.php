@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Fetcher;
 
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class MappingFetcher

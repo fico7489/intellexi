@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
-use App\ESModule\Syncer\Creator\SyncDocument\Helper\ShouldSyncDetector;
+use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ShouldSyncDetector;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
 class ShouldSyncDetectorTest extends TestCase

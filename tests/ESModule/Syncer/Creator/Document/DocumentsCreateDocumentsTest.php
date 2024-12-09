@@ -2,8 +2,8 @@
 
 namespace Tests\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Syncer\Creator\SyncDocument\SyncableDocumentsCreator;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;

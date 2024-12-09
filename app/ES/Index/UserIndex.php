@@ -3,7 +3,7 @@
 namespace App\ES\Index;
 
 use App\ESModule\Config\Interface\IndexModelInterface;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use App\Models\User;
 
 class UserIndex implements IndexModelInterface

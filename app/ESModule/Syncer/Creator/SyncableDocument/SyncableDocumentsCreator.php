@@ -1,12 +1,13 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncDocument;
+namespace App\ESModule\Syncer\Creator\SyncableDocument;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\SyncDocument\Helper\ModelsRelatedFetcher;
-use App\ESModule\Syncer\Creator\SyncDocument\Helper\ShouldSyncDetector;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableDocument\Dto\SyncableDocumentDto;
+use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ShouldSyncDetector;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncableDocumentsCreator
@@ -24,7 +25,7 @@ class SyncableDocumentsCreator
     /**
      * @param array<SyncableItemDto> $syncItemDtos
      *
-     * @return array<DocumentDto>
+     * @return array<SyncableDocumentDto>
      */
     public function create(array $syncItemDtos): array
     {
@@ -44,7 +45,14 @@ class SyncableDocumentsCreator
             }
         }
 
-        return $syncModels;
+        $syncModelsCollapsed = [];
+        foreach ($syncModels as $tableNameRelated => $data) {
+            foreach ($data as $identifierValue => $dto) {
+                $syncModelsCollapsed[] = $dto;
+            }
+        }
+
+        return $syncModelsCollapsed;
     }
 
     private function createSyncModelsForIndexNameRelated(array $syncModels, SyncableItemDto $syncItemDto, $modelSource, $indexNameRelated): array
@@ -70,6 +78,8 @@ class SyncableDocumentsCreator
             $syncModels[$tableNameRelated][$identifierValue] = [
                 'type' => $type,
             ];
+
+            $syncModels[$tableNameRelated][$identifierValue] = new SyncableDocumentDto($indexNameRelated, $identifierValue, $type);
         }
 
         return $syncModels;

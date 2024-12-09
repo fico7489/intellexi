@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncItem\Dto;
+namespace App\ESModule\Syncer\Creator\SyncableItem\Dto;
 
 class SyncableItemDto
 {

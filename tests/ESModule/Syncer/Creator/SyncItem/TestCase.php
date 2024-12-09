@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
-use App\ESModule\Syncer\Creator\SyncItem\SyncableItemsCreator;
+use App\ESModule\Syncer\Creator\SyncableItem\SyncableItemsCreator;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 

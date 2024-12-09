@@ -4,8 +4,8 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\SyncDocument\Helper\ModelsRelatedFetcher;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 

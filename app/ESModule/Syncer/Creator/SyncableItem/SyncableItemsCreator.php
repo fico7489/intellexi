@@ -1,11 +1,11 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncItem;
+namespace App\ESModule\Syncer\Creator\SyncableItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
-use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
+use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\SyncableItem\Exception\SyncItemCreatorException;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncableItemsCreator

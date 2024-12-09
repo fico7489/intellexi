@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncDocument\Helper;
+namespace App\ESModule\Syncer\Creator\SyncableDocument\Helper;
 
 class ShouldSyncDetector
 {

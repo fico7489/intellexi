@@ -4,6 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\SyncableDocument\Dto\SyncableDocumentDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
@@ -16,6 +17,11 @@ class DocumentsCreator
     ) {
     }
 
+    /**
+     * @param array<SyncableDocumentDto> $documentDtos
+     *
+     * @return array<DocumentDto>
+     */
     public function create(array $documentDtos)
     {
         // TODO test grouping, add delete different
@@ -24,19 +30,21 @@ class DocumentsCreator
         // TODO group in different service for ESAdapter
         // TODO exclude duplicates one more time
         $documentsGrouped = [];
-        foreach ($documentDtos as $tableName => $data) {
+        foreach ($documentDtos as $documentDto) {
+            $indexName = $documentDto->getIndexName();
+            $tableName = $this->configProvider->fetchTableNameByIndexName($indexName);
+
             $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
+            $identifierValue = $documentDto->getIdentifierValue();
+            $type = $documentDto->getType();
+
             $indexDto = $this->configProvider->fetchIndexDtoByTableName($tableName);
 
-            foreach ($data as $identifierValue => $data2) {
-                $type = $data2['type'];
+            $model = $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
 
-                $model = $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
-
-                $indexNameWithPrefix = $indexDto->getNameWithPrefix();
-                $data = $this->dataFetcher->fetch($indexDto, $model);
-                $documentsGrouped[$indexNameWithPrefix][] = new DocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
-            }
+            $indexNameWithPrefix = $indexDto->getNameWithPrefix();
+            $data = $this->dataFetcher->fetch($indexDto, $model);
+            $documentsGrouped[$indexNameWithPrefix][] = new DocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
         }
 
         return $documentsGrouped;
