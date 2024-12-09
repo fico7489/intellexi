@@ -6,7 +6,7 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Exception\Exception;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
-class CreatorDeleteTest extends TestCase
+class DeleteTest extends TestCase
 {
     protected function setUp(): void
     {
