@@ -73,15 +73,17 @@ class CdcSyncableCreator
                     }
 
                     // if we already have item stored as insert or update we will merge it with a new item
-                    if (CdcSyncableDto::TYPE_UPSERT === $cdcSyncableDto->getType()) {
-                        // merge and set indexNames
-                        $indexNamesMerged = array_unique(array_merge(
-                            $cdcSyncableDto->getIndexNamesForSync(),
-                            $indexNamesForSync
-                        ));
-                        $cdcSyncableDto->setIndexNames($indexNamesMerged);
 
-                        // merge and set changedFields
+                    // merge and set indexNames
+                    $indexNamesMerged = array_unique(array_merge(
+                        $cdcSyncableDto->getIndexNamesForSync(),
+                        $indexNamesForSync
+                    ));
+                    $cdcSyncableDto->setIndexNames($indexNamesMerged);
+
+                    // merge and set changedFields
+                    if(count($cdcSyncableDto->getChangedFields()) > 0){
+                        //when count === 0 then previous item was created and we will leave empty list
                         $changedFieldsMerged = array_unique(array_merge(
                             $cdcSyncableDto->getChangedFields(),
                             $changedFields

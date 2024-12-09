@@ -87,6 +87,28 @@ class UpdateTest extends TestCase
         $this->assertEquals(['test'], $cdcSyncable2->getIndexNamesForSync());
     }
 
+    public function testUpdateAfterInsert()
+    {
+        $data = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2'];
+        $data2 = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2-2'];
+
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_INSERT, data: $data, changedFields: ['name2']);
+        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: $data2, changedFields: ['name3']);
+        $cdcDtos = [$cdcDto, $cdcDto2];
+
+        $data = $this->createService()->create($cdcDtos);
+
+        $this->assertCount(1, $data);
+
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $cdcSyncable->getType());
+        $this->assertEquals([], $cdcSyncable->getChangedFields());
+        $this->assertEquals($cdcDto2->getData(), $cdcSyncable->getData());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        //$this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
+    }
+
     public function testUpdatefterDelete()
     {
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
