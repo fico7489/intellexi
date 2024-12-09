@@ -2,22 +2,24 @@
 
 namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
+use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 class EloquentAdapter
 {
+    public function fetchModelByData(CdcSyncableDto $cdcSyncableDto, string $classNameOrm, mixed $identifierValue): ?Model
+    {
+        $instance = new $classNameOrm();
+        $instance->forceFill($cdcSyncableDto->getData());
+
+        return $instance;
+    }
+
     public function fetchModel(string $classNameOrm, mixed $identifierValue): ?Model
     {
         return $classNameOrm::find($identifierValue);
-
-        // TODO
-        /** @var Model $instance */
-        $instance = new $classNameOrm();
-        $instance->forceFill($syncItemDto->getData());
-
-        return $instance;
     }
 
     public function fetchTableNameFromModel(Model $model): string

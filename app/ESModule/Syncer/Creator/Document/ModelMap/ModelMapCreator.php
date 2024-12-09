@@ -48,7 +48,7 @@ class ModelMapCreator
 
                 if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
                     $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
-                    $modelSource = $this->ormAdapter->fetchModel($classNameOrm, $syncItemDto->getIdentifierValue());
+                    $modelSource = $this->ormAdapter->fetchModelByData($syncItemDto, $classNameOrm, $syncItemDto->getIdentifierValue());
                 }
 
                 $this->modelSources[$tableName][$identifierValue] = $modelSource;

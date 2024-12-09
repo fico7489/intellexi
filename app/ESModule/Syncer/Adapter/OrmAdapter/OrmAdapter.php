@@ -2,11 +2,25 @@
 
 namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
+use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
+
 class OrmAdapter
 {
     public function __construct(
         private readonly EloquentAdapter $ormAdapter,// TODO interface
     ) {
+    }
+
+    public function fetchModel(string $classNameOrm, mixed $identifierValue): ?object
+    {
+        // TODO cache
+
+        return $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
+    }
+
+    public function fetchModelByData(CdcSyncableDto $cdcSyncableDto, string $classNameOrm, mixed $identifierValue): ?object
+    {
+        return $this->ormAdapter->fetchModelByData($cdcSyncableDto, $classNameOrm, $identifierValue);
     }
 
     public function fetchAllClassNamesOrm(): array
@@ -40,16 +54,6 @@ class OrmAdapter
         $mapping = $this->fetchAllClassNamesOrm();
 
         return isset($mapping[$tableName]);
-    }
-
-    public function fetchModel(string $classNameOrm, mixed $identifierValue): ?object
-    {
-        dump($classNameOrm, $identifierValue);
-        if(!isset($this->models[$classNameOrm][$identifierValue])){
-            $this->models[$classNameOrm][$identifierValue] =  $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
-        }
-
-        return $this->models[$classNameOrm][$identifierValue];
     }
 
     public function fetchTableNameFromModel(object $model): string
