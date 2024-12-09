@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Creator\CdcSyncable\Exception\SyncItemCreatorException;
+use App\ESModule\Syncer\Creator\CdcSyncable\Exception\Exception;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
 class CreatorInsertTest extends TestCase
@@ -58,7 +58,7 @@ class CreatorInsertTest extends TestCase
 
         $cdcDtos = [$cdcDto, $cdcDto2];
 
-        $this->expectException(SyncItemCreatorException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Grouper: insert detected after insert, delete or update');
         $this->createService()->create($cdcDtos);
     }

@@ -2,6 +2,6 @@
 
 namespace App\ESModule\Syncer\Creator\CdcSyncable\Exception;
 
-class SyncItemCreatorException extends \Exception
+class Exception extends \Exception
 {
 }

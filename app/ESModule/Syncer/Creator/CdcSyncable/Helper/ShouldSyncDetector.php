@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\Helper;
+namespace App\ESModule\Syncer\Creator\CdcSyncable\Helper;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 
