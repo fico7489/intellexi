@@ -45,10 +45,6 @@ class DocumentsCreator
 
     private function createForItem(array $documents, SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
     {
-        if ($tableName !== $syncItemDto->getTableName()) {
-            return $documents;
-        }
-
         // sync is matched by changed table $syncItemDto and table from $syncMapping
         if (!$this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
             return $documents;
