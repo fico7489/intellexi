@@ -44,7 +44,7 @@ class DocumentsCreator
 
             $indexNameWithPrefix = $indexDto->getNameWithPrefix();
             $data = $this->dataFetcher->fetch($indexDto, $model);
-            $documentsGrouped[$indexNameWithPrefix][] = new DocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
+            $documentsGrouped[] = new DocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
         }
 
         return $documentsGrouped;
