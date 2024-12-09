@@ -3,7 +3,7 @@
 namespace App\ES\Index;
 
 use App\ESModule\Config\Interface\IndexModelInterface;
-use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\Models\Application;
 use App\Models\Role;
 use App\Models\User;
@@ -76,13 +76,13 @@ class ApplicationIndex implements IndexModelInterface
     public function syncModels($syncModels): array
     {
         return [
-            Application::class => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) {
+            Application::class => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
                 return array_merge($relatedModels, [$model]);
             },
-            User::class => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) {
+            User::class => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
                 return array_merge($relatedModels, $model->applications->all());
             },
-            Role::class => function (object $model, SyncableItemDto $syncItemDto, array $relatedModels) {
+            Role::class => function (object $model, CdcSyncableDto $syncItemDto, array $relatedModels) {
                 $users = $model->users;
 
                 $applications = [];
@@ -92,7 +92,7 @@ class ApplicationIndex implements IndexModelInterface
 
                 return array_merge($relatedModels, $applications);
             },
-            'role_user' => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) {
+            'role_user' => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
                 $user = User::find($syncItemDto->getData()['user_id']);
 
                 if (!$user) {

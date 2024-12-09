@@ -1,14 +1,14 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncableItem;
+namespace App\ESModule\Syncer\Creator\CdcSyncable;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
-use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
-use App\ESModule\Syncer\Creator\SyncableItem\Exception\SyncItemCreatorException;
+use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
+use App\ESModule\Syncer\Creator\CdcSyncable\Exception\SyncItemCreatorException;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class SyncableItemsCreator
+class CdcSyncableCreator
 {
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
@@ -21,7 +21,7 @@ class SyncableItemsCreator
      *
      * @param array<CdcDto> $cdcDtos //TODO try to remove CdcDto, so that package will be independent
      *
-     * @return array<SyncableItemDto>
+     * @return array<CdcSyncableDto>
      *
      * @throws SyncItemCreatorException
      */
@@ -55,25 +55,25 @@ class SyncableItemsCreator
                     throw new SyncItemCreatorException('Grouper: delete already deleted');
                 }
 
-                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncableItemDto::TYPE_DELETE, $identifierValue);
+                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_DELETE, $identifierValue);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
                 if (!isset($syncItemDtosGrouped[$tableName][$identifierValue])) {
                     // item is not set
-                    $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncableItemDto::TYPE_UPSERT, $identifierValue);
+                    $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue);
                 } else {
                     // item is already set
 
-                    /** @var SyncableItemDto $syncItemDto */
+                    /** @var CdcSyncableDto $syncItemDto */
                     $syncItemDto = $syncItemDtosGrouped[$tableName][$identifierValue];
 
-                    if (SyncableItemDto::TYPE_DELETE === $syncItemDto->getType()) {
+                    if (CdcSyncableDto::TYPE_DELETE === $syncItemDto->getType()) {
                         // it is not possible to receive update after row is already deleted
                         throw new SyncItemCreatorException('Grouper: update detected after delete');
                     }
 
                     // if we already have item stored as insert or update we will merge it with new item
                     // we will merge changed fields and use data of newer cdcDto
-                    if (SyncableItemDto::TYPE_UPSERT === $syncItemDto->getType()) {
+                    if (CdcSyncableDto::TYPE_UPSERT === $syncItemDto->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncItemDto->getChangedFields(),
                             $changedFields
@@ -91,7 +91,7 @@ class SyncableItemsCreator
                     throw new SyncItemCreatorException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncableItemDto::TYPE_UPSERT, $identifierValue);
+                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue);
             }
         }
 
@@ -106,7 +106,7 @@ class SyncableItemsCreator
         return $syncItemDtos;
     }
 
-    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncableItemDto
+    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): CdcSyncableDto
     {
         $changedFields = $cdcDto->getChangedFields();
 
@@ -118,7 +118,7 @@ class SyncableItemsCreator
             $changedFields = array_keys($cdcDto->getData());
         }
 
-        return new SyncableItemDto(
+        return new CdcSyncableDto(
             $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),

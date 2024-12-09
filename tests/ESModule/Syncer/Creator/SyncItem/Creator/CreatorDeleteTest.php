@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\SyncItem\Creator;
 
 use App\ESModule\Cdc\Dto\CdcDto;
-use App\ESModule\Syncer\Creator\SyncableItem\Exception\SyncItemCreatorException;
+use App\ESModule\Syncer\Creator\CdcSyncable\Exception\SyncItemCreatorException;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
 class CreatorDeleteTest extends TestCase

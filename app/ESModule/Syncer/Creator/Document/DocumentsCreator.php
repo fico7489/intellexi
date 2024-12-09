@@ -4,7 +4,6 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\SyncableDocument\Dto\SyncableDocumentDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
@@ -18,8 +17,6 @@ class DocumentsCreator
     }
 
     /**
-     * @param array<SyncableDocumentDto> $documentDtos
-     *
      * @return array<DocumentDto>
      */
     public function create(array $documentDtos)
@@ -31,13 +28,12 @@ class DocumentsCreator
         // TODO exclude duplicates one more time
         $documentsGrouped = [];
         foreach ($documentDtos as $documentDto) {
-            $indexName = $documentDto->getIndexName();
+            $indexName = $documentDto['indexName'];
+            $identifierValue = $documentDto['identifierValue'];
+            $type = $documentDto['type'];
+
             $tableName = $this->configProvider->fetchTableNameByIndexName($indexName);
-
             $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
-            $identifierValue = $documentDto->getIdentifierValue();
-            $type = $documentDto->getType();
-
             $indexDto = $this->configProvider->fetchIndexDtoByTableName($tableName);
 
             $model = $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);

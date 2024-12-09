@@ -4,13 +4,13 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
-use App\ESModule\Syncer\Creator\SyncableItem\SyncableItemsCreator;
+use App\ESModule\Syncer\Creator\CdcSyncable\CdcSyncableCreator;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 
 class TestCase extends \Tests\TestCase
 {
-    protected SyncableItemsCreator $cdcConverter;
+    protected CdcSyncableCreator $cdcConverter;
     protected $mock;
 
     protected function setUp(): void
@@ -29,10 +29,10 @@ class TestCase extends \Tests\TestCase
         })->makePartial();
     }
 
-    protected function createService(): SyncableItemsCreator
+    protected function createService(): CdcSyncableCreator
     {
-        /** @var SyncableItemsCreator $syncItemCreator */
-        $syncItemCreator = app(SyncableItemsCreator::class);
+        /** @var CdcSyncableCreator $syncItemCreator */
+        $syncItemCreator = app(CdcSyncableCreator::class);
 
         return $syncItemCreator;
     }

@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Creator\SyncableDocument\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
+use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class ModelsRelatedFetcher
@@ -17,7 +17,7 @@ class ModelsRelatedFetcher
     /**
      * @return array<object>
      */
-    public function fetch(SyncableItemDto $syncItemDto, IndexDto $indexDto, ?object $modelSource): array
+    public function fetch(CdcSyncableDto $syncItemDto, IndexDto $indexDto, ?object $modelSource): array
     {
         $tableName = $syncItemDto->getTableName();
 

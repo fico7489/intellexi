@@ -3,11 +3,11 @@
 namespace App\ESModule\Syncer\Creator\SyncableDocument;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
+use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncableDocument\Dto\SyncableDocumentDto;
 use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ShouldSyncDetector;
-use App\ESModule\Syncer\Creator\SyncableItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncableDocumentsCreator
@@ -23,7 +23,7 @@ class SyncableDocumentsCreator
     }
 
     /**
-     * @param array<SyncableItemDto> $syncItemDtos
+     * @param array<CdcSyncableDto> $syncItemDtos
      *
      * @return array<SyncableDocumentDto>
      */
@@ -55,7 +55,7 @@ class SyncableDocumentsCreator
         return $syncModelsCollapsed;
     }
 
-    private function createSyncModelsForIndexNameRelated(array $syncModels, SyncableItemDto $syncItemDto, $modelSource, $indexNameRelated): array
+    private function createSyncModelsForIndexNameRelated(array $syncModels, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array
     {
         $tableNameRelated = $this->configProvider->fetchTableNameByIndexName($indexNameRelated);
 
@@ -79,13 +79,19 @@ class SyncableDocumentsCreator
                 'type' => $type,
             ];
 
-            $syncModels[$tableNameRelated][$identifierValue] = new SyncableDocumentDto($indexNameRelated, $identifierValue, $type);
+            // $syncModels[$tableNameRelated][$identifierValue] = new SyncableDocumentDto($indexNameRelated, $identifierValue, $type);
+
+            $syncModels[$tableNameRelated][$identifierValue] = [
+                'indexName' => $indexNameRelated,
+                'identifierValue' => $identifierValue,
+                'type' => $type,
+            ];
         }
 
         return $syncModels;
     }
 
-    private function fetchModelSource(SyncableItemDto $syncItemDto): ?object
+    private function fetchModelSource(CdcSyncableDto $syncItemDto): ?object
     {
         $modelSource = null;
         $tableName = $syncItemDto->getTableName();
@@ -108,7 +114,7 @@ class SyncableDocumentsCreator
         return $modelSource;
     }
 
-    private function filterSyncMappingForTableName(SyncableItemDto $syncItemDto, array $syncMappingForTableName): array
+    private function filterSyncMappingForTableName(CdcSyncableDto $syncItemDto, array $syncMappingForTableName): array
     {
         $syncMappingForTableNameFiltered = [];
 
