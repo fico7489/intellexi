@@ -44,7 +44,12 @@ class OrmAdapter
 
     public function fetchModel(string $classNameOrm, mixed $identifierValue): ?object
     {
-        return $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
+        dump($classNameOrm, $identifierValue);
+        if(!isset($this->models[$classNameOrm][$identifierValue])){
+            $this->models[$classNameOrm][$identifierValue] =  $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
+        }
+
+        return $this->models[$classNameOrm][$identifierValue];
     }
 
     public function fetchTableNameFromModel(object $model): string

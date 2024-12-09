@@ -37,9 +37,9 @@ class DocumentCreator
         });
 
         $modelMapDtos = $this->modelMapCreator->create($syncItemDtos);
-        dd($queries);
+        dump('    count=' . count($queries));
         $documentDtos = $this->modelMapConverter->convert($modelMapDtos);
-
+        dump('    count2=' . count($queries));
         return $documentDtos;
     }
 }
