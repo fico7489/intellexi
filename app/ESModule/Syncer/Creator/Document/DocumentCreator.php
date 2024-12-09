@@ -6,6 +6,8 @@ use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapConverter;
 use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapCreator;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 class DocumentCreator
 {
@@ -22,8 +24,20 @@ class DocumentCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $modelMapDtos = $this->modelMapCreator->create($syncItemDtos);
+        $queries = [];
+        DB::listen(function (QueryExecuted $query) use (&$queries) {
+            if (
+                !str_contains(strtolower($query->sql), 'show')
+            ) {
+                $addSlashes = str_replace('?', "'?'", $query->sql);
+                $querySql = vsprintf(str_replace('?', '%s', $addSlashes), $query->bindings);
 
+                $queries[] = $querySql;
+            }
+        });
+
+        $modelMapDtos = $this->modelMapCreator->create($syncItemDtos);
+        dd($queries);
         $documentDtos = $this->modelMapConverter->convert($modelMapDtos);
 
         return $documentDtos;
