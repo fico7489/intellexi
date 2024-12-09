@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Event\CdcDtosEvent;
-use App\ESModule\Syncer\Creator\SyncDocument\Dto\SyncableDocumentDto;
+use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncDocument\SyncableDocumentsCreator;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Creator\SyncItem\SyncableItemsCreator;
@@ -20,7 +20,7 @@ class SyncerTest extends TestCase
         $cdcDto = new CdcDto('test-database', 'test-table', CdcDto::TYPE_UPDATE, ['id' => 1], ['id'], []);
         $cdcDtoEvent = new CdcDtosEvent([$cdcDto]);
         $syncDto = new SyncableItemDto('test-table', CdcDto::TYPE_UPDATE, ['id' => 1], ['id'], 1);
-        $document = new SyncableDocumentDto('test-index', 1, ['id' => 3], SyncableDocumentDto::TYPE_UPSERT);
+        $document = new DocumentDto('test-index', 1, ['id' => 3], DocumentDto::TYPE_UPSERT);
 
         $this->mock(SyncableItemsCreator::class, function (MockInterface $mock) use ($syncDto, $cdcDto) {
             $mock->allows('create')

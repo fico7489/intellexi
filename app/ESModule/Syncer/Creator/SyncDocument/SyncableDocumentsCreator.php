@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Creator\SyncDocument;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\SyncDocument\Dto\SyncableDocumentDto;
+use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncDocument\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncDocument\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
@@ -24,7 +24,7 @@ class SyncableDocumentsCreator
     /**
      * @param array<SyncableItemDto> $syncItemDtos
      *
-     * @return array<SyncableDocumentDto>
+     * @return array<DocumentDto>
      */
     public function create(array $syncItemDtos): array
     {
@@ -61,7 +61,7 @@ class SyncableDocumentsCreator
         foreach ($modelsRelated as $modelRelated) {
             $type = $syncItemDto->getType();
             if ($modelRelated !== $modelSource) {
-                $type = SyncableDocumentDto::TYPE_UPSERT;
+                $type = DocumentDto::TYPE_UPSERT;
             }
 
             $identifierName = $modelRelated->getKeyName();
@@ -86,7 +86,7 @@ class SyncableDocumentsCreator
 
                 if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
                     $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
-                    $modelSource = $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
+                    $modelSource = $this->ormAdapter->fetchModel($classNameOrm, $syncItemDto->getIdentifierValue());
                 }
 
                 $this->modelSources[$tableName][$identifierValue] = $modelSource;

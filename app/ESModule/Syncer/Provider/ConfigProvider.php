@@ -59,6 +59,15 @@ class ConfigProvider
         return array_flip($tableNamesToIndexNamesMapping)[$indexName];
     }
 
+    public function fetchIndexDtoByTableName($tableName): IndexDto
+    {
+        $tableNamesToIndexNamesMapping = $this->getConfigDto()->getTableNamesToIndexNamesMapping();
+
+        $indexName = $tableNamesToIndexNamesMapping[$tableName];
+
+        return $this->fetchIndexDtoByIndexName($indexName);
+    }
+
     public function getConfigDto(): ConfigDto
     {
         return $this->configDtoBuilder->build($this->configConnection, $this->configIndexes);

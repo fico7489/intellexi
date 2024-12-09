@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncDocument\Dto;
+namespace App\ESModule\Syncer\Creator\Document\Dto;
 
-class SyncableDocumentDto
+class DocumentDto
 {
     final public const string TYPE_UPSERT = 'upsert';
     final public const string TYPE_DELETE = 'delete';
@@ -20,7 +20,7 @@ class SyncableDocumentDto
         return $this->indexName;
     }
 
-    public function getIdentifier(): mixed
+    public function getIdentifierValue(): mixed
     {
         return $this->identifierValue;
     }
