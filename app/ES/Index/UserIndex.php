@@ -3,7 +3,7 @@
 namespace App\ES\Index;
 
 use App\ESModule\Config\Interface\IndexModelInterface;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use App\Models\User;
 
 class UserIndex implements IndexModelInterface
@@ -50,7 +50,7 @@ class UserIndex implements IndexModelInterface
     public function syncModels($syncModels): array
     {
         return [
-            User::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) {
+            User::class => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) {
                 return array_merge($relatedModels, [$model]);
             },
         ];

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document;
+namespace App\ESModule\Syncer\Creator\SyncDocument;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
-use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncDocument\Dto\SyncableDocumentDto;
+use App\ESModule\Syncer\Creator\SyncDocument\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\SyncDocument\Helper\ShouldSyncDetector;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class SyncModelsCreator
+class SyncableDocumentsCreator
 {
     private array $modelSources = [];
 
@@ -22,9 +22,9 @@ class SyncModelsCreator
     }
 
     /**
-     * @param array<SyncItemDto> $syncItemDtos
+     * @param array<SyncableItemDto> $syncItemDtos
      *
-     * @return array<DocumentDto>
+     * @return array<SyncableDocumentDto>
      */
     public function create(array $syncItemDtos): array
     {
@@ -40,41 +40,42 @@ class SyncModelsCreator
                 // detect $modelSource
                 $modelSource = $this->fetchModelSource($syncItemDto);
 
-                $syncModels = $this->createSyncModelsForIndexName($syncModels, $syncItemDto, $modelSource, $indexName);
+                $syncModels = $this->createSyncModelsForIndexNameRelated($syncModels, $syncItemDto, $modelSource, $indexName);
             }
         }
 
         return $syncModels;
     }
 
-    private function createSyncModelsForIndexName(array $syncModels, SyncItemDto $syncItemDto, $modelSource, $indexName): array
+    private function createSyncModelsForIndexNameRelated(array $syncModels, SyncableItemDto $syncItemDto, $modelSource, $indexNameRelated): array
     {
-        // detect $indexDto
-        $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
+        $tableNameRelated = $this->configProvider->fetchTableNameByIndexName($indexNameRelated);
 
-        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
+        // detect $indexDto
+        $indexDtoRelated = $this->configProvider->fetchIndexDtoByIndexName($indexNameRelated);
+
+        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDtoRelated, $modelSource);
 
         // TODO make updates unique by model->id
 
         foreach ($modelsRelated as $modelRelated) {
             $type = $syncItemDto->getType();
             if ($modelRelated !== $modelSource) {
-                $type = DocumentDto::TYPE_UPSERT;
+                $type = SyncableDocumentDto::TYPE_UPSERT;
             }
 
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
 
-            $syncModels[$indexDto->getName()][$identifierValue] = [
+            $syncModels[$tableNameRelated][$identifierValue] = [
                 'type' => $type,
-                'modelRelated' => $modelRelated,
             ];
         }
 
         return $syncModels;
     }
 
-    private function fetchModelSource(SyncItemDto $syncItemDto): ?object
+    private function fetchModelSource(SyncableItemDto $syncItemDto): ?object
     {
         $modelSource = null;
         $tableName = $syncItemDto->getTableName();
@@ -97,7 +98,7 @@ class SyncModelsCreator
         return $modelSource;
     }
 
-    private function filterSyncMappingForTableName(SyncItemDto $syncItemDto, array $syncMappingForTableName): array
+    private function filterSyncMappingForTableName(SyncableItemDto $syncItemDto, array $syncMappingForTableName): array
     {
         $syncMappingForTableNameFiltered = [];
 

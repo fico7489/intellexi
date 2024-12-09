@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\Exception;
+namespace App\ESModule\Syncer\Creator\SyncDocument\Exception;
 
 class DocumentCreatorException extends \Exception
 {

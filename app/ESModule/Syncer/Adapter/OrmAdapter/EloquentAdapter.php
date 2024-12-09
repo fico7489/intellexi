@@ -2,14 +2,14 @@
 
 namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 class EloquentAdapter
 {
-    public function fetchModel(SyncItemDto $syncItemDto, string $classNameOrm): ?Model
+    public function fetchModel(SyncableItemDto $syncItemDto, string $classNameOrm): ?Model
     {
         $tableName = $syncItemDto->getTableName();
 

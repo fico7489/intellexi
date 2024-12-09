@@ -4,8 +4,8 @@ namespace Tests\ESModule\Syncer\Creator\SyncItem\Helper;
 
 use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncDocument\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
 
@@ -13,7 +13,7 @@ class ModelsRelatedFetcherTest extends TestCase
 {
     public function testEmpty()
     {
-        $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
+        $syncItemDto = new SyncableItemDto('test-table', SyncableItemDto::TYPE_UPSERT, [], [], 1);
         $modelRoot = new \stdClass();
         $modelRoot->id = 1;
         $index = $this->createIndexSyncInterface([]);
@@ -25,7 +25,7 @@ class ModelsRelatedFetcherTest extends TestCase
 
     public function testOnlyTable()
     {
-        $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
+        $syncItemDto = new SyncableItemDto('test-table', SyncableItemDto::TYPE_UPSERT, [], [], 1);
         $modelRoot = new class {
             public $id = 1;
         };
@@ -35,7 +35,7 @@ class ModelsRelatedFetcherTest extends TestCase
         };
 
         $index = $this->createIndexSyncInterface([
-            'test-table' => function ($model, SyncItemDto $syncItemDto, array $relatedModels) use ($object) {
+            'test-table' => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) use ($object) {
                 return [$object];
             },
         ]);
@@ -52,7 +52,7 @@ class ModelsRelatedFetcherTest extends TestCase
 
     public function testOnlyModel()
     {
-        $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
+        $syncItemDto = new SyncableItemDto('test-table', SyncableItemDto::TYPE_UPSERT, [], [], 1);
         $modelRoot = new class {
             public $id = 1;
         };
@@ -62,7 +62,7 @@ class ModelsRelatedFetcherTest extends TestCase
         };
 
         $index = $this->createIndexSyncInterface([
-            $object::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) use ($object) {
+            $object::class => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) use ($object) {
                 return [$object];
             },
         ]);
@@ -80,7 +80,7 @@ class ModelsRelatedFetcherTest extends TestCase
 
     public function testCombineTableAndModel()
     {
-        $syncItemDto = new SyncItemDto('test-table', SyncItemDto::TYPE_UPSERT, [], [], 1);
+        $syncItemDto = new SyncableItemDto('test-table', SyncableItemDto::TYPE_UPSERT, [], [], 1);
         $modelRoot = new class {
             public $id = 1;
         };
@@ -93,10 +93,10 @@ class ModelsRelatedFetcherTest extends TestCase
         };
 
         $index = $this->createIndexSyncInterface([
-            'test-table' => function ($model, SyncItemDto $syncItemDto, array $relatedModels) use ($object) {
+            'test-table' => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) use ($object) {
                 return array_merge([$object], $relatedModels);
             },
-            $object::class => function ($model, SyncItemDto $syncItemDto, array $relatedModels) use ($object2) {
+            $object::class => function ($model, SyncableItemDto $syncItemDto, array $relatedModels) use ($object2) {
                 return array_merge([$object2], $relatedModels);
             },
         ]);

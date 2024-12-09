@@ -2,9 +2,9 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\SyncModelsCreator;
-use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
+use App\ESModule\Syncer\Creator\SyncDocument\Dto\SyncableDocumentDto;
+use App\ESModule\Syncer\Creator\SyncDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\SyncItem\SyncableItemsCreator;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
@@ -12,11 +12,11 @@ use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 class Syncer
 {
     public function __construct(
-        private readonly SyncItemCreator $syncItemCreator,
-        private readonly SyncModelsCreator $documentsCreator,
-        private readonly SearchEngineDataClient $searchEngineSyncer,// TODO by interface
-        private readonly DataFetcher $dataFetcher,
-        private readonly ConfigProvider $configProvider,
+        private readonly SyncableItemsCreator     $syncableItemsCreator,
+        private readonly SyncableDocumentsCreator $syncableDocumentsCreator,
+        private readonly SearchEngineDataClient   $searchEngineSyncer,// TODO by interface
+        private readonly DataFetcher              $dataFetcher,
+        private readonly ConfigProvider           $configProvider,
     ) {
     }
 
@@ -26,19 +26,19 @@ class Syncer
     public function sync(array $cdcDtos): void
     {
         dump('count $cdcDtos='.count($cdcDtos));
-        $syncItemDtos = $this->syncItemCreator->create($cdcDtos);
+        $syncableItemDtos = $this->syncableItemsCreator->create($cdcDtos);
 
-        dump('count $syncItemDtos='.count($syncItemDtos));
-        $syncModelsDtos = $this->documentsCreator->create($syncItemDtos);
-
-        dump('count $documentDtos='.count($syncModelsDtos));
+        dump('count $syncableItemDtos='.count($syncableItemDtos));
+        $syncableDocumentDtos = $this->syncableDocumentsCreator->create($syncableItemDtos);
+dd($syncableDocumentDtos);
+        dump('count $syncableDocumentDtos='.count($syncableDocumentDtos));
         // TODO test grouping, add delete different
         // TODO mark document as root in DTO
         // TODO add to document source of trigger
         // TODO group in different service for ESAdapter
         // TODO exclude duplicates one more time
         $documentsGrouped = [];
-        foreach ($syncModelsDtos as $indexName => $data) {
+        foreach ($syncableDocumentDtos as $indexName => $data) {
             foreach ($data as $identifierValue => $data2) {
                 $type = $data2['type'];
                 $modelRelated = $data2['modelRelated'];
@@ -47,7 +47,7 @@ class Syncer
 
                 $indexNameWithPrefix = $indexDto->getNameWithPrefix();
                 $data = $this->dataFetcher->fetch($indexDto, $modelRelated);
-                $documentsGrouped[$indexNameWithPrefix][] = new DocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
+                $documentsGrouped[$indexNameWithPrefix][] = new SyncableDocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
             }
         }
 

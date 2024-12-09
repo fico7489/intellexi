@@ -2,8 +2,8 @@
 
 namespace Tests\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Syncer\Creator\Document\SyncModelsCreator;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;
@@ -12,7 +12,7 @@ class DocumentsCreateDocumentsTest extends TestCase
 {
     public function testNotMatchedTable()
     {
-        $syncItemDto = new SyncItemDto('test_table', SyncItemDto::TYPE_UPSERT, ['id' => 1], ['id'], []);
+        $syncItemDto = new SyncableItemDto('test_table', SyncableItemDto::TYPE_UPSERT, ['id' => 1], ['id'], []);
 
         $mock = $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $syncMapping = [
@@ -26,7 +26,7 @@ class DocumentsCreateDocumentsTest extends TestCase
             // $mock->allows('create')->andReturn([])->once();
         });
 
-        $service = app(SyncModelsCreator::class);
+        $service = app(SyncableDocumentsCreator::class);
 
         $mock2 = \Mockery::instanceMock($service, function (MockInterface $mock) {
             $mock->expects('testTwo')->times(1);

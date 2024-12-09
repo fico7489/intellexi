@@ -4,11 +4,11 @@ namespace App\ESModule\Syncer\Creator\SyncItem;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Creator\SyncItem\Exception\SyncItemCreatorException;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class SyncItemCreator
+class SyncableItemsCreator
 {
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
@@ -21,7 +21,7 @@ class SyncItemCreator
      *
      * @param array<CdcDto> $cdcDtos //TODO try to remove CdcDto, so that package will be independent
      *
-     * @return array<SyncItemDto>
+     * @return array<SyncableItemDto>
      *
      * @throws SyncItemCreatorException
      */
@@ -55,25 +55,25 @@ class SyncItemCreator
                     throw new SyncItemCreatorException('Grouper: delete already deleted');
                 }
 
-                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncItemDto::TYPE_DELETE, $identifierValue);
+                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncableItemDto::TYPE_DELETE, $identifierValue);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
                 if (!isset($syncItemDtosGrouped[$tableName][$identifierValue])) {
                     // item is not set
-                    $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncItemDto::TYPE_UPSERT, $identifierValue);
+                    $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncableItemDto::TYPE_UPSERT, $identifierValue);
                 } else {
                     // item is already set
 
-                    /** @var SyncItemDto $syncItemDto */
+                    /** @var SyncableItemDto $syncItemDto */
                     $syncItemDto = $syncItemDtosGrouped[$tableName][$identifierValue];
 
-                    if (SyncItemDto::TYPE_DELETE === $syncItemDto->getType()) {
+                    if (SyncableItemDto::TYPE_DELETE === $syncItemDto->getType()) {
                         // it is not possible to receive update after row is already deleted
                         throw new SyncItemCreatorException('Grouper: update detected after delete');
                     }
 
                     // if we already have item stored as insert or update we will merge it with new item
                     // we will merge changed fields and use data of newer cdcDto
-                    if (SyncItemDto::TYPE_UPSERT === $syncItemDto->getType()) {
+                    if (SyncableItemDto::TYPE_UPSERT === $syncItemDto->getType()) {
                         $changedFields = array_unique(array_merge(
                             $syncItemDto->getChangedFields(),
                             $changedFields
@@ -91,7 +91,7 @@ class SyncItemCreator
                     throw new SyncItemCreatorException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncItemDto::TYPE_UPSERT, $identifierValue);
+                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, SyncableItemDto::TYPE_UPSERT, $identifierValue);
             }
         }
 
@@ -106,7 +106,7 @@ class SyncItemCreator
         return $syncItemDtos;
     }
 
-    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncItemDto
+    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): SyncableItemDto
     {
         $changedFields = $cdcDto->getChangedFields();
 
@@ -118,7 +118,7 @@ class SyncItemCreator
             $changedFields = array_keys($cdcDto->getData());
         }
 
-        return new SyncItemDto(
+        return new SyncableItemDto(
             $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),

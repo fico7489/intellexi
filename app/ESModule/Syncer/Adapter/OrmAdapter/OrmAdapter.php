@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Adapter\OrmAdapter;
 
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 
 class OrmAdapter
 {
@@ -44,7 +44,7 @@ class OrmAdapter
         return isset($mapping[$tableName]);
     }
 
-    public function fetchModel(SyncItemDto $syncItemDto, string $classNameOrm): ?object
+    public function fetchModel(SyncableItemDto $syncItemDto, string $classNameOrm): ?object
     {
         return $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
     }

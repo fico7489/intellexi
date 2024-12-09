@@ -2,12 +2,12 @@
 
 namespace App\ESModule\Syncer\Fetcher;
 
-use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
+use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncableItemDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class MappingFetcher
 {
-    public function fetch(IndexDto $indexDto, object $model, SyncItemDto $syncItemDto): array
+    public function fetch(IndexDto $indexDto, object $model, SyncableItemDto $syncItemDto): array
     {
         $mapping = [];
 
