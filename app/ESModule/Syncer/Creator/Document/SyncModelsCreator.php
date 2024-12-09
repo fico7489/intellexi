@@ -40,19 +40,15 @@ class SyncModelsCreator
                 // detect $modelSource
                 $modelSource = $this->fetchModelSource($syncItemDto);
 
-                $syncModels = $this->createSyncModelsForItem($syncModels, $syncItemDto, $modelSource, $indexName);
+                $syncModels = $this->createSyncModelsForIndexName($syncModels, $syncItemDto, $modelSource, $indexName);
             }
         }
 
         return $syncModels;
     }
 
-
-
-    private function createSyncModelsForItem(array $syncModels, SyncItemDto $syncItemDto, $modelSource, $indexName): array
+    private function createSyncModelsForIndexName(array $syncModels, SyncItemDto $syncItemDto, $modelSource, $indexName): array
     {
-        $tableName = $syncItemDto->getTableName();
-
         // detect $indexDto
         $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
 

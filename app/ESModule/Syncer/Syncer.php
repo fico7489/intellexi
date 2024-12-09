@@ -2,8 +2,8 @@
 
 namespace App\ESModule\Syncer;
 
-use App\ESModule\Syncer\Creator\Document\SyncModelsCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\SyncModelsCreator;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
@@ -12,11 +12,11 @@ use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 class Syncer
 {
     public function __construct(
-        private readonly SyncItemCreator        $syncItemCreator,
-        private readonly SyncModelsCreator      $documentsCreator,
+        private readonly SyncItemCreator $syncItemCreator,
+        private readonly SyncModelsCreator $documentsCreator,
         private readonly SearchEngineDataClient $searchEngineSyncer,// TODO by interface
-        private readonly DataFetcher            $dataFetcher,
-        private readonly ConfigProvider         $configProvider,
+        private readonly DataFetcher $dataFetcher,
+        private readonly ConfigProvider $configProvider,
     ) {
     }
 
