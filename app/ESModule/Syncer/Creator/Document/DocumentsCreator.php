@@ -7,7 +7,6 @@ use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
-use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class DocumentsCreator
@@ -58,29 +57,8 @@ class DocumentsCreator
         $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
 
         // detect $modelSource
-        $modelSource = null;
-        $tableName = $syncItemDto->getTableName();
-        $identifierValue = $syncItemDto->getIdentifierValue();
-        if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
-            if (!isset($this->modelSources[$tableName][$identifierValue])) {
-                $tableName = $syncItemDto->getTableName();
+        $modelSource = $this->fetchModelSource($syncItemDto);
 
-                if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
-                    $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
-                    $modelSource = $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
-                }
-
-                $this->modelSources[$tableName][$identifierValue] = $modelSource;
-            }
-
-            $modelSource = $this->modelSources[$tableName][$identifierValue];
-        }
-
-        return $this->createForRelated($documents, $syncItemDto, $indexDto, $modelSource);
-    }
-
-    private function createForRelated(array $documents, SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
-    {
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
         // TODO make updates unique by model->id
@@ -101,5 +79,28 @@ class DocumentsCreator
         }
 
         return $documents;
+    }
+
+    private function fetchModelSource(SyncItemDto $syncItemDto): ?object
+    {
+        $modelSource = null;
+        $tableName = $syncItemDto->getTableName();
+        $identifierValue = $syncItemDto->getIdentifierValue();
+        if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
+            if (!isset($this->modelSources[$tableName][$identifierValue])) {
+                $tableName = $syncItemDto->getTableName();
+
+                if ($this->configProvider->isTableNameClassNameOrm($tableName)) {
+                    $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
+                    $modelSource = $this->ormAdapter->fetchModel($syncItemDto, $classNameOrm);
+                }
+
+                $this->modelSources[$tableName][$identifierValue] = $modelSource;
+            }
+
+            $modelSource = $this->modelSources[$tableName][$identifierValue];
+        }
+
+        return $modelSource;
     }
 }
