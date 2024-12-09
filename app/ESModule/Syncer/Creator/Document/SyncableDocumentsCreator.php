@@ -51,7 +51,6 @@ class SyncableDocumentsCreator
         }
 
         $documents = $this->documentsCreator->create($syncModelsCollapsed);
-        dump('  Calculated $documents count='.count($documents));
 
         return $documents;
     }

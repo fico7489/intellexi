@@ -26,7 +26,7 @@ class Syncer
         dump('  Found cdcSyncable count='.count($cdcSyncableDtos));
 
         $documentDtos = $this->syncableDocumentsCreator->create($cdcSyncableDtos);
-        dump('  Found documentDtos count='.count($documentDtos));
+        dump('  Calculated documentDtos count='.count($documentDtos));
 
         $this->searchEngineDataClient->syncDocuments($documentDtos);
     }
