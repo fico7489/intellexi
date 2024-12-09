@@ -36,7 +36,10 @@ class DocumentsCreator
             $indexNames = $syncMapping[$tableName];
 
             foreach ($indexNames as $indexName => $changedFieldsTriggers) {
-                $documents = $this->createForItem($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
+                // sync is matched by changed table $syncItemDto and table from $syncMapping
+                if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
+                    $documents = $this->createForItem($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
+                }
             }
         }
 
@@ -45,11 +48,6 @@ class DocumentsCreator
 
     private function createForItem(array $documents, SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
     {
-        // sync is matched by changed table $syncItemDto and table from $syncMapping
-        if (!$this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
-            return $documents;
-        }
-
         // detect $indexDto
         $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
 
