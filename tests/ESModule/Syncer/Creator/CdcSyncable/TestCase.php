@@ -47,8 +47,8 @@ class TestCase extends \Tests\TestCase
     protected function createCdcDto(
         string $database = 'test-database',
         string $table = 'test-table',
-        string $type = CdcDto::TYPE_UPDATE,
-        array $data = ['id' => 1, 'name' => 'test2'],
+        string $type = 'SET',
+        array $data = ['id' => 1234, 'name' => '1234'],
         array $changedFields = ['name'],
     ): CdcDto {
         $changedDbRow = new CdcDto(

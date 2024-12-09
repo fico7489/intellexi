@@ -7,14 +7,12 @@ use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Exception\Exception;
 use App\ESModule\Syncer\Creator\CdcSyncable\Helper\IndexNamesForSyncFinder;
-use App\ESModule\Syncer\Creator\CdcSyncable\Helper\ShouldSyncDetector;
-use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class CdcSyncableCreator
 {
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
-        private readonly IndexNamesForSyncFinder $indexNamesForSyncFinder
+        private readonly IndexNamesForSyncFinder $indexNamesForSyncFinder,
     ) {
     }
 
@@ -30,7 +28,7 @@ class CdcSyncableCreator
         $cdcSyncableDtosGrouped = [];
 
         foreach ($cdcDtos as $cdcDto) {
-            //detect by $cdcDto all indexNames that should be synced, if we can't find any skip that $cdcDto
+            // detect by $cdcDto all indexNames that should be synced, if we can't find any skip that $cdcDto
             $indexNamesForSync = $this->indexNamesForSyncFinder->findIndexNamesForSync($cdcDto);
             if (0 === count($indexNamesForSync)) {
                 continue;
@@ -45,8 +43,8 @@ class CdcSyncableCreator
             $type = $cdcDto->getType();
             if (CdcDto::TYPE_DELETE === $type) {
                 if (
-                    isset($cdcSyncableDtosGrouped[$tableName][$identifierValue]) &&
-                    CdcDto::TYPE_DELETE === $cdcSyncableDtosGrouped[$tableName][$identifierValue]->getType()
+                    isset($cdcSyncableDtosGrouped[$tableName][$identifierValue])
+                    && CdcDto::TYPE_DELETE === $cdcSyncableDtosGrouped[$tableName][$identifierValue]->getType()
                 ) {
                     throw new Exception('Delete already added');
                 }

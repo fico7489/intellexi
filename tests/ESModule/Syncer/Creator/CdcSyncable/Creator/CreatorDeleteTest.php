@@ -17,20 +17,20 @@ class CreatorDeleteTest extends TestCase
 
     public function testDeleteOne()
     {
-        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 1]);
         $cdcDtos = [$cdcDto];
 
         $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(1, count($data));
+        $this->assertCount(1, $data);
 
-        $syncDto = $data[0];
-        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
-        $this->assertEquals(CdcDto::TYPE_DELETE, $syncDto->getType());
-        $this->assertEquals($cdcDto->getData(), $syncDto->getData());
-        $this->assertEquals([], $syncDto->getChangedFields());
-        $this->assertEquals(1, $syncDto->getIdentifierValue());
-        $this->assertEquals(['test'], $syncDto->getIndexNamesForSync());
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcDto::TYPE_DELETE, $cdcSyncable->getType());
+        $this->assertEquals($cdcDto->getData(), $cdcSyncable->getData());
+        $this->assertEquals([], $cdcSyncable->getChangedFields());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
     }
 
     public function testDeleteTwo()
@@ -40,26 +40,26 @@ class CreatorDeleteTest extends TestCase
         $cdcDtos = [$cdcDto, $cdcDto2];
         $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(2, count($data));
+        $this->assertCount(2, $data);
 
-        $syncDto = $data[0];
-        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
-        $this->assertEquals(CdcDto::TYPE_DELETE, $syncDto->getType());
-        $this->assertEquals($cdcDto->getData(), $syncDto->getData());
-        $this->assertEquals([], $syncDto->getChangedFields());
-        $this->assertEquals(1, $syncDto->getIdentifierValue());
-        $this->assertEquals(['test'], $syncDto->getIndexNamesForSync());
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcDto::TYPE_DELETE, $cdcSyncable->getType());
+        $this->assertEquals($cdcDto->getData(), $cdcSyncable->getData());
+        $this->assertEquals([], $cdcSyncable->getChangedFields());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
 
-        $syncDto2 = $data[1];
-        $this->assertEquals($cdcDto2->getTableName(), $syncDto2->getTableName());
-        $this->assertEquals(CdcDto::TYPE_DELETE, $syncDto2->getType());
-        $this->assertEquals($cdcDto2->getData(), $syncDto2->getData());
-        $this->assertEquals([], $syncDto2->getChangedFields());
-        $this->assertEquals(2, $syncDto2->getIdentifierValue());
-        $this->assertEquals(['test'], $syncDto2->getIndexNamesForSync());
+        $cdcSyncable2 = $data[1];
+        $this->assertEquals($cdcDto2->getTableName(), $cdcSyncable2->getTableName());
+        $this->assertEquals(CdcDto::TYPE_DELETE, $cdcSyncable2->getType());
+        $this->assertEquals($cdcDto2->getData(), $cdcSyncable2->getData());
+        $this->assertEquals([], $cdcSyncable2->getChangedFields());
+        $this->assertEquals(2, $cdcSyncable2->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable2->getIndexNamesForSync());
     }
 
-    public function testDeleteAndUpsert()
+    public function testDeleteAndUpsertOnSameId()
     {
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: ['id' => 1]);
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 1]);
@@ -67,22 +67,21 @@ class CreatorDeleteTest extends TestCase
 
         $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(1, count($data));
+        $this->assertCount(1, $data);
 
-        $syncDto = $data[0];
-        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
-        $this->assertEquals(CdcDto::TYPE_DELETE, $syncDto->getType());
-        $this->assertEquals($cdcDto2->getData(), $syncDto->getData());
-        $this->assertEquals([], $syncDto->getChangedFields());
-        $this->assertEquals(1, $syncDto->getIdentifierValue());
-        $this->assertEquals(['test'], $syncDto->getIndexNamesForSync());
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcDto::TYPE_DELETE, $cdcSyncable->getType());
+        $this->assertEquals($cdcDto2->getData(), $cdcSyncable->getData());
+        $this->assertEquals([], $cdcSyncable->getChangedFields());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
     }
 
     public function testDeleteAlreadyExists()
     {
-        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
-        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
-
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 1]);
+        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_DELETE, data: ['id' => 1]);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
         $this->expectException(Exception::class);
