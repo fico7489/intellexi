@@ -23,34 +23,30 @@ class DocumentCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $syncMapping = $this->configProvider->getConfigDto()->getSyncMap();
-
-        $syncModels = [];
+        $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {
-            $tableName = $syncItemDto->getTableName();
             $indexNames = $syncItemDto->getIndexNamesForSync();
-
             foreach ($indexNames as $indexName) {
                 // detect $modelSource
                 $modelSource = $this->fetchModelSource($syncItemDto);
 
-                $syncModels = $this->createSyncModelsForIndexNameRelated($syncModels, $syncItemDto, $modelSource, $indexName);
+                $documents = $this->createDocuments($documents, $syncItemDto, $modelSource, $indexName);
             }
         }
 
-        $syncModelsCollapsed = [];
-        foreach ($syncModels as $tableNameRelated => $data) {
+        $documentsFlatten = [];
+        foreach ($documents as $tableNameRelated => $data) {
             foreach ($data as $identifierValue => $dto) {
-                $syncModelsCollapsed[] = $dto;
+                $documentsFlatten[] = $dto;
             }
         }
 
-        $documents = $this->documentsCreator->create($syncModelsCollapsed);
+        $documents = $this->documentsCreator->create($documentsFlatten);
 
         return $documents;
     }
 
-    private function createSyncModelsForIndexNameRelated(array $syncModels, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array
+    private function createDocuments(array $syncModels, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array
     {
         $tableNameRelated = $this->configProvider->fetchTableNameByIndexName($indexNameRelated);
 
@@ -69,12 +65,6 @@ class DocumentCreator
 
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
-
-            $syncModels[$tableNameRelated][$identifierValue] = [
-                'type' => $type,
-            ];
-
-            // $syncModels[$tableNameRelated][$identifierValue] = new SyncableDocumentDto($indexNameRelated, $identifierValue, $type);
 
             $syncModels[$tableNameRelated][$identifierValue] = [
                 'indexName' => $indexNameRelated,
