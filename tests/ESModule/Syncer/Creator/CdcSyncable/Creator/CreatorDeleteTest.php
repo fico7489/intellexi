@@ -13,6 +13,7 @@ class CreatorDeleteTest extends TestCase
         parent::setUp();
 
         $this->mockIndexNamesForSyncFinder(['test']);
+        $this->mockDatabaseAdapter(['test-table' => 'id']);
     }
 
     public function testDeleteOne()

@@ -6,34 +6,24 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\CdcSyncableCreator;
 use App\ESModule\Syncer\Creator\CdcSyncable\Helper\IndexNamesForSyncFinder;
-use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 
 class TestCase extends \Tests\TestCase
 {
     protected CdcSyncableCreator $cdcConverter;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
-            $mock->allows('isDatabaseNameForSync')->andReturn(true);
-            $mock->allows('isTableNameForSync')->andReturn(true);
-        })->makePartial();
-
-        $this->mock(DatabaseAdapter::class, function (MockInterface $mock) {
-            $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn([
-                'test-table' => 'id',
-            ]);
-        })->makePartial();
-    }
-
     protected function mockIndexNamesForSyncFinder($indexNamesForSync): void
     {
         $this->mock(IndexNamesForSyncFinder::class, function (MockInterface $mock) use ($indexNamesForSync) {
             $mock->allows('findIndexNamesForSync')->andReturn($indexNamesForSync);
         });
+    }
+
+    protected function mockDatabaseAdapter($mapping): void
+    {
+        $this->mock(DatabaseAdapter::class, function (MockInterface $mock) use ($mapping) {
+            $mock->allows('fetchTableNamesToPrimaryKeysMapping')->andReturn($mapping);
+        })->makePartial();
     }
 
     protected function createService(): CdcSyncableCreator
