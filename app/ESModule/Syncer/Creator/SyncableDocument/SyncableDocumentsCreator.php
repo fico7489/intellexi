@@ -5,7 +5,6 @@ namespace App\ESModule\Syncer\Creator\SyncableDocument;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\SyncableDocument\Dto\SyncableDocumentDto;
 use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Provider\ConfigProvider;
@@ -24,8 +23,6 @@ class SyncableDocumentsCreator
 
     /**
      * @param array<CdcSyncableDto> $syncItemDtos
-     *
-     * @return array<SyncableDocumentDto>
      */
     public function create(array $syncItemDtos): array
     {
