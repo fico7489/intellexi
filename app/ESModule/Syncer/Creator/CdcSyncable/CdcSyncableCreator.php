@@ -33,7 +33,7 @@ class CdcSyncableCreator
             $tableName = $cdcDto->getTableName();
             $type = $cdcDto->getType();
             $data = $cdcDto->getData();
-            $changedFields = $cdcDto->getChangedFields();
+            $changedFieldsMerged = $cdcDto->getChangedFields();
 
             $indexNamesForSync = $this->findIndexNamesForSync($cdcDto);
             if (0 === count($indexNamesForSync)) {
@@ -46,15 +46,21 @@ class CdcSyncableCreator
             // we will group each cdcDto inside array with tableName->identifierValue, so that we remove duplicated
             if (CdcDto::TYPE_DELETE === $type) {
                 if (isset($cdcSyncableDtos[$tableName][$identifierValue]) && CdcDto::TYPE_DELETE === $cdcSyncableDtos[$tableName][$identifierValue]->getType()) {
-                    // it is not possible to receive two cdc for deleting a row
-                    throw new Exception('Grouper: delete already deleted');
+                    throw new Exception('Delete already added');
                 }
 
-                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_DELETE, $identifierValue, $indexNamesForSync);
+                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow(CdcSyncableDto::TYPE_DELETE, $cdcDto, $identifierValue, [], $indexNamesForSync);
+            } elseif (CdcDto::TYPE_INSERT === $type) {
+                if (isset($cdcSyncableDtos[$tableName][$identifierValue])) {
+                    throw new Exception('Insert after insert, delete or update');
+                }
+
+                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow(CdcSyncableDto::TYPE_UPSERT, $cdcDto, $identifierValue, [], $indexNamesForSync);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
                 if (!isset($cdcSyncableDtos[$tableName][$identifierValue])) {
                     // item is not set
-                    $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNamesForSync);
+                    $changedFieldsMerged = $cdcDto->getChangedFields();
+                    $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow(CdcSyncableDto::TYPE_UPSERT, $cdcDto, $identifierValue, $changedFieldsMerged, $indexNamesForSync);
                 } else {
                     // item is already set
 
@@ -62,31 +68,36 @@ class CdcSyncableCreator
                     $cdcSyncableDto = $cdcSyncableDtos[$tableName][$identifierValue];
 
                     if (CdcSyncableDto::TYPE_DELETE === $cdcSyncableDto->getType()) {
-                        // it is not possible to receive update after row is already deleted
-                        throw new Exception('Grouper: update detected after delete');
+                        throw new Exception('Update after delete');
                     }
 
                     // if we already have item stored as insert or update we will merge it with new item
+
                     // we will merge changed fields and use data of newer cdcDto
                     if (CdcSyncableDto::TYPE_UPSERT === $cdcSyncableDto->getType()) {
-                        $changedFields = array_unique(array_merge(
-                            $cdcSyncableDto->getChangedFields(),
-                            $changedFields
+                        // merge indexNames
+                        $indexNamesMerged = array_unique(array_merge(
+                            $cdcSyncableDto->getIndexNames(),
+                            $indexNamesForSync
                         ));
+                        $cdcSyncableDto->setIndexNames($indexNamesMerged);
 
-                        $cdcSyncableDto->setChangedFields($changedFields);
+                        // merge changedFields
+                        $changedFieldsMerged = array_unique(array_merge(
+                            $cdcSyncableDto->getChangedFields(),
+                            $changedFieldsMerged
+                        ));
+                        $cdcSyncableDto->setChangedFields($changedFieldsMerged);
+
+                        // newer data
                         $cdcSyncableDto->setData($cdcDto->getData());
 
+                        // set item
                         $cdcSyncableDtos[$tableName][$identifierValue] = $cdcSyncableDto;
                     }
-                }
-            } elseif (CdcDto::TYPE_INSERT === $type) {
-                if (isset($cdcSyncableDtos[$tableName][$identifierValue])) {
-                    // row could not be inserted more times
-                    throw new Exception('Grouper: insert detected after insert, delete or update');
-                }
 
-                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNamesForSync);
+                    // if previous type is insert we will use empty changedFields
+                }
             }
         }
 
@@ -101,7 +112,7 @@ class CdcSyncableCreator
         return $cdcSyncableDtosFlatten;
     }
 
-    private function findIndexNamesForSync(CdcDto $cdcDto)
+    private function findIndexNamesForSync(CdcDto $cdcDto): array
     {
         // don't do sync if database is not supported
         $databaseName = $cdcDto->getDatabaseName();
@@ -131,13 +142,18 @@ class CdcSyncableCreator
         return $indexNamesForSync;
     }
 
-    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue, $indexNames): CdcSyncableDto
-    {
+    private function createSyncDbRow(
+        string $type,
+        CdcDto $cdcDto,
+        mixed $identifierValue,
+        array $changedFields,
+        array $indexNames,
+    ): CdcSyncableDto {
         return new CdcSyncableDto(
             $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),
-            $cdcDto->getChangedFields(),
+            $changedFields,
             $identifierValue,
             $indexNames,
         );

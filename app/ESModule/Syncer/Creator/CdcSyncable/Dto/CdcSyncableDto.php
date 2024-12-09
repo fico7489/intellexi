@@ -13,7 +13,7 @@ class CdcSyncableDto
         private array $data,
         private array $changedFields,
         private readonly mixed $identifierValue,
-        private readonly array $indexNames,
+        private array $indexNames,
     ) {
     }
 
@@ -55,5 +55,10 @@ class CdcSyncableDto
     public function setChangedFields(array $changedFields): void
     {
         $this->changedFields = $changedFields;
+    }
+
+    public function setIndexNames(array $indexNames): void
+    {
+        $this->indexNames = $indexNames;
     }
 }
