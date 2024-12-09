@@ -17,21 +17,22 @@ class UpdateTest extends TestCase
         $this->mockDatabaseAdapter(['test-table' => 'id']);
     }
 
-    public function testUpdateBasic()
+    public function testUpdateOne()
     {
-        $cdcDto = $this->createCdcDto();
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: ['id' => 1]);
         $cdcDtos = [$cdcDto];
 
         $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(1, count($data));
+        $this->assertCount(1, $data);
 
-        $syncDto = $data[0];
-        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
-        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $syncDto->getType());
-        $this->assertEquals($cdcDto->getChangedFields(), $syncDto->getChangedFields());
-        $this->assertEquals($cdcDto->getData(), $syncDto->getData());
-        $this->assertEquals(1, $syncDto->getIdentifierValue());
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $cdcSyncable->getType());
+        $this->assertEquals($cdcDto->getChangedFields(), $cdcSyncable->getChangedFields());
+        $this->assertEquals($cdcDto->getData(), $cdcSyncable->getData());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
     }
 
     public function testUpdateTwoSameRowDifferentData()
@@ -39,20 +40,21 @@ class UpdateTest extends TestCase
         $data = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2'];
         $data2 = ['id' => 1, 'name' => 'test-2', 'name2' => 'test2-2'];
 
-        $cdcDto = $this->createCdcDto(data: $data, changedFields: ['name2']);
-        $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: $data, changedFields: ['name2']);
+        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: $data2, changedFields: ['name3']);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
         $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(1, count($data));
+        $this->assertCount(1, $data);
 
-        $syncDto = $data[0];
-        $this->assertEquals($cdcDto2->getTableName(), $syncDto->getTableName());
-        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $syncDto->getType());
-        $this->assertEquals(['name2', 'name3'], $syncDto->getChangedFields());
-        $this->assertEquals($cdcDto2->getData(), $syncDto->getData());
-        $this->assertEquals(1, $syncDto->getIdentifierValue());
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto2->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $cdcSyncable->getType());
+        $this->assertEquals(['name2', 'name3'], $cdcSyncable->getChangedFields());
+        $this->assertEquals($cdcDto2->getData(), $cdcSyncable->getData());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
     }
 
     public function testUpdateTwoDifferentRow()
@@ -60,27 +62,29 @@ class UpdateTest extends TestCase
         $data = ['id' => 1, 'name' => 'test', 'name2' => 'test'];
         $data2 = ['id' => 2, 'name' => 'test2', 'name2' => 'test2'];
 
-        $cdcDto = $this->createCdcDto(data: $data, changedFields: ['name2']);
-        $cdcDto2 = $this->createCdcDto(data: $data2, changedFields: ['name3']);
+        $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: $data, changedFields: ['name2']);
+        $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE, data: $data2, changedFields: ['name3']);
         $cdcDtos = [$cdcDto, $cdcDto2];
 
         $data = $this->createService()->create($cdcDtos);
 
-        $this->assertEquals(2, count($data));
+        $this->assertCount(2, $data);
 
-        $syncDto = $data[0];
-        $this->assertEquals($cdcDto->getTableName(), $syncDto->getTableName());
-        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $syncDto->getType());
-        $this->assertEquals(1, $syncDto->getIdentifierValue());
-        $this->assertEquals($cdcDto->getChangedFields(), $syncDto->getChangedFields());
-        $this->assertEquals($cdcDto->getData(), $syncDto->getData());
+        $cdcSyncable = $data[0];
+        $this->assertEquals($cdcDto->getTableName(), $cdcSyncable->getTableName());
+        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $cdcSyncable->getType());
+        $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
+        $this->assertEquals($cdcDto->getChangedFields(), $cdcSyncable->getChangedFields());
+        $this->assertEquals($cdcDto->getData(), $cdcSyncable->getData());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
 
-        $syncDto2 = $data[1];
-        $this->assertEquals($cdcDto2->getTableName(), $syncDto2->getTableName());
-        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $syncDto2->getType());
-        $this->assertEquals(2, $syncDto2->getIdentifierValue());
-        $this->assertEquals($cdcDto2->getChangedFields(), $syncDto2->getChangedFields());
-        $this->assertEquals($cdcDto2->getData(), $syncDto2->getData());
+        $cdcSyncable2 = $data[1];
+        $this->assertEquals($cdcDto2->getTableName(), $cdcSyncable2->getTableName());
+        $this->assertEquals(CdcSyncableDto::TYPE_UPSERT, $cdcSyncable2->getType());
+        $this->assertEquals(2, $cdcSyncable2->getIdentifierValue());
+        $this->assertEquals($cdcDto2->getChangedFields(), $cdcSyncable2->getChangedFields());
+        $this->assertEquals($cdcDto2->getData(), $cdcSyncable2->getData());
+        $this->assertEquals(['test'], $cdcSyncable2->getIndexNamesForSync());
     }
 
     public function testUpdateExceptionAfterDelete()
@@ -90,7 +94,7 @@ class UpdateTest extends TestCase
         $cdcDtos = [$cdcDto, $cdcDto2];
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Grouper: update detected after delete');
+        $this->expectExceptionMessage('Update after delete');
         $this->createService()->create($cdcDtos);
     }
 }
