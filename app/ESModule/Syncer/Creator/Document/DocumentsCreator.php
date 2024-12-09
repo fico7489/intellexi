@@ -33,17 +33,29 @@ class DocumentsCreator
         $documents = [];
         foreach ($syncItemDtos as $syncItemDto) {
             $tableName = $syncItemDto->getTableName();
-            $indexNames = $syncMapping[$tableName];
+            $syncMappingForTableName = $syncMapping[$tableName];
+            $syncMappingForTableNameFiltered = $this->filterSyncMappingForTableName($syncItemDto, $syncMappingForTableName);
 
-            foreach ($indexNames as $indexName => $changedFieldsTriggers) {
-                // sync is matched by changed table $syncItemDto and table from $syncMapping
-                if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
-                    $documents = $this->createForItem($documents, $syncItemDto, $indexName);
-                }
+            foreach ($syncMappingForTableNameFiltered as $indexName => $changedFieldsTriggers) {
+                $documents = $this->createForItem($documents, $syncItemDto, $indexName);
             }
         }
 
         return $documents;
+    }
+
+    private function filterSyncMappingForTableName(SyncItemDto $syncItemDto, array $syncMappingForTableName): array
+    {
+        $syncMappingForTableNameFiltered = [];
+
+        foreach ($syncMappingForTableName as $indexName => $changedFieldsTriggers) {
+            // sync is matched by changed table $syncItemDto and table from $syncMapping
+            if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
+                $syncMappingForTableNameFiltered[$indexName] = $changedFieldsTriggers;
+            }
+        }
+
+        return $syncMappingForTableNameFiltered;
     }
 
     private function createForItem(array $documents, SyncItemDto $syncItemDto, $indexName): array
