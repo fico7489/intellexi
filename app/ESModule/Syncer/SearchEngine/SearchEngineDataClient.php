@@ -61,7 +61,7 @@ class SearchEngineDataClient
         return true;
     }
 
-    private function documentPrepare(string $indexName, int $identifierValue, array $data): array
+    private function documentPrepare(string $indexName, mixed $identifierValue, array $data): array
     {
         // TODO delete
 

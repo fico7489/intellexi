@@ -12,7 +12,7 @@ class SyncItemDto
         private readonly string $type,
         private array $data,
         private array $changedFields,
-        private readonly string|array $identifierValue,
+        private readonly mixed $identifierValue,
     ) {
     }
 
@@ -36,7 +36,7 @@ class SyncItemDto
         return $this->changedFields;
     }
 
-    public function getIdentifierValue(): array|string
+    public function getIdentifierValue(): mixed
     {
         return $this->identifierValue;
     }
