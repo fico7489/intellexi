@@ -87,7 +87,7 @@ class UpdateTest extends TestCase
         $this->assertEquals(['test'], $cdcSyncable2->getIndexNamesForSync());
     }
 
-    public function testUpdateExceptionAfterDelete()
+    public function testUpdatefterDelete()
     {
         $cdcDto = $this->createCdcDto(type: CdcDto::TYPE_DELETE);
         $cdcDto2 = $this->createCdcDto(type: CdcDto::TYPE_UPDATE);
