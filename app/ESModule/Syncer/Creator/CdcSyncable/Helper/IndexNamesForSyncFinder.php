@@ -9,7 +9,6 @@ class IndexNamesForSyncFinder
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly ShouldSyncDetector $shouldSyncDetector,
     ) {
     }
 
@@ -35,11 +34,20 @@ class IndexNamesForSyncFinder
 
         $indexNamesForSync = [];
         foreach ($syncMapForTableName as $indexName => $changedFieldsTriggers) {
-            if ($this->shouldSyncDetector->detect($type, $changedFields, $changedFieldsTriggers)) {
+            if ($this->shouldSync($type, $changedFields, $changedFieldsTriggers)) {
                 $indexNamesForSync[] = $indexName;
             }
         }
 
         return $indexNamesForSync;
+    }
+
+    public function shouldSync(string $type, array $changedFieldsTriggered, array $changedFieldsTriggers): bool
+    {
+        if (in_array($type, [CdcDto::TYPE_INSERT, CdcDto::TYPE_DELETE])) {
+            return true;
+        }
+
+        return !empty(array_intersect($changedFieldsTriggered, $changedFieldsTriggers));
     }
 }

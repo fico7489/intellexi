@@ -82,8 +82,8 @@ class CdcSyncableCreator
                     $cdcSyncableDto->setIndexNames($indexNamesMerged);
 
                     // merge and set changedFields
-                    if(count($cdcSyncableDto->getChangedFields()) > 0){
-                        //when count === 0 then previous item was created and we will leave empty list
+                    if (count($cdcSyncableDto->getChangedFields()) > 0) {
+                        // when count === 0 then previous item was created and we will leave empty list
                         $changedFieldsMerged = array_unique(array_merge(
                             $cdcSyncableDto->getChangedFields(),
                             $changedFields
