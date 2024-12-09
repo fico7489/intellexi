@@ -1,12 +1,12 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncableDocument;
+namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ModelsRelatedFetcher;
-use App\ESModule\Syncer\Creator\SyncableDocument\Helper\ShouldSyncDetector;
+use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncableDocumentsCreator
@@ -18,6 +18,7 @@ class SyncableDocumentsCreator
         private readonly ShouldSyncDetector $shouldSyncDetector,
         private readonly OrmAdapter $ormAdapter,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
+        private readonly DocumentsCreator $documentsCreator,
     ) {
     }
 
@@ -49,7 +50,10 @@ class SyncableDocumentsCreator
             }
         }
 
-        return $syncModelsCollapsed;
+        $documents = $this->documentsCreator->create($syncModelsCollapsed);
+        dump('  Calculated $documents count='.count($documents));
+
+        return $documents;
     }
 
     private function createSyncModelsForIndexNameRelated(array $syncModels, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array

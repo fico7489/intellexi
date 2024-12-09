@@ -7,7 +7,7 @@ use App\ESModule\Cdc\Event\CdcDtosEvent;
 use App\ESModule\Syncer\Creator\CdcSyncable\CdcSyncableCreator;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\SyncableDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 use App\ESModule\Syncer\Syncer;
 use Mockery\MockInterface;

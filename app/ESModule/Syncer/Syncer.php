@@ -3,8 +3,7 @@
 namespace App\ESModule\Syncer;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\CdcSyncableCreator;
-use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
-use App\ESModule\Syncer\Creator\SyncableDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 
 class Syncer
@@ -12,7 +11,6 @@ class Syncer
     public function __construct(
         private readonly CdcSyncableCreator $cdcSyncableCreator,
         private readonly SyncableDocumentsCreator $syncableDocumentsCreator,
-        private readonly DocumentsCreator $documentsCreator,
         private readonly SearchEngineDataClient $searchEngineDataClient,// TODO by interface
     ) {
     }
@@ -22,17 +20,14 @@ class Syncer
      */
     public function sync(array $cdcRawDtos): void
     {
-        dump('Received $cdcRawDtos count='.count($cdcRawDtos));
+        dump('Received cdcRaw count='.count($cdcRawDtos));
 
         $cdcSyncableDtos = $this->cdcSyncableCreator->create($cdcRawDtos);
-        dump('  Found $cdcSyncableDtos count='.count($cdcSyncableDtos));
+        dump('  Found cdcSyncable count='.count($cdcSyncableDtos));
 
-        $syncableDocumentDtos = $this->syncableDocumentsCreator->create($cdcSyncableDtos);
-        dump('    -> count $syncableDocumentDtos='.count($syncableDocumentDtos));
+        $documentDtos = $this->syncableDocumentsCreator->create($cdcSyncableDtos);
+        dump('  Found documentDtos count='.count($documentDtos));
 
-        $documents = $this->documentsCreator->create($syncableDocumentDtos);
-        dump('  Calculated $documents count='.count($documents));
-
-        $this->searchEngineDataClient->syncDocuments($documents);
+        $this->searchEngineDataClient->syncDocuments($documentDtos);
     }
 }

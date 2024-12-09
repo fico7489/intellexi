@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Creator\SyncableDocument\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\SyncItem\TestCase;

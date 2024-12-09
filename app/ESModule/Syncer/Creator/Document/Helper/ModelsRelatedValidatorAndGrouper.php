@@ -1,9 +1,9 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\SyncableDocument\Helper;
+namespace App\ESModule\Syncer\Creator\Document\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\SyncableDocument\Exception\DocumentCreatorException;
+use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
 
 class ModelsRelatedValidatorAndGrouper
 {
