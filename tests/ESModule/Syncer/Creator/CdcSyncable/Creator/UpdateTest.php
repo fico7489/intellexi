@@ -106,7 +106,7 @@ class UpdateTest extends TestCase
         $this->assertEquals([], $cdcSyncable->getChangedFields());
         $this->assertEquals($cdcDto2->getData(), $cdcSyncable->getData());
         $this->assertEquals(1, $cdcSyncable->getIdentifierValue());
-        //$this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
+        $this->assertEquals(['test'], $cdcSyncable->getIndexNamesForSync());
     }
 
     public function testUpdatefterDelete()
