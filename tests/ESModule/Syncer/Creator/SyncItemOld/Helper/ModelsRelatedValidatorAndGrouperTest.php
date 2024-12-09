@@ -3,8 +3,8 @@
 namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedValidatorAndGrouper;
+use App\ESModule\Syncer\Creator\Document\Exception\Exception;
+use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedValidatorAndGrouper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
@@ -86,7 +86,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(2)->once();
         });
 
-        $this->expectException(DocumentCreatorException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Related model is not instanceof source className="'.$object::class.'"');
         app(ModelsRelatedValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
     }

@@ -4,7 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document\ModelMap;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class ModelMapItemCreator

@@ -2,6 +2,6 @@
 
 namespace App\ESModule\Syncer\Creator\Document\Exception;
 
-class DocumentCreatorException extends \Exception
+class Exception extends \Exception
 {
 }

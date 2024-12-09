@@ -1,9 +1,9 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\Helper;
+namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
-use App\ESModule\Syncer\Creator\Document\Exception\DocumentCreatorException;
+use App\ESModule\Syncer\Creator\Document\Exception\Exception;
 
 class ModelsRelatedValidatorAndGrouper
 {
@@ -17,7 +17,7 @@ class ModelsRelatedValidatorAndGrouper
      *
      * @return array<object>
      *
-     * @throws DocumentCreatorException
+     * @throws Exception
      */
     public function validateAndGroup(array $modelsRelated, string $classNameOrmSource): array
     {
@@ -30,7 +30,7 @@ class ModelsRelatedValidatorAndGrouper
             $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
 
             if (!$model instanceof $classNameOrmSource) {
-                throw new DocumentCreatorException('Related model is not instanceof source classNameOrm="'.$classNameOrmSource.'"');
+                throw new Exception('Related model is not instanceof source classNameOrm="'.$classNameOrmSource.'"');
             }
         }
 
