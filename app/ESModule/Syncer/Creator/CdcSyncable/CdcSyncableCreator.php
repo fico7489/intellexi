@@ -35,27 +35,8 @@ class CdcSyncableCreator
             $data = $cdcDto->getData();
             $changedFields = $cdcDto->getChangedFields();
 
-            // don't do sync if database is not supported
-            if (!$this->configProvider->isDatabaseNameForSync($databaseName)) {
-                continue;
-            }
-
-            $syncMap = $this->configProvider->getConfigDto()->getSyncMap();
-            $syncMapForTableName = $syncMap[$tableName] ?? [];
-
-            // don't do sync if tableName is not is for sync
-            if (0 === count($syncMapForTableName)) {
-                continue;
-            }
-
-            $indexNames = [];
-            foreach ($syncMapForTableName as $indexName => $changedFieldsTriggers) {
-                if ($this->shouldSyncDetector->detect($type, $changedFields, $changedFieldsTriggers)) {
-                    $indexNames[] = $indexName;
-                }
-            }
-
-            if (0 === count($indexNames)) {
+            $indexNamesForSync = $this->findIndexNamesForSync($cdcDto);
+            if (0 === count($indexNamesForSync)) {
                 continue;
             }
 
@@ -69,11 +50,11 @@ class CdcSyncableCreator
                     throw new Exception('Grouper: delete already deleted');
                 }
 
-                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_DELETE, $identifierValue, $indexNames);
+                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_DELETE, $identifierValue, $indexNamesForSync);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
                 if (!isset($cdcSyncableDtos[$tableName][$identifierValue])) {
                     // item is not set
-                    $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNames);
+                    $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNamesForSync);
                 } else {
                     // item is already set
 
@@ -105,7 +86,7 @@ class CdcSyncableCreator
                     throw new Exception('Grouper: insert detected after insert, delete or update');
                 }
 
-                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNames);
+                $cdcSyncableDtos[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNamesForSync);
             }
         }
 
@@ -118,6 +99,36 @@ class CdcSyncableCreator
         }
 
         return $cdcSyncableDtosFlatten;
+    }
+
+    private function findIndexNamesForSync(CdcDto $cdcDto)
+    {
+        // don't do sync if database is not supported
+        $databaseName = $cdcDto->getDatabaseName();
+        if (!$this->configProvider->isDatabaseNameForSync($databaseName)) {
+            return [];
+        }
+
+        $tableName = $cdcDto->getTableName();
+        $syncMap = $this->configProvider->getConfigDto()->getSyncMap();
+        $syncMapForTableName = $syncMap[$tableName] ?? [];
+
+        // don't do sync if tableName is not is for sync
+        if (0 === count($syncMapForTableName)) {
+            return [];
+        }
+
+        $type = $cdcDto->getType();
+        $changedFields = $cdcDto->getChangedFields();
+
+        $indexNamesForSync = [];
+        foreach ($syncMapForTableName as $indexName => $changedFieldsTriggers) {
+            if ($this->shouldSyncDetector->detect($type, $changedFields, $changedFieldsTriggers)) {
+                $indexNamesForSync[] = $indexName;
+            }
+        }
+
+        return $indexNamesForSync;
     }
 
     private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue, $indexNames): CdcSyncableDto
