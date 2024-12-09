@@ -7,9 +7,14 @@ use GuzzleHttp\Client;
 
 class SearchEngineDataClient
 {
-    public function syncDocuments($dataSync): void
+    public function syncDocuments($documents): void
     {
-        foreach ($dataSync as $indexName => $documents) {
+        $documentDtosGrouped = [];
+        foreach ($documents as $document) {
+            $documentDtosGrouped[$document->getIndexName()][] = $document;
+        }
+
+        foreach ($documentDtosGrouped as $indexName => $documents) {
             $this->esIndexSync($indexName, $documents);
         }
     }

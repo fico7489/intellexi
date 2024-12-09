@@ -31,13 +31,7 @@ class Syncer
         dump('count $syncableDocumentDtos='.count($syncableDocumentDtos));
         $documents = $this->documentsCreator->create($syncableDocumentDtos);
 
-        $documentDtosGrouped = [];
-        foreach ($documents as $document) {
-            $documentDtosGrouped[$document->getIndexName()][] = $document;
-        }
-
         dump('count $documents='.count($documents));
-        dump('count $documentDtosGrouped='.count($documentDtosGrouped));
-        $this->searchEngineDataClient->syncDocuments($documentDtosGrouped);
+        $this->searchEngineDataClient->syncDocuments($documents);
     }
 }
