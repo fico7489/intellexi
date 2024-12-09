@@ -35,7 +35,7 @@ class DocumentsCreator
         foreach ($syncItemDtos as $syncItemDto) {
             foreach ($syncMapping as $tableName => $indexData) {
                 foreach ($indexData as $indexName => $changedFieldsTriggers) {
-                    $documents = $this->createForMatched($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
+                    $documents = $this->createForItem($documents, $syncItemDto, $tableName, $indexName, $changedFieldsTriggers);
                 }
             }
         }
@@ -43,7 +43,7 @@ class DocumentsCreator
         return $documents;
     }
 
-    private function createForMatched(array $documents, SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
+    private function createForItem(array $documents, SyncItemDto $syncItemDto, $tableName, $indexName, $changedFieldsTriggers): array
     {
         if ($tableName !== $syncItemDto->getTableName()) {
             return $documents;
@@ -76,10 +76,10 @@ class DocumentsCreator
             $modelSource = $this->modelSources[$tableName][$identifierValue];
         }
 
-        return $this->createForItem($documents, $syncItemDto, $indexDto, $modelSource);
+        return $this->createForRelated($documents, $syncItemDto, $indexDto, $modelSource);
     }
 
-    private function createForItem(array $documents, SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
+    private function createForRelated(array $documents, SyncItemDto $syncItemDto, IndexDto $indexDto, $modelSource): array
     {
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
