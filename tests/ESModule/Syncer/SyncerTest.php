@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer;
 
 use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Cdc\Event\CdcDtosEvent;
-use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\SyncModelsCreator;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Creator\SyncItem\SyncItemCreator;
@@ -29,7 +29,7 @@ class SyncerTest extends TestCase
                 ->once();
         });
 
-        $this->mock(DocumentsCreator::class, function (MockInterface $mock) use ($document, $syncDto) {
+        $this->mock(SyncModelsCreator::class, function (MockInterface $mock) use ($document, $syncDto) {
             $mock
                 ->allows('create')
                 ->with($this->equalTo([$syncDto]))

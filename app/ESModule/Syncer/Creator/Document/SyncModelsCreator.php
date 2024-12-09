@@ -9,7 +9,7 @@ use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class DocumentsCreator
+class SyncModelsCreator
 {
     private array $modelSources = [];
 
@@ -30,43 +30,31 @@ class DocumentsCreator
     {
         $syncMapping = $this->configProvider->getConfigDto()->getSyncMap();
 
-        $documents = [];
+        $syncModels = [];
         foreach ($syncItemDtos as $syncItemDto) {
             $tableName = $syncItemDto->getTableName();
             $syncMappingForTableName = $syncMapping[$tableName];
             $syncMappingForTableNameFiltered = $this->filterSyncMappingForTableName($syncItemDto, $syncMappingForTableName);
 
             foreach ($syncMappingForTableNameFiltered as $indexName => $changedFieldsTriggers) {
-                $documents = $this->createForItem($documents, $syncItemDto, $indexName);
+                // detect $modelSource
+                $modelSource = $this->fetchModelSource($syncItemDto);
+
+                $syncModels = $this->createSyncModelsForItem($syncModels, $syncItemDto, $modelSource, $indexName);
             }
         }
 
-        return $documents;
+        return $syncModels;
     }
 
-    private function filterSyncMappingForTableName(SyncItemDto $syncItemDto, array $syncMappingForTableName): array
-    {
-        $syncMappingForTableNameFiltered = [];
 
-        foreach ($syncMappingForTableName as $indexName => $changedFieldsTriggers) {
-            // sync is matched by changed table $syncItemDto and table from $syncMapping
-            if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
-                $syncMappingForTableNameFiltered[$indexName] = $changedFieldsTriggers;
-            }
-        }
 
-        return $syncMappingForTableNameFiltered;
-    }
-
-    private function createForItem(array $documents, SyncItemDto $syncItemDto, $indexName): array
+    private function createSyncModelsForItem(array $syncModels, SyncItemDto $syncItemDto, $modelSource, $indexName): array
     {
         $tableName = $syncItemDto->getTableName();
 
         // detect $indexDto
         $indexDto = $this->configProvider->fetchIndexDtoByIndexName($indexName);
-
-        // detect $modelSource
-        $modelSource = $this->fetchModelSource($syncItemDto);
 
         $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDto, $modelSource);
 
@@ -81,13 +69,13 @@ class DocumentsCreator
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
 
-            $documents[$indexDto->getName()][$identifierValue] = [
+            $syncModels[$indexDto->getName()][$identifierValue] = [
                 'type' => $type,
                 'modelRelated' => $modelRelated,
             ];
         }
 
-        return $documents;
+        return $syncModels;
     }
 
     private function fetchModelSource(SyncItemDto $syncItemDto): ?object
@@ -111,5 +99,19 @@ class DocumentsCreator
         }
 
         return $modelSource;
+    }
+
+    private function filterSyncMappingForTableName(SyncItemDto $syncItemDto, array $syncMappingForTableName): array
+    {
+        $syncMappingForTableNameFiltered = [];
+
+        foreach ($syncMappingForTableName as $indexName => $changedFieldsTriggers) {
+            // sync is matched by changed table $syncItemDto and table from $syncMapping
+            if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
+                $syncMappingForTableNameFiltered[$indexName] = $changedFieldsTriggers;
+            }
+        }
+
+        return $syncMappingForTableNameFiltered;
     }
 }

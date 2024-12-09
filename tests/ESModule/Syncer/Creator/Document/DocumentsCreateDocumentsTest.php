@@ -2,7 +2,7 @@
 
 namespace Tests\ESModule\Syncer\Creator\Document;
 
-use App\ESModule\Syncer\Creator\Document\DocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\SyncModelsCreator;
 use App\ESModule\Syncer\Creator\SyncItem\Dto\SyncItemDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
@@ -26,7 +26,7 @@ class DocumentsCreateDocumentsTest extends TestCase
             // $mock->allows('create')->andReturn([])->once();
         });
 
-        $service = app(DocumentsCreator::class);
+        $service = app(SyncModelsCreator::class);
 
         $mock2 = \Mockery::instanceMock($service, function (MockInterface $mock) {
             $mock->expects('testTwo')->times(1);
