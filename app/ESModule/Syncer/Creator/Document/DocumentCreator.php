@@ -4,12 +4,14 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapCreator;
+use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapFlattener;
 
 class DocumentCreator
 {
     public function __construct(
         private readonly ModelMapCreator $modelMapCreator,
         private readonly EsDocumentsCreator $documentsCreator,
+        private readonly ModelMapFlattener $modelMapFlattener,
     ) {
     }
 
@@ -18,17 +20,12 @@ class DocumentCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $modelMapDtos = $this->modelMapCreator->create($syncItemDtos);
+        $modelMapDtosGrouped = $this->modelMapCreator->create($syncItemDtos);
 
-        $modelMapDtosFlattened = [];
-        foreach ($modelMapDtos as $tableNameRelated => $data) {
-            foreach ($data as $identifierValue => $dto) {
-                $modelMapDtosFlattened[] = $dto;
-            }
-        }
+        $modelMapDtosFlattened = $this->modelMapFlattener->flatten($modelMapDtosGrouped);
 
-        $modelMapDtos = $this->documentsCreator->create($modelMapDtosFlattened);
+        $documents = $this->documentsCreator->create($modelMapDtosFlattened);
 
-        return $modelMapDtos;
+        return $documents;
     }
 }
