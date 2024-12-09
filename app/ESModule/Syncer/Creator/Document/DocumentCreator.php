@@ -4,6 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
+use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapConverter;
 use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapCreator;
 use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapFlattener;
 
