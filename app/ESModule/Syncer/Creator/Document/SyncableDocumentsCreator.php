@@ -10,8 +10,6 @@ use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncableDocumentsCreator
 {
-    private array $modelSources = [];
-
     public function __construct(
         private readonly ConfigProvider $configProvider,
         private readonly OrmAdapter $ormAdapter,
