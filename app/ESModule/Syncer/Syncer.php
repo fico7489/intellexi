@@ -20,18 +20,19 @@ class Syncer
     /**
      * @params array<CdcDto>
      */
-    public function sync(array $cdcDtos): void
+    public function sync(array $cdcRawDtos): void
     {
-        dump('count $cdcDtos='.count($cdcDtos));
-        $syncableItemDtos = $this->syncableItemsCreator->create($cdcDtos);
+        dump('count $cdcDtos='.count($cdcRawDtos));
 
-        dump('count $syncableItemDtos='.count($syncableItemDtos));
-        $syncableDocumentDtos = $this->syncableDocumentsCreator->create($syncableItemDtos);
+        $cdcSyncableDtos = $this->syncableItemsCreator->create($cdcRawDtos);
+        dump('count $cdcSyncableDtos='.count($cdcSyncableDtos));
 
+        $syncableDocumentDtos = $this->syncableDocumentsCreator->create($cdcSyncableDtos);
         dump('count $syncableDocumentDtos='.count($syncableDocumentDtos));
-        $documents = $this->documentsCreator->create($syncableDocumentDtos);
 
+        $documents = $this->documentsCreator->create($syncableDocumentDtos);
         dump('count $documents='.count($documents));
+
         $this->searchEngineDataClient->syncDocuments($documents);
     }
 }
