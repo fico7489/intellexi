@@ -3,14 +3,14 @@
 namespace App\ESModule\Syncer;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\CdcSyncableCreator;
-use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\DocumentCreator;
 use App\ESModule\Syncer\SearchEngine\SearchEngineDataClient;
 
 class Syncer
 {
     public function __construct(
         private readonly CdcSyncableCreator $cdcSyncableCreator,
-        private readonly SyncableDocumentsCreator $syncableDocumentsCreator,
+        private readonly DocumentCreator $documentCreator,
         private readonly SearchEngineDataClient $searchEngineDataClient,// TODO by interface
     ) {
     }
@@ -25,7 +25,7 @@ class Syncer
         $cdcSyncableDtos = $this->cdcSyncableCreator->create($cdcRawDtos);
         dump('  Found cdcSyncable count='.count($cdcSyncableDtos));
 
-        $documentDtos = $this->syncableDocumentsCreator->create($cdcSyncableDtos);
+        $documentDtos = $this->documentCreator->create($cdcSyncableDtos);
         dump('  Calculated documentDtos count='.count($documentDtos));
 
         $this->searchEngineDataClient->syncDocuments($documentDtos);

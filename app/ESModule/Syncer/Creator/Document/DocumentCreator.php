@@ -8,13 +8,13 @@ use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class SyncableDocumentsCreator
+class DocumentCreator
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
         private readonly OrmAdapter $ormAdapter,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
-        private readonly DocumentsCreator $documentsCreator,
+        private readonly EsDocumentsCreator $documentsCreator,
     ) {
     }
 

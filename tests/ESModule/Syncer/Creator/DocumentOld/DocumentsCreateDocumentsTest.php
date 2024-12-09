@@ -3,7 +3,7 @@
 namespace Tests\ESModule\Syncer\Creator\DocumentOld;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Creator\Document\SyncableDocumentsCreator;
+use App\ESModule\Syncer\Creator\Document\DocumentCreator;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
@@ -26,7 +26,7 @@ class DocumentsCreateDocumentsTest extends TestCase
             // $mock->allows('create')->andReturn([])->once();
         });
 
-        $service = app(SyncableDocumentsCreator::class);
+        $service = app(DocumentCreator::class);
 
         $mock2 = \Mockery::instanceMock($service, function (MockInterface $mock) {
             $mock->expects('testTwo')->times(1);

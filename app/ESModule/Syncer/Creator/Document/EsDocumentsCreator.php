@@ -7,7 +7,7 @@ use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class DocumentsCreator
+class EsDocumentsCreator
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
