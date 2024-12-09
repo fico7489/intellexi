@@ -6,7 +6,6 @@ use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Helper\ModelsRelatedFetcher;
-use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class SyncableDocumentsCreator
@@ -15,7 +14,6 @@ class SyncableDocumentsCreator
 
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly ShouldSyncDetector $shouldSyncDetector,
         private readonly OrmAdapter $ormAdapter,
         private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
         private readonly DocumentsCreator $documentsCreator,
@@ -32,10 +30,9 @@ class SyncableDocumentsCreator
         $syncModels = [];
         foreach ($syncItemDtos as $syncItemDto) {
             $tableName = $syncItemDto->getTableName();
-            $syncMappingForTableName = $syncMapping[$tableName];
-            $syncMappingForTableNameFiltered = $this->filterSyncMappingForTableName($syncItemDto, $syncMappingForTableName);
+            $indexNames = $syncItemDto->getIndexNames();
 
-            foreach ($syncMappingForTableNameFiltered as $indexName => $changedFieldsTriggers) {
+            foreach ($indexNames as $indexName) {
                 // detect $modelSource
                 $modelSource = $this->fetchModelSource($syncItemDto);
 
@@ -112,19 +109,5 @@ class SyncableDocumentsCreator
         }
 
         return $modelSource;
-    }
-
-    private function filterSyncMappingForTableName(CdcSyncableDto $syncItemDto, array $syncMappingForTableName): array
-    {
-        $syncMappingForTableNameFiltered = [];
-
-        foreach ($syncMappingForTableName as $indexName => $changedFieldsTriggers) {
-            // sync is matched by changed table $syncItemDto and table from $syncMapping
-            if ($this->shouldSyncDetector->detect($syncItemDto->getChangedFields(), $changedFieldsTriggers)) {
-                $syncMappingForTableNameFiltered[$indexName] = $changedFieldsTriggers;
-            }
-        }
-
-        return $syncMappingForTableNameFiltered;
     }
 }

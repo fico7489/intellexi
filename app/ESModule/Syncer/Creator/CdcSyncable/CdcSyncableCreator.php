@@ -6,6 +6,7 @@ use App\ESModule\Cdc\Dto\CdcDto;
 use App\ESModule\Syncer\Adapter\DatabaseAdapter\DatabaseAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\CdcSyncable\Exception\SyncItemCreatorException;
+use App\ESModule\Syncer\Creator\Document\Helper\ShouldSyncDetector;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
 class CdcSyncableCreator
@@ -13,6 +14,7 @@ class CdcSyncableCreator
     public function __construct(
         private readonly DatabaseAdapter $databaseAdapter,
         private readonly ConfigProvider $configProvider,
+        private readonly ShouldSyncDetector $shouldSyncDetector,
     ) {
     }
 
@@ -40,8 +42,21 @@ class CdcSyncableCreator
                 continue;
             }
 
+            $syncMap = $this->configProvider->getConfigDto()->getSyncMap();
+            $indexNamesSyncMap = $syncMap[$tableName] ?? [];
             // don't do sync if tableName is not is for sync
-            if (!$this->configProvider->isTableNameForSync($tableName)) {
+            if (0 === count($indexNamesSyncMap)) {
+                continue;
+            }
+
+            $indexNames = [];
+            foreach ($indexNamesSyncMap as $indexName => $changedFieldsTriggers) {
+                if ($this->shouldSyncDetector->detect($type, $changedFields, $changedFieldsTriggers)) {
+                    $indexNames[] = $indexName;
+                }
+            }
+
+            if (0 === count($indexNames)) {
                 continue;
             }
 
@@ -55,11 +70,11 @@ class CdcSyncableCreator
                     throw new SyncItemCreatorException('Grouper: delete already deleted');
                 }
 
-                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_DELETE, $identifierValue);
+                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_DELETE, $identifierValue, $indexNames);
             } elseif (CdcDto::TYPE_UPDATE === $type) {
                 if (!isset($syncItemDtosGrouped[$tableName][$identifierValue])) {
                     // item is not set
-                    $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue);
+                    $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNames);
                 } else {
                     // item is already set
 
@@ -91,7 +106,7 @@ class CdcSyncableCreator
                     throw new SyncItemCreatorException('Grouper: insert detected after insert, delete or update');
                 }
 
-                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue);
+                $syncItemDtosGrouped[$tableName][$identifierValue] = $this->createSyncDbRow($cdcDto, CdcSyncableDto::TYPE_UPSERT, $identifierValue, $indexNames);
             }
         }
 
@@ -106,24 +121,15 @@ class CdcSyncableCreator
         return $syncItemDtos;
     }
 
-    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue): CdcSyncableDto
+    private function createSyncDbRow(CdcDto $cdcDto, string $type, mixed $identifierValue, $indexNames): CdcSyncableDto
     {
-        $changedFields = $cdcDto->getChangedFields();
-
-        if (CdcDto::TYPE_DELETE === $type) {
-            $changedFields = [];
-        }
-
-        if (in_array($cdcDto->getType(), [CdcDto::TYPE_INSERT, CdcDto::TYPE_DELETE])) {
-            $changedFields = array_keys($cdcDto->getData());
-        }
-
         return new CdcSyncableDto(
             $cdcDto->getTableName(),
             $type,
             $cdcDto->getData(),
-            $changedFields,
+            $cdcDto->getChangedFields(),
             $identifierValue,
+            $indexNames,
         );
     }
 }

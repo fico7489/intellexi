@@ -26,13 +26,6 @@ class ConfigProvider
         return $databaseName === $this->getConfigDto()->getDatabaseName();
     }
 
-    public function isTableNameForSync($tableName): bool
-    {
-        $syncMap = $this->getConfigDto()->getSyncMap();
-
-        return isset($syncMap[$tableName]);
-    }
-
     public function isTableNameForIndex($tableName): bool
     {
         $tableNamesIndex = array_flip($this->getConfigDto()->getTableNamesForSync());
