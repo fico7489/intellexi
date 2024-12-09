@@ -18,23 +18,73 @@ class IndexNamesForSyncFinderTest extends TestCase
             $mock->allows('getSyncMap')->never();
         })->makePartial();
 
-        $this->createServiceInternal()->findIndexNamesForSync($cdcDto);
+        app(IndexNamesForSyncFinder::class)->findIndexNamesForSync($cdcDto);
     }
 
     public function testTableNameNotForSync()
     {
         $cdcDto = $this->createCdcDto();
 
-        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
+        $mock = $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(true);
             $mock->allows('getSyncMap')->andReturn([])->once();
         })->makePartial();
 
-        $this->createServiceInternal()->findIndexNamesForSync($cdcDto);
+        $service = \Mockery::mock(
+            IndexNamesForSyncFinder::class,
+            [$mock]
+        )->makePartial();
+
+        $service->allows('shouldSync')->never();
+
+        $service->findIndexNamesForSync($cdcDto);
     }
 
-    private function createServiceInternal() : IndexNamesForSyncFinder
+    public function testShouldSyncFalse()
     {
-        return app(IndexNamesForSyncFinder::class);
+        $cdcDto = $this->createCdcDto();
+
+        $mock = $this->mock(ConfigProvider::class, function (MockInterface $mock) {
+            $mock->allows('isDatabaseNameForSync')->andReturn(true);
+            $mock->allows('getSyncMap')->andReturn([
+                'test-table' => [
+                    'test-index' => ['id'],
+                ],
+            ])->once();
+        })->makePartial();
+
+        $service = \Mockery::mock(
+            IndexNamesForSyncFinder::class,
+            [$mock]
+        )->makePartial();
+
+        $service->allows('shouldSync')->once()->andReturn(false);
+
+        $indexNamesForSync = $service->findIndexNamesForSync($cdcDto);
+        $this->assertCount(0, $indexNamesForSync);
+    }
+
+    public function testShouldSyncTrue()
+    {
+        $cdcDto = $this->createCdcDto();
+
+        $mock = $this->mock(ConfigProvider::class, function (MockInterface $mock) {
+            $mock->allows('isDatabaseNameForSync')->andReturn(true);
+            $mock->allows('getSyncMap')->andReturn([
+                'test-table' => [
+                    'test-index' => ['id'],
+                ],
+            ])->once();
+        })->makePartial();
+
+        $service = \Mockery::mock(
+            IndexNamesForSyncFinder::class,
+            [$mock]
+        )->makePartial();
+
+        $service->allows('shouldSync')->once()->andReturn(true);
+
+        $indexNamesForSync = $service->findIndexNamesForSync($cdcDto);
+        $this->assertCount(1, $indexNamesForSync);
     }
 }
