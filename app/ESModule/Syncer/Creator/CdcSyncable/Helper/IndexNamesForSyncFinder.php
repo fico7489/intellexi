@@ -21,7 +21,7 @@ class IndexNamesForSyncFinder
         }
 
         $tableName = $cdcDto->getTableName();
-        $syncMap = $this->configProvider->getConfigDto()->getSyncMap();
+        $syncMap = $this->configProvider->getSyncMap();
         $syncMapForTableName = $syncMap[$tableName] ?? [];
 
         // don't do sync if tableName is not is for sync

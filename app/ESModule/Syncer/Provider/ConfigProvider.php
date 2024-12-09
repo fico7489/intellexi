@@ -61,6 +61,11 @@ class ConfigProvider
         return $this->fetchIndexDtoByIndexName($indexName);
     }
 
+    public function getSyncMap(): array
+    {
+        return $this->getConfigDto()->getSyncMap();
+    }
+
     public function getConfigDto(): ConfigDto
     {
         return $this->configDtoBuilder->build($this->configConnection, $this->configIndexes);

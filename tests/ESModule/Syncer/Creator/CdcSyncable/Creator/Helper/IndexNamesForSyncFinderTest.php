@@ -9,13 +9,25 @@ use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
 class IndexNamesForSyncFinderTest extends TestCase
 {
-    public function testIsDatabaseNotForSync()
+    public function testDatabaseNameNotForSync()
     {
         $cdcDto = $this->createCdcDto();
 
         $this->mock(ConfigProvider::class, function (MockInterface $mock) {
             $mock->allows('isDatabaseNameForSync')->andReturn(false);
-            $mock->allows('isTableNameForSync')->never();
+            $mock->allows('getSyncMap')->never();
+        })->makePartial();
+
+        $this->createServiceInternal()->findIndexNamesForSync($cdcDto);
+    }
+
+    public function testTableNameNotForSync()
+    {
+        $cdcDto = $this->createCdcDto();
+
+        $this->mock(ConfigProvider::class, function (MockInterface $mock) {
+            $mock->allows('isDatabaseNameForSync')->andReturn(true);
+            $mock->allows('getSyncMap')->andReturn([])->once();
         })->makePartial();
 
         $this->createServiceInternal()->findIndexNamesForSync($cdcDto);
