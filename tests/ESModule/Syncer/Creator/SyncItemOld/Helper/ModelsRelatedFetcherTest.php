@@ -5,7 +5,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Creator\Document\ModelsRelated\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated\ModelsRelatedFetcher;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 

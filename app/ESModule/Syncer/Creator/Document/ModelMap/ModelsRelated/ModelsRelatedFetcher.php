@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelsRelated;
+namespace App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
