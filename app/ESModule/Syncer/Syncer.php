@@ -25,6 +25,12 @@ class Syncer
         $cdcSyncableDtos = $this->cdcSyncableCreator->create($cdcRawDtos);
         dump('  Found cdcSyncable count='.count($cdcSyncableDtos));
 
+        $indexNamesForSyncCount = 0;
+        foreach ($cdcSyncableDtos as $cdcSyncableDto) {
+            $indexNamesForSyncCount += count($cdcSyncableDto->getIndexNamesForSync());
+        }
+        dump('  Found indexes for sync in cdcSyncable count='.$indexNamesForSyncCount);
+
         $documentDtos = $this->documentCreator->create($cdcSyncableDtos);
         dump('  Calculated documentDtos count='.count($documentDtos));
 
