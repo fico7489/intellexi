@@ -2,17 +2,15 @@
 
 namespace App\ESModule\Syncer\Creator\Document\IndexModel;
 
-use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Provider\ConfigProvider;
+use App\ESModule\Syncer\Creator\Document\IndexModel\Helper\ModelSourceFetcher;
 
 class IndexModelCreator
 {
     public function __construct(
         private readonly IndexModelFlattener $indexModelFlattener,
         private readonly IndexModelItemCreator $indexModelItemCreator,
-        private readonly ConfigProvider $configProvider,
-        private readonly OrmAdapter $ormAdapter,
+        private readonly ModelSourceFetcher $modelSourceFetcher,
     ) {
     }
 
@@ -26,7 +24,7 @@ class IndexModelCreator
             $indexNames = $cdcSyncableDto->getIndexNamesForSync();
             foreach ($indexNames as $indexName) {
                 // detect $modelSource
-                $modelSource = $this->fetchModelSource($cdcSyncableDto);
+                $modelSource = $this->modelSourceFetcher->fetch($cdcSyncableDto);
 
                 $indexModelDtosGrouped = $this->indexModelItemCreator->create($indexModelDtosGrouped, $cdcSyncableDto, $modelSource, $indexName);
             }
@@ -35,16 +33,5 @@ class IndexModelCreator
         $indexModelDtosFlattened = $this->indexModelFlattener->flatten($indexModelDtosGrouped);
 
         return $indexModelDtosFlattened;
-    }
-
-    private function fetchModelSource(CdcSyncableDto $cdcSyncableDto): ?object
-    {
-        $modelSource = null;
-        if ($this->configProvider->isTableNameClassNameOrm($cdcSyncableDto->getTableName())) {
-            $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($cdcSyncableDto->getTableName());
-            $modelSource = $this->ormAdapter->fetchModelByData($cdcSyncableDto, $classNameOrm, $cdcSyncableDto->getIdentifierValue());
-        }
-
-        return $modelSource;
     }
 }
