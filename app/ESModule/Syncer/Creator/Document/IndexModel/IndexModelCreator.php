@@ -17,18 +17,18 @@ class IndexModelCreator
     }
 
     /**
-     * @param array<CdcSyncableDto> $syncItemDtos
+     * @param array<CdcSyncableDto> $cdcSyncableDtos
      */
-    public function create(array $syncItemDtos): array
+    public function create(array $cdcSyncableDtos): array
     {
         $indexModelDtosGrouped = [];
-        foreach ($syncItemDtos as $syncItemDto) {
-            $indexNames = $syncItemDto->getIndexNamesForSync();
+        foreach ($cdcSyncableDtos as $cdcSyncableDto) {
+            $indexNames = $cdcSyncableDto->getIndexNamesForSync();
             foreach ($indexNames as $indexName) {
                 // detect $modelSource
-                $modelSource = $this->fetchModelSource($syncItemDto);
+                $modelSource = $this->fetchModelSource($cdcSyncableDto);
 
-                $indexModelDtosGrouped = $this->indexModelItemCreator->create($indexModelDtosGrouped, $syncItemDto, $modelSource, $indexName);
+                $indexModelDtosGrouped = $this->indexModelItemCreator->create($indexModelDtosGrouped, $cdcSyncableDto, $modelSource, $indexName);
             }
         }
 
@@ -37,12 +37,12 @@ class IndexModelCreator
         return $indexModelDtosFlattened;
     }
 
-    private function fetchModelSource(CdcSyncableDto $syncItemDto): ?object
+    private function fetchModelSource(CdcSyncableDto $cdcSyncableDto): ?object
     {
         $modelSource = null;
-        if ($this->configProvider->isTableNameClassNameOrm($syncItemDto->getTableName())) {
-            $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($syncItemDto->getTableName());
-            $modelSource = $this->ormAdapter->fetchModelByData($syncItemDto, $classNameOrm, $syncItemDto->getIdentifierValue());
+        if ($this->configProvider->isTableNameClassNameOrm($cdcSyncableDto->getTableName())) {
+            $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($cdcSyncableDto->getTableName());
+            $modelSource = $this->ormAdapter->fetchModelByData($cdcSyncableDto, $classNameOrm, $cdcSyncableDto->getIdentifierValue());
         }
 
         return $modelSource;

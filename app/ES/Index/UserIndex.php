@@ -50,7 +50,7 @@ class UserIndex implements IndexModelInterface
     public function syncModels($syncModels): array
     {
         return [
-            User::class => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
+            User::class => function ($model, CdcSyncableDto $cdcSyncableDto, array $relatedModels) {
                 return array_merge($relatedModels, [$model]);
             },
         ];

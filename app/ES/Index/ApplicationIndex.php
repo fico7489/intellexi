@@ -76,13 +76,13 @@ class ApplicationIndex implements IndexModelInterface
     public function syncModels($syncModels): array
     {
         return [
-            Application::class => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
+            Application::class => function ($model, CdcSyncableDto $cdcSyncableDto, array $relatedModels) {
                 return array_merge($relatedModels, [$model]);
             },
-            User::class => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
+            User::class => function ($model, CdcSyncableDto $cdcSyncableDto, array $relatedModels) {
                 return array_merge($relatedModels, $model->applications->all());
             },
-            Role::class => function (object $model, CdcSyncableDto $syncItemDto, array $relatedModels) {
+            Role::class => function (object $model, CdcSyncableDto $cdcSyncableDto, array $relatedModels) {
                 $users = $model->users;
 
                 $applications = [];
@@ -92,8 +92,8 @@ class ApplicationIndex implements IndexModelInterface
 
                 return array_merge($relatedModels, $applications);
             },
-            'role_user' => function ($model, CdcSyncableDto $syncItemDto, array $relatedModels) {
-                $user = User::find($syncItemDto->getData()['user_id']);
+            'role_user' => function ($model, CdcSyncableDto $cdcSyncableDto, array $relatedModels) {
+                $user = User::find($cdcSyncableDto->getData()['user_id']);
 
                 if (!$user) {
                     return $relatedModels;

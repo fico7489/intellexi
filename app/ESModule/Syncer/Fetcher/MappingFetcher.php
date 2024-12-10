@@ -7,7 +7,7 @@ use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
 class MappingFetcher
 {
-    public function fetch(IndexDto $indexDto, object $model, CdcSyncableDto $syncItemDto): array
+    public function fetch(IndexDto $indexDto, object $model, CdcSyncableDto $cdcSyncableDto): array
     {
         $mapping = [];
 

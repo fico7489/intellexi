@@ -18,11 +18,11 @@ class DocumentCreator
     }
 
     /**
-     * @param array<CdcSyncableDto> $syncItemDtos
+     * @param array<CdcSyncableDto> $cdcSyncableDtos
      *
      * @return array<DocumentDto>
      */
-    public function create(array $syncItemDtos): array
+    public function create(array $cdcSyncableDtos): array
     {
         $queries = [];
         DB::listen(function (QueryExecuted $query) use (&$queries) {
@@ -36,7 +36,7 @@ class DocumentCreator
             }
         });
 
-        $indexModelDtos = $this->indexModelCreator->create($syncItemDtos);
+        $indexModelDtos = $this->indexModelCreator->create($cdcSyncableDtos);
         dump('    count='.count($queries));
         $documentDtos = $this->indexModelsToDocumentsConverter->convert($indexModelDtos);
         dump('    count2='.count($queries));

@@ -17,9 +17,9 @@ class ModelsFetcher
     /**
      * @return array<object>
      */
-    public function fetch(CdcSyncableDto $syncItemDto, IndexDto $indexDto, ?object $modelSource): array
+    public function fetch(CdcSyncableDto $cdcSyncableDto, IndexDto $indexDto, ?object $modelSource): array
     {
-        $tableName = $syncItemDto->getTableName();
+        $tableName = $cdcSyncableDto->getTableName();
 
         $syncModels = [];
         // TODO decorate before syncModels
@@ -32,12 +32,12 @@ class ModelsFetcher
             $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
 
             if (isset($syncModels[$classNameOrm])) {
-                $modelsRelated = $syncModels[$classNameOrm]($modelSource, $syncItemDto, $modelsRelated);
+                $modelsRelated = $syncModels[$classNameOrm]($modelSource, $cdcSyncableDto, $modelsRelated);
             }
         }
 
         if (isset($syncModels[$tableName])) {
-            $modelsRelated = $syncModels[$tableName]($modelSource, $syncItemDto, $modelsRelated);
+            $modelsRelated = $syncModels[$tableName]($modelSource, $cdcSyncableDto, $modelsRelated);
         }
 
         // TODO decorators after $modelsRelated

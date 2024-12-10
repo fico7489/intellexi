@@ -16,17 +16,17 @@ class IndexModelItemCreator
     ) {
     }
 
-    public function create(array $indexModelDtos, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array
+    public function create(array $indexModelDtos, CdcSyncableDto $cdcSyncableDto, $modelSource, $indexNameRelated): array
     {
         $tableNameRelated = $this->configProvider->fetchTableNameByIndexName($indexNameRelated);
 
         // detect $indexDto
         $indexDtoRelated = $this->configProvider->fetchIndexDtoByIndexName($indexNameRelated);
 
-        $modelsRelated = $this->modelsRelatedFetcher->fetch($syncItemDto, $indexDtoRelated, $modelSource);
+        $modelsRelated = $this->modelsRelatedFetcher->fetch($cdcSyncableDto, $indexDtoRelated, $modelSource);
 
         foreach ($modelsRelated as $modelRelated) {
-            $type = $syncItemDto->getType();
+            $type = $cdcSyncableDto->getType();
             if ($modelRelated !== $modelSource) {
                 $type = DocumentDto::TYPE_UPSERT;
             }
