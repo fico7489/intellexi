@@ -9,8 +9,8 @@ use App\ESModule\Syncer\Provider\ConfigProvider;
 class IndexModelCreator
 {
     public function __construct(
-        private readonly IndexModelFlattener $modelMapFlattener,
-        private readonly IndexModelItemCreator $modelMapCreator,
+        private readonly IndexModelFlattener $indexModelFlattener,
+        private readonly IndexModelItemCreator $indexModelItemCreator,
         private readonly ConfigProvider $configProvider,
         private readonly OrmAdapter $ormAdapter,
     ) {
@@ -21,20 +21,20 @@ class IndexModelCreator
      */
     public function create(array $syncItemDtos): array
     {
-        $modelMapDtosGrouped = [];
+        $indexModelDtosGrouped = [];
         foreach ($syncItemDtos as $syncItemDto) {
             $indexNames = $syncItemDto->getIndexNamesForSync();
             foreach ($indexNames as $indexName) {
                 // detect $modelSource
                 $modelSource = $this->fetchModelSource($syncItemDto);
 
-                $modelMapDtosGrouped = $this->modelMapCreator->createModelMapDtosForIndex($modelMapDtosGrouped, $syncItemDto, $modelSource, $indexName);
+                $indexModelDtosGrouped = $this->indexModelItemCreator->create($indexModelDtosGrouped, $syncItemDto, $modelSource, $indexName);
             }
         }
 
-        $modelMapDtosFlattened = $this->modelMapFlattener->flatten($modelMapDtosGrouped);
+        $indexModelDtosFlattened = $this->indexModelFlattener->flatten($indexModelDtosGrouped);
 
-        return $modelMapDtosFlattened;
+        return $indexModelDtosFlattened;
     }
 
     private function fetchModelSource(CdcSyncableDto $syncItemDto): ?object

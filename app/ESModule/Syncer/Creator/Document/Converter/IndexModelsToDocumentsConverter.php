@@ -8,7 +8,7 @@ use App\ESModule\Syncer\Creator\Document\Dto\IndexModelDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class ModelMapToDocumentsConverter
+class IndexModelsToDocumentsConverter
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
@@ -20,25 +20,25 @@ class ModelMapToDocumentsConverter
     /**
      * @return array<DocumentDto>
      */
-    public function convert(array $modelMapDtos): array
+    public function convert(array $indexModelDtos): array
     {
         // TODO test grouping, add delete different
         // TODO mark document as root in DTO
         // TODO add to document source of trigger
         // TODO exclude duplicates one more time
         $documents = [];
-        foreach ($modelMapDtos as $modelToIndexDto) {
-            /** @var IndexModelDto $modelToIndexDto */
-            $tableName = $this->configProvider->fetchTableNameByIndexName($modelToIndexDto->getIndexName());
+        foreach ($indexModelDtos as $indexModelDto) {
+            /** @var IndexModelDto $indexModelDto */
+            $tableName = $this->configProvider->fetchTableNameByIndexName($indexModelDto->getIndexName());
             $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
             $indexDto = $this->configProvider->fetchIndexDtoByTableName($tableName);
 
-            $identifierValue = $modelToIndexDto->getIdentifierValue();
+            $identifierValue = $indexModelDto->getIdentifierValue();
             $model = $this->ormAdapter->fetchModel($classNameOrm, $identifierValue);
 
             $indexNameWithPrefix = $indexDto->getNameWithPrefix();
             $data = $this->dataFetcher->fetch($indexDto, $model);
-            $type = $modelToIndexDto->getType();
+            $type = $indexModelDto->getType();
             $documents[] = new DocumentDto($indexNameWithPrefix, $identifierValue, $data, $type);
         }
 

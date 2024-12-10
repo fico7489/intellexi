@@ -4,15 +4,15 @@ namespace App\ESModule\Syncer\Creator\Document\IndexModel;
 
 class IndexModelFlattener
 {
-    public function flatten(array $modelMapDtosGrouped): array
+    public function flatten(array $indexModelDtosGrouped): array
     {
-        $modelMapDtosFlattened = [];
-        foreach ($modelMapDtosGrouped as $tableNameRelated => $data) {
+        $indexModelDtosFlattened = [];
+        foreach ($indexModelDtosGrouped as $tableNameRelated => $data) {
             foreach ($data as $identifierValue => $dto) {
-                $modelMapDtosFlattened[] = $dto;
+                $indexModelDtosFlattened[] = $dto;
             }
         }
 
-        return $modelMapDtosFlattened;
+        return $indexModelDtosFlattened;
     }
 }

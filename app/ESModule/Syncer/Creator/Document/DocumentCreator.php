@@ -3,7 +3,7 @@
 namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Creator\Document\Converter\ModelMapToDocumentsConverter;
+use App\ESModule\Syncer\Creator\Document\Converter\IndexModelsToDocumentsConverter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\IndexModel\IndexModelCreator;
 use Illuminate\Database\Events\QueryExecuted;
@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\DB;
 class DocumentCreator
 {
     public function __construct(
-        private readonly IndexModelCreator $modelMapCreator,
-        private readonly ModelMapToDocumentsConverter $modelMapConverter,
+        private readonly IndexModelCreator $indexModelCreator,
+        private readonly IndexModelsToDocumentsConverter $indexModelsToDocumentsConverter,
     ) {
     }
 
@@ -36,9 +36,9 @@ class DocumentCreator
             }
         });
 
-        $modelMapDtos = $this->modelMapCreator->create($syncItemDtos);
+        $indexModelDtos = $this->indexModelCreator->create($syncItemDtos);
         dump('    count='.count($queries));
-        $documentDtos = $this->modelMapConverter->convert($modelMapDtos);
+        $documentDtos = $this->indexModelsToDocumentsConverter->convert($indexModelDtos);
         dump('    count2='.count($queries));
 
         return $documentDtos;

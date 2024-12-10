@@ -16,7 +16,7 @@ class IndexModelItemCreator
     ) {
     }
 
-    public function createModelMapDtosForIndex(array $modelMapDtos, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array
+    public function create(array $indexModelDtos, CdcSyncableDto $syncItemDto, $modelSource, $indexNameRelated): array
     {
         $tableNameRelated = $this->configProvider->fetchTableNameByIndexName($indexNameRelated);
 
@@ -34,9 +34,9 @@ class IndexModelItemCreator
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
 
-            $modelMapDtos[$tableNameRelated][$identifierValue] = new IndexModelDto($indexNameRelated, $identifierValue, $type);
+            $indexModelDtos[$tableNameRelated][$identifierValue] = new IndexModelDto($indexNameRelated, $identifierValue, $type);
         }
 
-        return $modelMapDtos;
+        return $indexModelDtos;
     }
 }
