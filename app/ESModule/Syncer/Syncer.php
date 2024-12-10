@@ -25,15 +25,22 @@ class Syncer
         $cdcSyncableDtos = $this->cdcSyncableCreator->create($cdcRawDtos);
         dump('  Found cdcSyncable count='.count($cdcSyncableDtos));
 
-        $indexNamesForSyncCount = 0;
-        foreach ($cdcSyncableDtos as $cdcSyncableDto) {
-            $indexNamesForSyncCount += count($cdcSyncableDto->getIndexNamesForSync());
-        }
+        $indexNamesForSyncCount = $this->fetchIndexNamesForSyncCount($cdcSyncableDtos);
         dump('  Found indexes for sync in cdcSyncable count='.$indexNamesForSyncCount);
 
         $documentDtos = $this->documentCreator->create($cdcSyncableDtos);
         dump('  Calculated documentDtos count='.count($documentDtos));
 
         $this->searchEngineDataClient->syncDocuments($documentDtos);
+    }
+
+    private function fetchIndexNamesForSyncCount(array $cdcSyncableDtos): int
+    {
+        $indexNamesForSyncCount = 0;
+        foreach ($cdcSyncableDtos as $cdcSyncableDto) {
+            $indexNamesForSyncCount += count($cdcSyncableDto->getIndexNamesForSync());
+        }
+
+        return $indexNamesForSyncCount;
     }
 }
