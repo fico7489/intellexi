@@ -3,9 +3,9 @@
 namespace App\ESModule\Syncer\Creator\Document;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
+use App\ESModule\Syncer\Creator\Document\Converter\ModelMapToDocumentsConverter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapCreator;
-use App\ESModule\Syncer\Creator\Document\ModelMap\ModelMapToDocumentsConverter;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 

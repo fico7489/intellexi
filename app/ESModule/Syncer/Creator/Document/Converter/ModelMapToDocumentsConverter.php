@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelMap;
+namespace App\ESModule\Syncer\Creator\Document\Converter;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
