@@ -8,7 +8,7 @@ class DocumentDto
     final public const string TYPE_DELETE = 'delete';
 
     public function __construct(
-        private readonly string $indexName, // TODO index DTO
+        private readonly string $indexName,
         private readonly mixed $identifierValue,
         private readonly array $data,
         private readonly string $type,

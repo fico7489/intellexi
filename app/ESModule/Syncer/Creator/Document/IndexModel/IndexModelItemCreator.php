@@ -23,18 +23,18 @@ class IndexModelItemCreator
         // detect $indexDto
         $indexDtoRelated = $this->configProvider->fetchIndexDtoByIndexName($indexNameRelated);
 
-        $modelsRelated = $this->modelsRelatedFetcher->fetch($cdcSyncableDto, $indexDtoRelated, $modelSource);
+        $models = $this->modelsRelatedFetcher->fetch($cdcSyncableDto, $indexDtoRelated, $modelSource);
 
-        foreach ($modelsRelated as $modelRelated) {
+        foreach ($models as $model) {
             $type = $cdcSyncableDto->getType();
-            if ($modelRelated !== $modelSource) {
+            if ($model !== $modelSource) {
                 $type = DocumentDto::TYPE_UPSERT;
             }
 
-            $identifierName = $modelRelated->getKeyName();
-            $identifierValue = $modelRelated->{$identifierName};
+            $identifierName = $model->getKeyName();
+            $identifierValue = $model->{$identifierName};
 
-            $indexModelDtos[$tableNameRelated][$identifierValue] = new IndexModelDto($indexNameRelated, $identifierValue, $type);
+            $indexModelDtos[$tableNameRelated][$identifierValue] = new IndexModelDto($indexNameRelated, $identifierValue, $type, $model);
         }
 
         return $indexModelDtos;

@@ -8,6 +8,7 @@ class IndexModelDto
         private readonly string $indexName,
         private readonly mixed $identifierValue,
         private readonly string $type,
+        private readonly object $model,
     ) {
     }
 
@@ -24,5 +25,10 @@ class IndexModelDto
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getModel(): object
+    {
+        return $this->model;
     }
 }

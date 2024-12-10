@@ -15,7 +15,7 @@ class DocumentCreatorTest extends TestCase
     public function testService()
     {
         $cdcSyncableDto = new CdcSyncableDto('test-table', CdcSyncableDto::TYPE_UPSERT, [], [], 1, []);
-        $indexModelDto = new IndexModelDto('test-index', 1, CdcSyncableDto::TYPE_UPSERT);
+        $indexModelDto = new IndexModelDto('test-index', 1, CdcSyncableDto::TYPE_UPSERT, new \stdClass());
         $documentDto = new DocumentDto('test-index', 1, [], DocumentDto::TYPE_UPSERT);
 
         $this->mock(IndexModelCreator::class, function ($mock) use ($indexModelDto, $cdcSyncableDto) {
