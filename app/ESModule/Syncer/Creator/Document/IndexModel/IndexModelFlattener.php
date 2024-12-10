@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelMap;
+namespace App\ESModule\Syncer\Creator\Document\IndexModel;
 
-class ModelMapFlattener
+class IndexModelFlattener
 {
     public function flatten(array $modelMapDtosGrouped): array
     {

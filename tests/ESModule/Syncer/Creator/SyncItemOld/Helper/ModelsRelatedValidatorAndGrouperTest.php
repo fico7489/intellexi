@@ -4,7 +4,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Exception\Exception;
-use App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated\ModelsRelatedValidatorAndGrouper;
+use App\ESModule\Syncer\Creator\Document\IndexModel\Models\ModelsValidatorAndGrouper;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
@@ -21,7 +21,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
         });
 
-        $relatedModels = app(ModelsRelatedValidatorAndGrouper::class)->validateAndGroup([$object], $object::class);
+        $relatedModels = app(ModelsValidatorAndGrouper::class)->validateAndGroup([$object], $object::class);
 
         $this->assertEquals(1, count($relatedModels));
         $this->assertEquals($object, $relatedModels[0]);
@@ -42,7 +42,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(2)->once();
         });
 
-        $relatedModels = app(ModelsRelatedValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
+        $relatedModels = app(ModelsValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
 
         $this->assertEquals(2, count($relatedModels));
         $this->assertEquals($object, $relatedModels[0]);
@@ -64,7 +64,7 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
             $mock->allows('fetchIdentifierValueFromModel')->andReturn(1)->once();
         });
 
-        $relatedModels = app(ModelsRelatedValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
+        $relatedModels = app(ModelsValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
 
         $this->assertEquals(1, count($relatedModels));
         $this->assertEquals($object, $relatedModels[0]);
@@ -88,6 +88,6 @@ class ModelsRelatedValidatorAndGrouperTest extends TestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Related model is not instanceof source className="'.$object::class.'"');
-        app(ModelsRelatedValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
+        app(ModelsValidatorAndGrouper::class)->validateAndGroup([$object, $object2], $object::class);
     }
 }

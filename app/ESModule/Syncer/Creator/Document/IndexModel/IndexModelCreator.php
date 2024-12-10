@@ -1,16 +1,16 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelMap;
+namespace App\ESModule\Syncer\Creator\Document\IndexModel;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class ModelMapCreator
+class IndexModelCreator
 {
     public function __construct(
-        private readonly ModelMapFlattener $modelMapFlattener,
-        private readonly ModelMapItemCreator $modelMapCreator,
+        private readonly IndexModelFlattener $modelMapFlattener,
+        private readonly IndexModelItemCreator $modelMapCreator,
         private readonly ConfigProvider $configProvider,
         private readonly OrmAdapter $ormAdapter,
     ) {

@@ -4,7 +4,7 @@ namespace App\ESModule\Syncer\Creator\Document\Converter;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Dto\ModelToIndexDto;
+use App\ESModule\Syncer\Creator\Document\Dto\IndexModelDto;
 use App\ESModule\Syncer\Fetcher\DataFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
@@ -28,7 +28,7 @@ class ModelMapToDocumentsConverter
         // TODO exclude duplicates one more time
         $documents = [];
         foreach ($modelMapDtos as $modelToIndexDto) {
-            /** @var ModelToIndexDto $modelToIndexDto */
+            /** @var IndexModelDto $modelToIndexDto */
             $tableName = $this->configProvider->fetchTableNameByIndexName($modelToIndexDto->getIndexName());
             $classNameOrm = $this->ormAdapter->convertTableNameToClassNameOrm($tableName);
             $indexDto = $this->configProvider->fetchIndexDtoByTableName($tableName);

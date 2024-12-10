@@ -1,16 +1,16 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated;
+namespace App\ESModule\Syncer\Creator\Document\IndexModel\Models;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Provider\Builder\Dto\IndexDto;
 
-class ModelsRelatedFetcher
+class ModelsFetcher
 {
     public function __construct(
         private readonly OrmAdapter $ormAdapter,
-        private readonly ModelsRelatedValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
+        private readonly ModelsValidatorAndGrouper $modelsRelatedValidatorAndGrouper,
     ) {
     }
 

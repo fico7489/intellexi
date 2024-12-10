@@ -2,7 +2,7 @@
 
 namespace App\ESModule\Syncer\Creator\Document\Dto;
 
-class ModelToIndexDto
+class IndexModelDto
 {
     public function __construct(
         private readonly string $indexName,

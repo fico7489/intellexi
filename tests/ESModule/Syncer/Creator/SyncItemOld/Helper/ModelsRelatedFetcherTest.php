@@ -5,7 +5,7 @@ namespace Tests\ESModule\Syncer\Creator\SyncItemOld\Helper;
 use App\ESModule\Config\Interface\IndexSyncInterface;
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
-use App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\IndexModel\Models\ModelsFetcher;
 use Mockery\MockInterface;
 use Tests\ESModule\Syncer\Creator\CdcSyncable\TestCase;
 
@@ -18,7 +18,7 @@ class ModelsRelatedFetcherTest extends TestCase
         $modelRoot->id = 1;
         $index = $this->createIndexSyncInterface([]);
 
-        $modelsRelated = app(ModelsRelatedFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
+        $modelsRelated = app(ModelsFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
 
         $this->assertEquals(0, count($modelsRelated));
     }
@@ -44,7 +44,7 @@ class ModelsRelatedFetcherTest extends TestCase
             $mock->allows('isTableNameModel')->with($this->equalTo('test-table'))->andReturn(false)->once();
         });
 
-        $modelsRelated = app(ModelsRelatedFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
+        $modelsRelated = app(ModelsFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
 
         $this->assertEquals(1, count($modelsRelated));
         $this->assertEquals($object, $modelsRelated[0]);
@@ -72,7 +72,7 @@ class ModelsRelatedFetcherTest extends TestCase
             $mock->allows('convertTableNameToClassName')->with($this->equalTo('test-table'))->andReturn($object::class)->once();
         });
 
-        $modelsRelated = app(ModelsRelatedFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
+        $modelsRelated = app(ModelsFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
 
         $this->assertEquals(1, count($modelsRelated));
         $this->assertEquals($object, $modelsRelated[0]);
@@ -106,7 +106,7 @@ class ModelsRelatedFetcherTest extends TestCase
             $mock->allows('convertTableNameToClassName')->with($this->equalTo('test-table'))->andReturn($object::class)->once();
         });
 
-        $modelsRelated = app(ModelsRelatedFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
+        $modelsRelated = app(ModelsFetcher::class)->fetch($syncItemDto, $index, $modelRoot);
 
         $this->assertEquals(2, count($modelsRelated));
         $this->assertEquals($object, $modelsRelated[0]);

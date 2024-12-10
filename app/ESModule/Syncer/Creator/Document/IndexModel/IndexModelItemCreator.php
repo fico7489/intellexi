@@ -1,18 +1,18 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelMap;
+namespace App\ESModule\Syncer\Creator\Document\IndexModel;
 
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
-use App\ESModule\Syncer\Creator\Document\Dto\ModelToIndexDto;
-use App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated\ModelsRelatedFetcher;
+use App\ESModule\Syncer\Creator\Document\Dto\IndexModelDto;
+use App\ESModule\Syncer\Creator\Document\IndexModel\Models\ModelsFetcher;
 use App\ESModule\Syncer\Provider\ConfigProvider;
 
-class ModelMapItemCreator
+class IndexModelItemCreator
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly ModelsRelatedFetcher $modelsRelatedFetcher,
+        private readonly ModelsFetcher $modelsRelatedFetcher,
     ) {
     }
 
@@ -34,7 +34,7 @@ class ModelMapItemCreator
             $identifierName = $modelRelated->getKeyName();
             $identifierValue = $modelRelated->{$identifierName};
 
-            $modelMapDtos[$tableNameRelated][$identifierValue] = new ModelToIndexDto($indexNameRelated, $identifierValue, $type);
+            $modelMapDtos[$tableNameRelated][$identifierValue] = new IndexModelDto($indexNameRelated, $identifierValue, $type);
         }
 
         return $modelMapDtos;

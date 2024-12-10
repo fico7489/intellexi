@@ -1,11 +1,11 @@
 <?php
 
-namespace App\ESModule\Syncer\Creator\Document\ModelMap\ModelsRelated;
+namespace App\ESModule\Syncer\Creator\Document\IndexModel\Models;
 
 use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\Document\Exception\Exception;
 
-class ModelsRelatedValidatorAndGrouper
+class ModelsValidatorAndGrouper
 {
     public function __construct(
         private readonly OrmAdapter $ormAdapter,
