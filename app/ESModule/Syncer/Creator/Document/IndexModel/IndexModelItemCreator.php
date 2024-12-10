@@ -13,7 +13,7 @@ class IndexModelItemCreator
 {
     public function __construct(
         private readonly ConfigProvider $configProvider,
-        private readonly ModelsFetcher $modelsRelatedFetcher,
+        private readonly ModelsFetcher $modelsFetcher,
         private readonly OrmAdapter $ormAdapter,
     ) {
     }
@@ -25,7 +25,7 @@ class IndexModelItemCreator
         // detect $indexDto
         $indexDtoRelated = $this->configProvider->fetchIndexDtoByIndexName($indexNameRelated);
 
-        $models = $this->modelsRelatedFetcher->fetch($cdcSyncableDto, $indexDtoRelated, $modelSource);
+        $models = $this->modelsFetcher->fetch($cdcSyncableDto, $indexDtoRelated, $modelSource);
 
         foreach ($models as $model) {
             $type = $cdcSyncableDto->getType();

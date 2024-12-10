@@ -13,34 +13,34 @@ class ModelsValidatorAndGrouper
     }
 
     /**
-     * @param array<object> $modelsRelated
+     * @param array<object> $models
      *
      * @return array<object>
      *
      * @throws Exception
      */
-    public function validateAndGroup(array $modelsRelated, string $classNameOrmSource): array
+    public function validateAndGroup(array $models, string $classNameOrmSource): array
     {
-        $modelsRelatedGrouped = [];
+        $modelsGrouped = [];
 
-        foreach ($modelsRelated as $model) {
+        foreach ($models as $model) {
             $tableName = $this->ormAdapter->fetchTableNameFromModel($model);
             $identifierValue = $this->ormAdapter->fetchIdentifierValueFromModel($model);
 
-            $modelsRelatedGrouped[$tableName][$identifierValue] = $model;
+            $modelsGrouped[$tableName][$identifierValue] = $model;
 
             if (!$model instanceof $classNameOrmSource) {
                 throw new Exception('Related model is not instanceof source classNameOrm="'.$classNameOrmSource.'"');
             }
         }
 
-        $modelsRelatedNew = [];
-        foreach ($modelsRelatedGrouped as $tableName => $models) {
-            foreach ($models as $identifierValue => $model) {
-                $modelsRelatedNew[] = $model;
+        $modelsFlattened = [];
+        foreach ($modelsGrouped as $tableName => $tableModels) {
+            foreach ($tableModels as $identifierValue => $model) {
+                $modelsFlattened[] = $model;
             }
         }
 
-        return $modelsRelatedNew;
+        return $modelsFlattened;
     }
 }
