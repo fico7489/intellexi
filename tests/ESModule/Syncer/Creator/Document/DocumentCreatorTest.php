@@ -33,5 +33,7 @@ class DocumentCreatorTest extends TestCase
         });
 
         $documentDtos = app(DocumentCreator::class)->create([$cdcSyncableDto]);
+
+        $this->assertCount(1, $documentDtos);
     }
 }
