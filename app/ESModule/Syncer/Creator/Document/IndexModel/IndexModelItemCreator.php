@@ -2,6 +2,7 @@
 
 namespace App\ESModule\Syncer\Creator\Document\IndexModel;
 
+use App\ESModule\Syncer\Adapter\OrmAdapter\OrmAdapter;
 use App\ESModule\Syncer\Creator\CdcSyncable\Dto\CdcSyncableDto;
 use App\ESModule\Syncer\Creator\Document\Dto\DocumentDto;
 use App\ESModule\Syncer\Creator\Document\Dto\IndexModelDto;
@@ -13,6 +14,7 @@ class IndexModelItemCreator
     public function __construct(
         private readonly ConfigProvider $configProvider,
         private readonly ModelsFetcher $modelsRelatedFetcher,
+        private readonly OrmAdapter $ormAdapter,
     ) {
     }
 
@@ -31,8 +33,7 @@ class IndexModelItemCreator
                 $type = DocumentDto::TYPE_UPSERT;
             }
 
-            $identifierName = $model->getKeyName();
-            $identifierValue = $model->{$identifierName};
+            $identifierValue = $this->ormAdapter->fetchIdentifierValueFromModel($model);
 
             $indexModelDtos[$tableNameRelated][$identifierValue] = new IndexModelDto($indexNameRelated, $identifierValue, $type, $model);
         }
